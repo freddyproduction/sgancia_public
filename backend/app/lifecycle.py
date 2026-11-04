@@ -34,8 +34,6 @@ class TokenIn(Strict):
 def state(group_id:str,body:StateIn,user=Depends(current),db=Depends(get_db)):
     db.scalar(select(Group).where(Group.id==group_id).with_for_update())
     group,actor=membership(db,group_id,user,manage=True)
-    if group.state=='archived' and actor.role!='owner':
-        raise HTTPException(403,'Solo il proprietario può riaprire il gruppo')
     group.state=body.state;group.metadata_version+=1
     audit(db,user.id,'group.state_changed',group.id)
     db.commit()

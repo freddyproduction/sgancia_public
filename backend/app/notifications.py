@@ -107,16 +107,16 @@ def reset_preferences(group_id:str,user=Depends(current),db=Depends(get_db)):
 
 
 @router.get('')
-def inbox(user=Depends(current),db=Depends(get_db)):
+def inbox(folder:Literal['inbox','unread','archived','trash']='inbox',user=Depends(current),db=Depends(get_db)):
     rows=[n for n in db.scalars(select(Notification).where(Notification.user_id==user.id,Notification.created>=int(time.time())-365*86400).order_by(Notification.created.desc(),Notification.id)) if not n.event_key.startswith('email:') and permitted(db,n,user)]
     labels={'expense':'Spesa creata o aggiornata','payment':'Rimborso aggiornato','group':'Impostazioni o membri del gruppo aggiornati','reminder':'Hai importi da restituire: controlla i saldi attuali','summary':'Il riepilogo del gruppo è disponibile'}
-    return {'unread':sum(n.read_at is None for n in rows),'items':[{'id':n.id,'group_id':n.group_id,'group':db.get(Group,n.group_id).name,'kind':n.kind,'text':labels[n.kind],'created':n.created,'read_at':n.read_at,'email_status':n.email_status} for n in rows if preferences(db,user.id,n.group_id)['show_read'] or n.read_at is None][:preferences(db,user.id)['max_items']]}
+    return {'unread':sum(n.read_at is None and n.folder=='inbox' for n in rows),'items':[{'id':n.id,'group_id':n.group_id,'group':db.get(Group,n.group_id).name,'kind':n.kind,'text':labels[n.kind],'created':n.created,'read_at':n.read_at,'email_status':n.email_status} for n in rows if n.folder==('inbox' if folder=='unread' else folder) and (folder!='unread' or n.read_at is None) and (folder not in ('inbox','unread') or preferences(db,user.id,n.group_id)['show_read'] or n.read_at is None)][:preferences(db,user.id)['max_items']]}
 
 
 @router.post('/read-all')
 def mark_all(user=Depends(current),db=Depends(get_db)):
     now=int(time.time())
-    for n in db.scalars(select(Notification).where(Notification.user_id==user.id,Notification.read_at.is_(None))):
+    for n in db.scalars(select(Notification).where(Notification.user_id==user.id,Notification.read_at.is_(None),Notification.folder=='inbox')):
         if permitted(db,n,user):n.read_at=now
     db.commit();return {'read':True}
 
@@ -126,6 +126,22 @@ def mark_read(nid:str,user=Depends(current),db=Depends(get_db)):
     n=db.get(Notification,nid)
     if not n or not permitted(db,n,user):raise HTTPException(404,'Notifica non disponibile')
     n.read_at=n.read_at or int(time.time());db.commit();return {'read':True}
+
+
+class InboxAction(Strict):
+    action:Literal['read','unread','archive','trash','restore']
+
+
+@router.post('/{nid}/action')
+def inbox_action(nid:str,body:InboxAction,user=Depends(current),db=Depends(get_db)):
+    n=db.scalar(select(Notification).where(Notification.id==nid,Notification.user_id==user.id).with_for_update())
+    if not n or not permitted(db,n,user):raise HTTPException(404,'Notifica non disponibile')
+    if body.action=='read':n.read_at=n.read_at or int(time.time())
+    elif body.action=='unread':n.read_at=None
+    elif body.action=='archive':n.folder='archived'
+    elif body.action=='trash':n.folder='trash'
+    else:n.folder='inbox'
+    db.commit();return {'folder':n.folder,'read':n.read_at is not None}
 
 
 def add(db,user,actor,gid,key,kind,resource,audience=None,now=None):

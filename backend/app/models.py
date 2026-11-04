@@ -504,7 +504,8 @@ class Notification(Base):
     created: Mapped[int] = mapped_column(BigInteger,default=lambda:int(time.time()))
     read_at: Mapped[int | None] = mapped_column(BigInteger)
     email_status: Mapped[str] = mapped_column(String(20),default='none')
-    __table_args__ = (UniqueConstraint('user_id','event_key',name='uq_notification_event'),)
+    folder: Mapped[str] = mapped_column(String(16),default='inbox')
+    __table_args__ = (UniqueConstraint('user_id','event_key',name='uq_notification_event'),CheckConstraint("folder in ('inbox','archived','trash')",name='ck_notification_folder'))
 
 
 class InstallationPasskey(Base):

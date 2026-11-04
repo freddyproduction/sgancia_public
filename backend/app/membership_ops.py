@@ -55,7 +55,7 @@ def offer_owner(gid:str,body:TargetIn,request:Request,if_match:int=Header(ge=1),
     if actor.role!='owner' or group.owner_id!=user.id:raise HTTPException(403,'Solo il proprietario può trasferire la proprietà')
     target=person(db,gid,body.target)
     account=db.get(User,target.user_id) if target.user_id else None
-    if target.id==actor.id or not account or account.status!='active' or target.role=='viewer':raise HTTPException(422,'Scegli un altro membro con account attivo e permesso di scrittura')
+    if target.id==actor.id or not account or account.status!='active':raise HTTPException(422,'Scegli un altro partecipante con account attivo, non una persona virtuale')
     if group.metadata_version!=if_match:raise HTTPException(409,'Gruppo cambiato: aggiorna')
     group.metadata_version+=1
     op=GroupOperation(group_id=gid,actor_id=user.id,kind='ownership_offer',snapshot={'target':target.id,'owner':actor.id,'version':group.metadata_version,'expires':int(time.time())+86400})
@@ -64,13 +64,16 @@ def offer_owner(gid:str,body:TargetIn,request:Request,if_match:int=Header(ge=1),
 
 @router.post('/{gid}/ownership/{oid}/accept')
 def accept_owner(gid:str,oid:str,request:Request,user=Depends(current),db=Depends(get_db)):
-    group,actor=locked(db,gid,user);recent(request);op=db.get(GroupOperation,oid)
+    db.scalar(select(Group).where(Group.id==gid).with_for_update())
+    group,actor=membership(db,gid,user);recent(request)
+    if group.state!='active':raise HTTPException(409,'Riattiva prima il gruppo')
+    op=db.get(GroupOperation,oid)
     if not op or op.group_id!=gid or op.kind!='ownership_offer':raise HTTPException(404,'Trasferimento non disponibile')
     data=op.snapshot
     if data['target']!=actor.id:raise HTTPException(403,'Trasferimento destinato a un altro account')
     if data['expires']<=time.time() or data['version']!=group.metadata_version:raise HTTPException(409,'Trasferimento scaduto o gruppo modificato: richiedi una nuova proposta')
     old=person(db,gid,data['owner'])
-    if old.role!='owner' or group.owner_id!=old.user_id or actor.role=='viewer':raise HTTPException(409,'Proprietà o ruolo cambiati')
+    if old.role!='owner' or group.owner_id!=old.user_id:raise HTTPException(409,'Proprietà o ruolo cambiati')
     old.role='admin';actor.role='owner';group.owner_id=user.id;group.metadata_version+=1
     op.kind='ownership_accepted';revoke(db,gid)
     db.add(GroupOperation(group_id=gid,actor_id=user.id,kind='ownership_accepted_event',snapshot={'from':old.id,'to':actor.id}))
@@ -112,10 +115,19 @@ def departure_preview(db,gid,p,actor):
     return data
 
 
+def check_departure(db,gid,p,actor):
+    if p.role=='owner':
+        if actor.id!=p.id:raise HTTPException(403,'Il proprietario non può essere rimosso')
+        others=db.scalar(select(Participant.id).where(Participant.group_id==gid,Participant.id!=p.id,Participant.active.is_(True),Participant.merged_into.is_(None),Participant.user_id.is_not(None)))
+        if others:raise HTTPException(403,'Trasferisci prima la proprietà a un altro account reale e attendi la sua accettazione')
+        return
+    if (actor.role=='viewer' and actor.id!=p.id) or (actor.id!=p.id and actor.role not in ('owner','admin')) or (p.role=='admin' and actor.role!='owner' and actor.id!=p.id):raise HTTPException(403,'Rimozione non consentita')
+
+
 @router.get('/{gid}/participants/{pid}/departure-preview')
 def preview_departure(gid:str,pid:str,user=Depends(current),db=Depends(get_db)):
     _,actor=membership(db,gid,user);p=person(db,gid,pid)
-    if (actor.role=='viewer' and actor.id!=p.id) or (actor.id!=p.id and actor.role not in ('owner','admin')) or p.role=='owner' or (p.role=='admin' and actor.role!='owner' and actor.id!=p.id):raise HTTPException(403,'Trasferisci prima la proprietà oppure chiedi a un amministratore')
+    check_departure(db,gid,p,actor)
     return departure_preview(db,gid,p,actor)
 
 
@@ -124,14 +136,24 @@ def depart(gid:str,pid:str,body:DepartureIn,user=Depends(current),db=Depends(get
     db.scalar(select(Group).where(Group.id==gid).with_for_update())
     group,actor=membership(db,gid,user);p=person(db,gid,pid)
     if actor.id!=p.id:membership(db,gid,user,write=True,manage=True)
-    if (actor.role=='viewer' and actor.id!=p.id) or (actor.id!=p.id and actor.role not in ('owner','admin')) or p.role=='owner' or (p.role=='admin' and actor.role!='owner' and actor.id!=p.id):raise HTTPException(403,'Rimozione non consentita: il proprietario deve prima trasferire la proprietà')
+    check_departure(db,gid,p,actor)
     preview=departure_preview(db,gid,p,actor)
     if body.fingerprint!=preview['fingerprint']:raise HTTPException(409,'Dati cambiati: aggiorna l’anteprima')
     if preview['keep_balance_required'] and not body.keep_balance:raise HTTPException(409,'Conserva esplicitamente i saldi aperti oppure saldali prima di uscire')
     op=GroupOperation(group_id=gid,actor_id=user.id,kind='departure',snapshot={'participant':p.id,'user':p.user_id,'role':p.role,'keep_balance':body.keep_balance})
     revoke(db,gid,p.id)
-    # The historical participant becomes an inactive virtual; no account retains access.
-    p.user_id=None;p.active=False;p.role='member';group.metadata_version+=1
+    if p.role=='owner':
+        # Last real account leaves: retain custody solely for restoring the trashed group.
+        from sqlalchemy import delete
+        from .models import GroupJoinCode
+        db.execute(delete(GroupJoinCode).where(GroupJoinCode.group_id==gid))
+        revoke(db,gid)
+        db.execute(update(GuestLink).where(GuestLink.group_id==gid).values(revoked=True))
+        group.deleted=True;p.active=False
+    else:
+        # Preserve the historical person and all balances without granting account access.
+        p.user_id=None;p.active=False;p.role='member'
+    group.metadata_version+=1
     db.add(op);audit(db,user.id,'participant.departed',p.id);db.commit();return {'status':'departed'}
 
 

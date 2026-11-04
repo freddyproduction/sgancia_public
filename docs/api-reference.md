@@ -4,6 +4,8 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 
 | Metodo | Percorso | Operazione |
 |---|---|---|
+| GET | `/api/v1/account/avatar` | Avatar |
+| PUT | `/api/v1/account/avatar` | Update Avatar |
 | GET | `/api/v1/account/payment-methods` | Methods |
 | POST | `/api/v1/account/payment-methods` | Create |
 | PUT | `/api/v1/account/payment-methods/{mid}` | Edit |
@@ -115,6 +117,8 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | GET | `/api/v1/groups/{gid}/export` | Export Group |
 | POST | `/api/v1/groups/{gid}/imports/preview` | Preview Import |
 | POST | `/api/v1/groups/{gid}/imports/{batch_id}/apply` | Apply Import |
+| GET | `/api/v1/groups/{gid}/join-codes` | Group Codes |
+| POST | `/api/v1/groups/{gid}/join-codes/{role}/rotate` | Rotate Code |
 | POST | `/api/v1/groups/{gid}/merge` | Merge |
 | POST | `/api/v1/groups/{gid}/merge/preview` | Merge Preview |
 | GET | `/api/v1/groups/{gid}/operations` | Operations |
@@ -164,6 +168,7 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | POST | `/api/v1/groups/{group_id}/invitations` | Invite |
 | POST | `/api/v1/groups/{group_id}/participants` | Add Participant |
 | PUT | `/api/v1/groups/{group_id}/participants/{participant_id}` | Edit Person |
+| GET | `/api/v1/groups/{group_id}/participants/{participant_id}/avatar` | Participant Avatar |
 | POST | `/api/v1/groups/{group_id}/participants/{participant_id}/claim` | Issue Claim |
 | GET | `/api/v1/groups/{group_id}/settlements` | Payments |
 | POST | `/api/v1/groups/{group_id}/settlements` | Create |
@@ -186,6 +191,7 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | PUT | `/api/v1/notifications/preferences` | Set Preferences |
 | DELETE | `/api/v1/notifications/preferences` | Reset Preferences |
 | POST | `/api/v1/notifications/read-all` | Mark All |
+| POST | `/api/v1/notifications/{nid}/action` | Inbox Action |
 | POST | `/api/v1/notifications/{nid}/read` | Mark Read |
 | GET | `/api/v1/overview` | Overview |
 | POST | `/api/v1/overview/settle` | Settle Overview |

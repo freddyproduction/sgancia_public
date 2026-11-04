@@ -195,6 +195,15 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | used | BOOLEAN | no |  |
 | participant_id | VARCHAR(36) | sì | participants.id |
 
+## group_join_codes
+
+| Colonna | Tipo | Nullable | Riferimenti |
+|---|---|---|---|
+| token_hash | VARCHAR(64) | no |  |
+| group_id | VARCHAR(36) | no | groups.id |
+| role | VARCHAR(16) | no |  |
+| secret | BLOB | no |  |
+
 ## group_operations
 
 | Colonna | Tipo | Nullable | Riferimenti |
@@ -392,6 +401,7 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | created | BIGINT | no |  |
 | read_at | BIGINT | sì |  |
 | email_status | VARCHAR(20) | no |  |
+| folder | VARCHAR(16) | no |  |
 
 ## participant_claims
 
@@ -615,6 +625,9 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | superadmin | BOOLEAN | no |  |
 | admin_permissions | JSON | sì |  |
 | requested_role | VARCHAR(16) | no |  |
+| avatar | BLOB | sì |  |
+| avatar_icon | VARCHAR(16) | no |  |
+| avatar_version | INTEGER | no |  |
 | theme | VARCHAR(5) | no |  |
 | email_verified | BOOLEAN | no |  |
 | auth_version | INTEGER | no |  |

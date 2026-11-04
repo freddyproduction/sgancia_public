@@ -16,7 +16,7 @@ def owned(db,gid,user):
 
 @router.get('/group-trash')
 def group_trash(user=Depends(current),db=Depends(get_db)):
-    rows=db.scalars(select(Group).join(Participant,Participant.group_id==Group.id).where(Group.owner_id==user.id,Participant.user_id==user.id,Participant.role=='owner',Group.deleted.is_(True)).order_by(Group.name))
+    rows=db.scalars(select(Group).join(Participant,Participant.group_id==Group.id).where(Participant.user_id==user.id,Participant.role.in_(['owner','admin']),((Participant.active.is_(True))|((Group.owner_id==user.id)&(Participant.role=='owner'))),Group.deleted.is_(True)).order_by(Group.name))
     return [{'id':g.id,'name':g.name,'currency':g.currency,'state':g.state,'metadata_version':g.metadata_version} for g in rows]
 
 @router.delete('/groups/{gid}',status_code=204)
@@ -36,11 +36,15 @@ def remove_group(gid:str,if_match:int=Header(ge=1),user=Depends(current),db=Depe
 
 @router.post('/groups/{gid}/restore')
 def restore_group(gid:str,if_match:int=Header(ge=1),user=Depends(current),db=Depends(get_db)):
-    group=owned(db,gid,user)
+    group=db.scalar(select(Group).where(Group.id==gid).with_for_update())
+    actor=db.scalar(select(Participant).where(Participant.group_id==gid,Participant.user_id==user.id))
+    custody=bool(group and actor and group.owner_id==user.id and actor.role=='owner')
+    if not group or not actor or actor.role not in ('owner','admin') or (not actor.active and not custody):raise HTTPException(403,'Solo i gestori del gruppo possono ripristinarlo')
     if not group.deleted:
         if if_match==group.metadata_version-1:return group_out(group)
         raise HTTPException(409,'Il gruppo non è nel cestino')
     if group.metadata_version!=if_match:raise HTTPException(409,'Il gruppo è cambiato: aggiorna il cestino')
     group.deleted=False;group.metadata_version+=1
+    if custody:actor.active=True
     audit(db,user.id,'group.restored',group.id);db.commit()
     return group_out(group)

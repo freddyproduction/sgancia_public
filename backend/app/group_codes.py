@@ -31,7 +31,7 @@ def preview(db,clear,user):
     if not group or group.deleted or group.state!='active':raise HTTPException(404,'Codice gruppo non disponibile')
     existing=db.scalar(select(Participant).where(Participant.group_id==group.id,Participant.user_id==user.id))
     if existing and (not existing.active or existing.merged_into):raise HTTPException(403,'Partecipazione disattivata: contatta un admin del gruppo')
-    people=[] if existing else [{'id':p.id,'name':p.name} for p in db.scalars(select(Participant).where(Participant.group_id==group.id,Participant.user_id.is_(None),Participant.active.is_(True),Participant.merged_into.is_(None)).order_by(Participant.name,Participant.id))]
+    people=[] if existing else [{'id':p.id,'name':p.name} for p in db.scalars(select(Participant).where(Participant.group_id==group.id,Participant.user_id.is_(None),Participant.active.is_(True),Participant.merged_into.is_(None),Participant.role==row.role).order_by(Participant.name,Participant.id))]
     return {'kind':'group_code','group_id':group.id,'group':group.name,'role':existing.role if existing else row.role,'person':None,'already_member':bool(existing),'expires':None,'virtuals':people,'message':'Sei già nel gruppo: il tuo ruolo non cambia.' if existing else 'Entra come nuova persona oppure collega una persona senza account. Collegandola acquisisci i suoi saldi, le spese e il pubblico riservato: scegli solo la tua persona.'}
 
 
@@ -42,7 +42,7 @@ def join(db,body,user,data):
     if body.name is not None and not name:raise HTTPException(422,'Inserisci un nome valido')
     if body.participant_id:
         person=db.scalar(select(Participant).where(Participant.id==body.participant_id,Participant.group_id==gid).with_for_update())
-        if not person or person.user_id or not person.active or person.merged_into:raise HTTPException(409,'Persona non più disponibile: aggiorna l’anteprima')
+        if not person or person.user_id or not person.active or person.merged_into or person.role!=data['role']:raise HTTPException(409,'Persona non più disponibile: aggiorna l’anteprima')
         from .membership_ops import revoke
         revoke(db,gid,person.id)
         person.user_id=user.id;person.role=data['role']
