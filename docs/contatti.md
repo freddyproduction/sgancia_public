@@ -2,6 +2,14 @@
 
 Sgancia è ideato e sviluppato da **PjChaosEOW**, con vibecoding e ChatGPT. La firma è nel README, AUTHORS e nella pagina Guida e informazioni, accessibile anche prima del login.
 
+## Recapiti del progetto
+
+- **Email:** [freddy.productionsound@gmail.com](mailto:freddy.productionsound@gmail.com)
+- **GitHub:** [repository pubblico di Sgancia](https://github.com/freddyproduction/sgancia_public)
+- **Donazioni volontarie:** [offri un caffè su Buy Me a Coffee](https://buymeacoffee.com/chaoseow)
+
+## Configurazione dell’installazione
+
 Unico punto di configurazione: **backend/app/project_info.py**.
 
 | Costante | Cosa inserire |

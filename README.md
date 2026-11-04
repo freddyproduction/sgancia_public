@@ -67,4 +67,12 @@ Sono supportati dominio HTTPS, localhost, 127.0.0.1 e IP LAN HTTP dichiarato esp
 
 **Ideato e sviluppato da PjChaosEOW**, con vibecoding e ChatGPT: idee, iterazioni e cura dei dettagli, per condividere le spese con più leggerezza.
 
-Email, repository pubblico e Buy Me a Coffee sono configurabili e rimangono nascosti finché non vengono inseriti recapiti reali. Le donazioni sono interamente volontarie, senza acquisto di funzionalità, obblighi, priorità delle richieste, legami con lo sviluppo del codice o promesse su tempi e risultati.
+## Contatti e donazioni
+
+- **Email:** [freddy.productionsound@gmail.com](mailto:freddy.productionsound@gmail.com)
+- **GitHub:** [repository pubblico di Sgancia](https://github.com/freddyproduction/sgancia_public)
+- **Donazioni volontarie:** [offri un caffè su Buy Me a Coffee](https://buymeacoffee.com/chaoseow)
+
+La donazione è interamente volontaria: non acquista funzionalità né comporta obblighi, priorità delle richieste, legami con lo sviluppo del codice o promesse su tempi e risultati.
+
+Per proporre idee, descrivi esigenza e risultato desiderato usando esempi inventati, senza credenziali o dati personali. Nell’app trovi anche il modulo **Guida e informazioni → Idee e contatti sviluppatore**. Configurazione per chi ospita Sgancia: [contatti.md](docs/contatti.md).
