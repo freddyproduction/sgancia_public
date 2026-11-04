@@ -1,0 +1,12 @@
+import {useState} from 'react'
+import {api,send} from './api'
+import {registerPasskey} from './passkeys'
+import {Modal,ErrorMessage} from './ui'
+import {useAutoRefresh} from './live'
+type Key={id:string;name:string}
+export function PasskeySettings(){
+ const[keys,setKeys]=useState<Key[]>([]),[removing,setRemoving]=useState<Key|null>(null),[error,setError]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false)
+ async function load(){setKeys(await api('/auth/passkeys'))}
+ useAutoRefresh(load,true,e=>setError(e.message))
+ return <section className="panel settings-panel"><h2>Passkey: aggiungi o rimuovi</h2><p className="small muted">Gestisci le passkey del tuo account. Puoi rimuoverle tutte e continuare ad accedere con password e, se attiva, MFA. La rimozione di una passkey non disattiva MFA.</p><ErrorMessage error={error}/>{notice&&<p className="success" role="status">{notice}</p>}{!keys.length&&<p className="muted">Nessuna passkey registrata.</p>}{keys.map(key=><div className="session-row" key={key.id}><b>{key.name}</b><button type="button" className="secondary danger" disabled={busy} onClick={()=>{setError('');setRemoving(key)}}>Rimuovi passkey</button></div>)}<button className="secondary" disabled={busy} onClick={async()=>{setError('');setNotice('');setBusy(true);try{await registerPasskey();await load();setNotice('Passkey aggiunta.')}catch(e){setError((e as Error).message)}finally{setBusy(false)}}}>Aggiungi passkey</button>{removing&&<Modal title="Rimuovi passkey" onClose={()=>{if(!busy)setRemoving(null)}}><p>Rimuovere <b>{removing.name}</b> dal tuo account Sgancia?</p><p className="small muted">Non potrai più usarla per accedere a Sgancia. Le altre sessioni e le richieste di accesso pendenti saranno revocate; questa sessione rimane aperta. La credenziale eventualmente salvata nel gestore password del dispositivo può essere eliminata anche da lì.</p><ErrorMessage error={error}/>{error.includes('identità')&&<p className="small muted">Chiudi questa finestra, usa “Conferma identità” nelle impostazioni e riprova.</p>}<button className="primary full" disabled={busy} onClick={async()=>{setBusy(true);setError('');try{await api('/auth/passkeys/'+removing.id,send('DELETE'));await load();setRemoving(null);setNotice('Passkey rimossa. Le altre sessioni sono state revocate.')}catch(e){setError((e as Error).message)}finally{setBusy(false)}}}>Conferma rimozione passkey</button></Modal>}</section>
+}

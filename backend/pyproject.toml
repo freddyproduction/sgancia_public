@@ -1,0 +1,9 @@
+[project]
+name = "sgancia-backend"
+version = "0.1.0"
+description = "Sgancia — spese condivise self-hosted"
+requires-python = ">=3.13"
+license = "AGPL-3.0-only"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -1,0 +1,160 @@
+name: sgancia
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sgancia
+      POSTGRES_USER: sgancia
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U sgancia -d sgancia']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [internal]
+  migrate:
+    build: .
+    image: sgancia:local
+    command: [alembic, upgrade, head]
+    environment: &api_env
+      SGANCIA_LEGACY_SUPERADMIN_ID: ${SGANCIA_LEGACY_SUPERADMIN_ID:-}
+      SGANCIA_DATABASE_URL: postgresql+psycopg://sgancia:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/sgancia
+      SGANCIA_PUBLIC_ORIGIN: ${SGANCIA_PUBLIC_ORIGIN:?Set public HTTPS origin}
+      SGANCIA_ALLOWED_ORIGINS: ${SGANCIA_ALLOWED_ORIGINS:-[]}
+      SGANCIA_HTTP_LAN_ORIGINS: ${SGANCIA_HTTP_LAN_ORIGINS:-[]}
+      SGANCIA_SECURE_COOKIES: ${SGANCIA_SECURE_COOKIES:-true}
+      SGANCIA_SMTP_HOST: ${SGANCIA_SMTP_HOST:-}
+      SGANCIA_SMTP_PORT: ${SGANCIA_SMTP_PORT:-587}
+      SGANCIA_SMTP_MODE: ${SGANCIA_SMTP_MODE:-starttls}
+      SGANCIA_SMTP_USERNAME: ${SGANCIA_SMTP_USERNAME:-}
+      SGANCIA_SMTP_PASSWORD: ${SGANCIA_SMTP_PASSWORD:-}
+      SGANCIA_SMTP_SENDER: ${SGANCIA_SMTP_SENDER:-}
+      SGANCIA_SESSION_HOURS: ${SGANCIA_SESSION_HOURS:-24}
+      SGANCIA_ENCRYPTION_KEY: ${SGANCIA_ENCRYPTION_KEY:?Set encryption key}
+      SGANCIA_BACKUP_KEY: ${SGANCIA_BACKUP_KEY:-}
+      SGANCIA_ATTACHMENT_DIR: /app/storage
+      SGANCIA_ATTACHMENT_MAX_BYTES: ${SGANCIA_ATTACHMENT_MAX_BYTES:-10485760}
+      SGANCIA_ATTACHMENT_GROUP_BYTES: ${SGANCIA_ATTACHMENT_GROUP_BYTES:-104857600}
+      SGANCIA_ATTACHMENT_MAX_COUNT: ${SGANCIA_ATTACHMENT_MAX_COUNT:-20}
+      SGANCIA_TRUSTED_PROXIES: ${SGANCIA_TRUSTED_PROXIES:-127.0.0.1}
+    depends_on:
+      db: {condition: service_healthy}
+    networks: [internal]
+  storage-init:
+    image: sgancia:local
+    user: '0:0'
+    command: [python, -m, app.attachment_storage]
+    environment: *api_env
+    volumes: ['./data/attachments:/app/storage']
+    networks: [internal]
+  api:
+    image: sgancia:local
+    restart: unless-stopped
+    environment: *api_env
+    volumes: ['./data/attachments:/app/storage']
+    ports: ['${SGANCIA_BIND_IP:-127.0.0.1}:${SGANCIA_PORT:-8088}:8000']
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      storage-init: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready')"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    networks: [internal]
+  mail:
+    image: sgancia:local
+    restart: unless-stopped
+    command: [python, -m, app.mail_delivery]
+    environment: *api_env
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    networks: [internal]
+  worker:
+    image: sgancia:local
+    restart: unless-stopped
+    command: [python, -m, app.automation]
+    environment: *api_env
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    networks: [internal]
+  backup-init:
+    image: sgancia:local
+    user: '0:0'
+    command: [python, -m, app.backup_storage]
+    environment: *api_env
+    volumes: ['./backups/automatic:/app/backups']
+    networks: [internal]
+  backup:
+    image: sgancia:local
+    restart: unless-stopped
+    command: [python, -m, app.maintenance]
+    environment: *api_env
+    volumes: ['./backups/automatic:/app/backups', './data/attachments:/app/storage:ro']
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      storage-init: {condition: service_completed_successfully}
+      backup-init: {condition: service_completed_successfully}
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    networks: [internal]
+  telegram:
+    image: sgancia:local
+    restart: unless-stopped
+    command: [python, -m, app.telegram_service]
+    environment: *api_env
+    volumes: ['./data/attachments:/app/storage']
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      storage-init: {condition: service_completed_successfully}
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    networks: [internal]
+  db-test:
+    profiles: [test]
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: sgancia_test
+      POSTGRES_USER: sgancia_test
+      POSTGRES_PASSWORD: disposable-test-only
+    tmpfs: [/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U sgancia_test -d sgancia_test']
+      interval: 2s
+      timeout: 3s
+      retries: 20
+    networks: [internal]
+  test:
+    profiles: [test]
+    image: sgancia:test
+    build:
+      context: .
+      target: test
+    environment:
+      SGANCIA_TEST_DATABASE_URL: postgresql+psycopg://sgancia_test:disposable-test-only@db-test:5432/sgancia_test
+    depends_on:
+      db-test: {condition: service_healthy}
+    command: [sh, -c, 'python -m pytest -q && export SGANCIA_DATABASE_URL="$$SGANCIA_TEST_DATABASE_URL" && python -m alembic upgrade head && python -m alembic check && python -m alembic downgrade base']
+    networks: [internal]
+networks:
+  internal:

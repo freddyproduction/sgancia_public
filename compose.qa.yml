@@ -1,0 +1,48 @@
+# Disposable synthetic QA only. Never use production data or credentials.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: sgancia_qa
+      POSTGRES_USER: sgancia_qa
+      POSTGRES_PASSWORD: ${QA_DB_PASSWORD:?QA runner required}
+    tmpfs: [/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U sgancia_qa -d sgancia_qa']
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  migrate:
+    image: sgancia:local
+    environment: &qa_env
+      SGANCIA_DATABASE_URL: postgresql+psycopg://sgancia_qa:${QA_DB_PASSWORD}@db:5432/sgancia_qa
+      SGANCIA_ENCRYPTION_KEY: ${QA_ENCRYPTION_KEY:?QA runner required}
+      SGANCIA_BACKUP_KEY: ${QA_BACKUP_KEY:?QA runner required}
+      SGANCIA_PUBLIC_ORIGIN: http://localhost:18088
+      SGANCIA_ALLOWED_ORIGINS: '["http://127.0.0.1:18088"]'
+      SGANCIA_SECURE_COOKIES: 'false'
+    command: [alembic, upgrade, head]
+    depends_on:
+      db: {condition: service_healthy}
+  storage-init:
+    image: sgancia:local
+    user: '0:0'
+    command: [python, -m, app.attachment_storage]
+    volumes: [qa-storage:/app/storage]
+  api:
+    image: sgancia:local
+    environment: *qa_env
+    ports: ['127.0.0.1:18088:8000']
+    volumes: [qa-storage:/app/storage]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      storage-init: {condition: service_completed_successfully}
+  worker:
+    image: sgancia:local
+    environment: *qa_env
+    command: [python, -m, app.automation]
+    volumes: [qa-storage:/app/storage]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+volumes:
+  qa-storage:

@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+cd "$(git rev-parse --show-toplevel)"
+git diff --cached --check
+if [ -x .venv/bin/python ]; then
+  exec .venv/bin/python scripts/check_git_secrets.py
+fi
+exec python3 scripts/check_git_secrets.py

@@ -1,0 +1,9 @@
+# Rivelazione delle spese riservate
+
+Dal lucchetto vicino alla spesa, oppure dalla cronologia → Visibilità e programmazioni, controllare l’anteprima prima/dopo e confermare la pubblicazione. Un membro deve essere autore della spesa; i gestori del gruppo devono comunque appartenere al suo pubblico. Un visualizzatore non può pubblicare.
+
+In presenza di incassi confermati la riconciliazione richiede un gestore incluso nel pubblico e un secondo consenso. Pubblica tutte le spese del medesimo ambito, comprese quelle nel cestino (pubbliche se ripristinate). Conserva gli importi e i saldi netti: gli incassi diventano nuove registrazioni pubbliche, mentre gli originali vengono annullati contabilmente e restano privati. Le note private, le ricevute, gli allegati e le vecchie revisioni non vengono copiati. I suggerimenti Smart possono cambiare unendo gli ambiti diventati pubblici. Pagamenti in attesa o contestati devono essere risolti prima.
+
+La programmazione è disponibile senza incassi attivi nello stesso ambito. Richiede una data futura, entro un anno, e un consenso distinto. Il worker controlla ogni circa 30 secondi; prima della pubblicazione verifica autore, account, versione delle credenziali, partecipazione, ruolo, stato del gruppo, versione e pubblico della spesa e assenza di nuovi pagamenti. Una variazione incompatibile blocca il lavoro per revisione manuale. È possibile annullare o sostituire una programmazione pendente. Ripristinare un backup sospende tutte le programmazioni pendenti: occorre controllarle e programmarle nuovamente.
+
+Chi era escluso non vede le vecchie revisioni né le programmazioni, nemmeno dopo la pubblicazione. Ricerca, statistiche ed esportazioni seguono il pubblico corrente; gli allegati seguono il pubblico della revisione originale. I link ospiti restano disabilitati globalmente per impostazione predefinita, secondo la scelta dell’amministratore dell’installazione. La pubblicazione non abilita i link ospiti.

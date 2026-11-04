@@ -1,0 +1,10 @@
+import {useState,useRef} from 'react'
+import {api,send,money,minorToDecimal,type Detail} from './api'
+import {Modal,ErrorMessage} from './ui'
+export type SuggestedPayment={from:string;to:string;amount:number;audience:string[]|null}
+export function SettleSuggestion({payment,detail,onClose,onSaved}:{payment:SuggestedPayment;detail:Detail;onClose:()=>void;onSaved:(message:string)=>Promise<void>}){
+ const[error,setError]=useState(''),[busy,setBusy]=useState(false),requestKey=useRef(crypto.randomUUID())
+ const sender=detail.participants.find(p=>p.id===payment.from)!,recipient=detail.participants.find(p=>p.id===payment.to)!
+ const confirmed=recipient.id===detail.my_participant||(recipient.virtual&&['owner','admin'].includes(detail.role))
+ return <Modal title="Segna come saldato" onClose={onClose}><p className="settle-summary"><b>{sender.name} → {recipient.name}</b><strong>{money(payment.amount,detail.currency)}</strong></p><p className="muted small">Registra soltanto un pagamento già avvenuto. Sgancia non trasferisce denaro.</p><p className="muted small">{confirmed?(recipient.virtual?'Registri la ricezione per il partecipante senza account. Il tuo intervento sarà conservato nella cronologia.':'Confermi di aver ricevuto questo pagamento.'):`Il pagamento resterà in attesa della conferma di ${recipient.name}; il saldo cambierà dopo la conferma.`}</p><ErrorMessage error={error}/><button className="primary full" disabled={busy} onClick={async()=>{setBusy(true);setError('');try{const result=await api<{status:string}>(`/groups/${detail.id}/settlements/settle-suggestion`,{...send('POST',{sender:payment.from,recipient:payment.to,amount:minorToDecimal(payment.amount),audience:payment.audience}),headers:{'Idempotency-Key':requestKey.current}});await onSaved(result.status==='confirmed'?'Pagamento registrato: saldo aggiornato.':`Pagamento registrato, in attesa della conferma di ${recipient.name}.`)}catch(e){setError((e as Error).message)}finally{setBusy(false)}}}>{busy?'Registrazione…':confirmed?'Conferma: saldato':'Registra pagamento'}</button></Modal>
+}
