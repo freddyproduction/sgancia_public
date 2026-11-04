@@ -14,6 +14,21 @@ try{
  await page.goto(base+'/help');await page.getByRole('heading',{name:'Guida e informazioni',exact:true}).waitFor();await page.getByLabel('Cerca nella guida').fill('valute');await page.getByText('Valute e conversione',{exact:true}).click();await audit('guida-mobile');assert.equal(await page.getByRole('link',{name:/Offri un caffè/}).count(),0);await page.getByLabel('La tua idea').fill('Un esempio sintetico per la guida.');await page.getByText('Anteprima da copiare',{exact:true}).click();await page.getByText('Comportamento desiderato:',{exact:false}).last().waitFor();await page.screenshot({path:new URL('guida-mobile.png',output).pathname,fullPage:true});
  }
  await login();
+ if(!process.env.QA_RESTART_ONLY){
+  await page.setViewportSize({width:1280,height:900});
+  await page.getByRole('button',{name:'Impostazioni',exact:true}).first().click();
+  let protectedRequests=0;
+  await page.route('**/api/v1/auth/totp/setup',async route=>{protectedRequests++;await route.fulfill({status:403,contentType:'application/json',body:JSON.stringify({detail:'Conferma nuovamente la tua identità'})})});
+  await page.getByRole('button',{name:'Configura MFA',exact:true}).click();
+  const identity=page.getByRole('dialog',{name:'Conferma la tua identità',exact:true});await identity.waitFor();
+  await page.setViewportSize({width:390,height:844});await audit('identity-mobile');
+  await identity.getByLabel('Password account',{exact:true}).fill('invalid-password-long');await identity.getByRole('button',{name:'Conferma identità',exact:true}).click();await identity.getByText('Verifica identità fallita',{exact:true}).waitFor();
+  await identity.getByLabel('Password account',{exact:true}).fill('qa-password-long');await identity.getByRole('button',{name:'Conferma identità',exact:true}).click();
+  await page.getByRole('dialog',{name:'Identità confermata',exact:true}).waitFor();assert.equal(protectedRequests,1);
+  await page.getByRole('button',{name:'Torna all’operazione',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});await page.unroute('**/api/v1/auth/totp/setup');
+  await page.setViewportSize({width:1280,height:900});await page.getByRole('button',{name:'Panoramica',exact:true}).first().click();await page.setViewportSize({width:390,height:844});
+  console.log('PASS: recent-identity popup, wrong/correct password, mobile accessibility, no automatic operation replay');
+ }
  if(process.env.QA_RESTART_ONLY){const list=await(await page.request.get(base+'/api/v1/groups/qa-group/expenses')).json();assert.equal(list.length,1);assert.equal(list[0].title,'Cena QA rilascio');console.log('PASS restart: authenticated expenses persisted');}
  else{
  await page.getByRole('button',{name:'Attiva tema scuro'}).click();await page.waitForFunction(()=>document.documentElement.dataset.theme==='dark');await page.getByRole('button',{name:'Apri menu',exact:true}).click();await page.getByRole('button',{name:'Guida e informazioni',exact:true}).last().click();await page.getByRole('heading',{name:'Guida e informazioni',exact:true}).waitFor();await page.getByLabel('Cerca nella guida').fill('Smart');await audit('guida-dark-mobile');

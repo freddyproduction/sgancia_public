@@ -1,16 +1,124 @@
 [
- {"id":"accesso","title":"Accesso, email e recupero","paragraphs":["Apri l’indirizzo indicato dall’amministratore. Se il cancello d’installazione è attivo, inserisci la chiave o usa la passkey dell’installazione; poi accedi al tuo account con password e, se richiesta, MFA, oppure con una passkey personale. Le due passkey hanno scopi distinti.","Registrazioni libere, con approvazione, su invito o chiuse dipendono dalla policy globale. Per verificare l’email richiedi il messaggio in Impostazioni account: SMTP deve essere configurato dall’amministratore. Un link di verifica o recupero scade e si usa una sola volta. Non condividere password, codici MFA, inviti o chiavi.","Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin globale può recuperare i fattori degli altri utenti, escluso il superadmin fondatore. Non esistono password universali."]},
- {"id":"account","title":"Account, aspetto e metodi di pagamento","paragraphs":["In Impostazioni modifica nome, email e password, gestisci MFA, passkey e sessioni. Le operazioni sensibili richiedono Conferma identità recente. Il tema chiaro o scuro è salvato sull’account e si applica anche agli altri dispositivi.","Aggiungi i tuoi metodi di pagamento con descrizione, dati utili e immagine nei limiti indicati. Sono recapiti per ricevere denaro: Sgancia non conserva carte per addebiti e non effettua pagamenti. Controlla destinatario e importo prima di usare servizi esterni."]},
- {"id":"gruppi","title":"Gruppi, ruoli e inviti","paragraphs":["Crea un gruppo con nome e valuta principale. Impostazioni gruppo raccoglie descrizione, icona o immagine, membri, ruoli, stato, inviti e cestino. Proprietario e amministratori di gruppo gestiscono il gruppo; i membri modificano le spese visibili; il visualizzatore consulta soltanto. Essere admin globale non rende visibili tutte le spese riservate.","Puoi aggiungere partecipanti senza account. Per associare un account successivamente usa l’invito o l’associazione esplicita della persona esistente: non creare un duplicato e non associare soltanto in base al nome. L’anteprima mostra chi verrà collegato e i conti conservati.","I link per nuovi account, i codici per account già registrati e i link ospite sono percorsi distinti. I link ospite sono in sola lettura e solo pubblici; inizialmente sono disabilitati globalmente. Se abilitati possono avere password, scadenza e limite di aperture. Condividili privatamente."]},
- {"id":"spese","title":"Inserire e modificare una spesa","paragraphs":["Premi Aggiungi spesa, compila titolo, data, categoria e note. Aggiungi una o più voci. Per ogni voce la casella accanto al nome indica chi divide il costo, la stella chi ha anticipato. Più pagatori possono indicare anticipi precisi o dividere automaticamente il resto. Puoi creare categorie del gruppo.","Sono disponibili parti uguali, percentuali, importi esatti, pesi e quantità. Nei campi importo puoi usare 12,50 + 8,90 oppure 100 * (1 - 20%). Controlla sempre l’anteprima: la somma dei pagatori e delle quote deve coincidere con il totale.","Esempio sintetico: Anna anticipa 60 EUR per Anna, Luca e Bea in parti uguali. Ogni quota è 20 EUR; ad Anna devono tornare 40 EUR. I resti al centesimo sono distribuiti in modo deterministico.","Usa la matita per modificare, il cestino per eliminare. Nel modulo puoi togliere una voce; eliminando l’ultima si elimina l’intera spesa. La cronologia conserva le revisioni. Se qualcuno ha cambiato la stessa spesa, ricarica la versione corrente prima di confermare."]},
- {"id":"riservate","title":"Spese riservate e rivelazione","paragraphs":["Per un regalo o altra spesa riservata scegli il pubblico autorizzato. Autore, pagatori e partecipanti alle quote devono essere inclusi. Gli esclusi non vedono la spesa né indizi nei saldi, report o notifiche. I gestori del gruppo non possono superare questo pubblico.","Puoi programmare o eseguire una rivelazione secondo i permessi. In presenza di incassi riservati confermati usa l’anteprima di riconciliazione e il consenso esplicito: non si possono semplicemente spostare debiti già pagati tra pubblici diversi. Dopo un ripristino le rivelazioni programmate restano sospese per controllo.","Sgancia applica la privacy nel software: non offre cifratura end-to-end tra utenti e amministratore del server."]},
- {"id":"valute","title":"Valute e conversione","paragraphs":["La valuta principale si gestisce nelle impostazioni del gruppo. Per una spesa in valuta diversa scegli la valuta originale e, se desiderato, il cambio automatico: la quotazione disponibile viene applicata all’inserimento e conservata con la spesa. Non è un cambio in tempo reale garantito né una transazione bancaria. Se il servizio non è disponibile puoi usare un tasso manuale.","Il cambio della valuta principale richiede anteprima e conferma perché converte i conti esistenti e conserva lo storico. In panoramica valute diverse restano separate: non si sommano EUR e USD senza una conversione esplicita."]},
- {"id":"saldi","title":"Anticipi, debiti e algoritmo Smart","paragraphs":["Spese del gruppo comprende tutte le spese visibili al tuo account, incluse le riservate autorizzate. Hai anticipato è quanto hai pagato. Ti devono tornare e Devi restituire indicano importi ancora aperti: non coincidono necessariamente con il saldo netto.","Clicca Ti devono tornare per vedere chi deve pagarti e confermare quanto hai davvero ricevuto. Clicca Devi restituire per vedere i destinatari. La panoramica aggrega i gruppi riconoscendo l’account; gli omonimi senza account restano distinti. Una conferma aggregata viene ripartita nei gruppi dal software con controllo degli importi correnti.","Smart è attivo di default per gruppo e riduce i passaggi di pagamento nei limiti della visibilità. Puoi disattivarlo nelle impostazioni del gruppo. Non cambia le quote dovute e non trasferisce denaro. Ambiti riservati diversi restano protetti."]},
- {"id":"rimborsi","title":"Saldato, rimborsi e contestazioni","paragraphs":["Saldato conferma denaro effettivamente ricevuto. Per un membro ordinario può premerlo soltanto il ricevente, non chi deve dare soldi. Il debitore può registrare una segnalazione in attesa: i conti cambiano quando il ricevente conferma. Per persone senza account valgono le deleghe e le regole dei gestori.","In Rimborsi consulta lo stato, conferma o contesta con motivazione. Ripristina rimborso annulla la conferma e riapre il debito conservando lo storico; non restituisce denaro sul conto bancario. Eliminare una spesa non cancella un trasferimento già registrato.","Una contestazione della spesa si consulta nello storico; le revisioni precedenti restano disponibili alle persone autorizzate."]},
- {"id":"allegati","title":"Scontrini, immagini e cestino","paragraphs":["Allega foto o documenti alla spesa o al pagamento autorizzato. Formati e limiti sono indicati dal software e configurabili dall’admin. Le immagini vengono normalizzate e i file sono serviti con verifica dei permessi; non sono URL pubblici permanenti.","Puoi ripristinare spese e gruppi dal rispettivo cestino secondo il tuo ruolo. I gruppi archiviati sono nascosti per impostazione predefinita: usa l’icona archivio vicino a I tuoi gruppi per mostrarli. Il cestino non equivale alla cancellazione fisica dei backup."]},
- {"id":"strumenti","title":"Modelli, ricorrenze, ricerca e report","paragraphs":["Duplica una spesa o crea un modello per riutilizzare le voci. Le ricorrenze richiedono configurazione e conferma esplicita; dopo un ripristino vengono sospese. Gli anticipi sono pagamenti distinti con regole proprie: controlla sempre l’anteprima.","Ricerca, statistiche e conti offre filtri, grafici, budget, simulazioni e chiusura del gruppo. Una simulazione non registra pagamenti. Importa/esporta supporta CSV e JSON e report PDF nei limiti del tuo pubblico. Prima dell’importazione controlla associazioni, quote e provenienza per evitare duplicati."]},
- {"id":"notifiche","title":"Notifiche e aggiornamento automatico","paragraphs":["Il centro notifiche mostra solo eventi autorizzati. Imposta frequenza, fuso orario, durata e soglie per account o gruppo. Email e Telegram sono facoltativi; l’email richiede indirizzo verificato e SMTP configurato. I messaggi esterni sono generici e rimandano ai dati protetti nel software.","L’app aggiorna dopo una modifica e gli altri client si riallineano circa ogni due secondi quando la pagina è visibile. I moduli già modificati non vengono sovrascritti. Se la rete manca, verifica lo stato prima di riprovare: un errore di collegamento non significa che la modifica non sia stata salvata."]},
- {"id":"telegram","title":"Telegram dal tuo account","paragraphs":["L’admin abilita Telegram nelle impostazioni globali e salva; non occorre usare il terminale. Apri il bot dalla Panoramica, invia /id, inserisci quell’ID nelle impostazioni account e genera un collegamento monouso valido cinque minuti. Solo il tuo ID può completarlo in chat privata.","Riservate e notifiche richiedono consensi separati, inizialmente spenti. Usa /gruppi, /saldi, /spesa, /spese, /cestino, /foto, /rimborsi e /notifiche. Il wizard propone un’anteprima da confermare. Puoi scollegarti dal web o con /scollega; i comandi avanzati rimandano al web.","Non inviare mai chiave globale, password o codici MFA al bot. Telegram è un servizio esterno che riceve i dati autorizzati. L’OCR delle foto non è ancora disponibile."]},
- {"id":"admin","title":"Amministratori e recupero dell’installazione","paragraphs":["L’admin globale gestisce registrazioni, ruoli globali, SMTP, chiave d’accesso, politiche, Telegram, link ospiti, audit e backup. L’admin del gruppo gestisce soltanto il proprio gruppo. Il primo account del bootstrap è il superadmin permanente: rinominare un altro utente non assegna questo ruolo.","I backup automatici e i link ospiti sono inizialmente spenti; le notifiche esterne e Telegram richiedono configurazione. Custodisci le chiavi di cifratura e recupero separatamente dal server. Un backup cifrato senza le chiavi originali non è recuperabile.","Il ripristino revoca sessioni, inviti e collegamenti sensibili e sospende automatismi: prima di riabilitarli controlla utenti, saldi e pianificazioni. Per aggiornamenti e recupero seguire le guide operative della versione installata."]},
- {"id":"stato","title":"Disponibile, da abilitare e in arrivo","paragraphs":["Disponibile: account e sicurezza, gruppi e ruoli, spese composte/riservate, valute, saldi Smart, rimborsi, allegati, storico, import/export, statistiche, notifiche e bot Telegram.","Da abilitare o configurare: Telegram, SMTP e verifica email, email di notifica, backup automatici e prove di recupero, link ospiti, ricorrenze e rivelazioni. Alcune opzioni spettano all’admin globale; altre all’autore o ai gestori del gruppo.","In arrivo: PWA/offline completa, OCR locale e ulteriori miglioramenti della roadmap. Restano prove reali di passkey su Mac/iPhone, SMTP e Telegram, server Linux, HTTPS/proxy e CI remota. La versione corrente è di sviluppo, non una dichiarazione di prima release stabile."]}
+  {
+    "id": "accesso",
+    "title": "Accesso, email e recupero",
+    "paragraphs": [
+      "Apri l’indirizzo indicato dall’amministratore. Se il cancello d’installazione è attivo, inserisci la chiave o usa la passkey dell’installazione; poi accedi al tuo account con password e, se richiesta, MFA, oppure con una passkey personale. Le due passkey hanno scopi distinti.",
+      "Registrazioni libere, con approvazione, su invito o chiuse dipendono dalla policy globale. Per verificare l’email richiedi il messaggio in Impostazioni account: SMTP deve essere configurato dall’amministratore. Un link di verifica o recupero scade e si usa una sola volta. Non condividere password, codici MFA, inviti o chiavi.",
+      "Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin globale può recuperare i fattori degli altri utenti, escluso il superadmin fondatore. Non esistono password universali."
+    ]
+  },
+  {
+    "id": "account",
+    "title": "Account, aspetto e metodi di pagamento",
+    "paragraphs": [
+      "In Impostazioni modifica nome, email e password, gestisci MFA, passkey e sessioni. Le operazioni sensibili richiedono Conferma identità recente: quando necessario si apre un popup per password account e codice MFA/recupero se attivo. Dopo la verifica torna al modulo e premi di nuovo il pulsante dell’operazione; non viene ripetuta automaticamente. Il tema chiaro o scuro è salvato sull’account e si applica anche agli altri dispositivi.",
+      "Aggiungi i tuoi metodi di pagamento con descrizione, dati utili e immagine nei limiti indicati. Sono recapiti per ricevere denaro: Sgancia non conserva carte per addebiti e non effettua pagamenti. Controlla destinatario e importo prima di usare servizi esterni."
+    ]
+  },
+  {
+    "id": "gruppi",
+    "title": "Gruppi, ruoli e inviti",
+    "paragraphs": [
+      "Crea un gruppo con nome e valuta principale. Impostazioni gruppo raccoglie descrizione, icona o immagine, membri, ruoli, stato, inviti e cestino. Proprietario e amministratori di gruppo gestiscono il gruppo; i membri modificano le spese visibili; il visualizzatore consulta soltanto. Essere admin globale non rende visibili tutte le spese riservate.",
+      "Puoi aggiungere partecipanti senza account. Per associare un account successivamente usa l’invito o l’associazione esplicita della persona esistente: non creare un duplicato e non associare soltanto in base al nome. L’anteprima mostra chi verrà collegato e i conti conservati.",
+      "I link per nuovi account, i codici per account già registrati e i link ospite sono percorsi distinti. I link ospite sono in sola lettura e solo pubblici; inizialmente sono disabilitati globalmente. Se abilitati possono avere password, scadenza e limite di aperture. Condividili privatamente."
+    ]
+  },
+  {
+    "id": "spese",
+    "title": "Inserire e modificare una spesa",
+    "paragraphs": [
+      "Premi Aggiungi spesa, compila titolo, data, categoria e note. Aggiungi una o più voci. Per ogni voce la casella accanto al nome indica chi divide il costo, la stella chi ha anticipato. Più pagatori possono indicare anticipi precisi o dividere automaticamente il resto. Puoi creare categorie del gruppo.",
+      "Sono disponibili parti uguali, percentuali, importi esatti, pesi e quantità. Nei campi importo puoi usare 12,50 + 8,90 oppure 100 * (1 - 20%). Controlla sempre l’anteprima: la somma dei pagatori e delle quote deve coincidere con il totale.",
+      "Esempio sintetico: Anna anticipa 60 EUR per Anna, Luca e Bea in parti uguali. Ogni quota è 20 EUR; ad Anna devono tornare 40 EUR. I resti al centesimo sono distribuiti in modo deterministico.",
+      "Usa la matita per modificare, il cestino per eliminare. Nel modulo puoi togliere una voce; eliminando l’ultima si elimina l’intera spesa. La cronologia conserva le revisioni. Se qualcuno ha cambiato la stessa spesa, ricarica la versione corrente prima di confermare."
+    ]
+  },
+  {
+    "id": "riservate",
+    "title": "Spese riservate e rivelazione",
+    "paragraphs": [
+      "Per un regalo o altra spesa riservata scegli il pubblico autorizzato. Autore, pagatori e partecipanti alle quote devono essere inclusi. Gli esclusi non vedono la spesa né indizi nei saldi, report o notifiche. I gestori del gruppo non possono superare questo pubblico.",
+      "Puoi programmare o eseguire una rivelazione secondo i permessi. In presenza di incassi riservati confermati usa l’anteprima di riconciliazione e il consenso esplicito: non si possono semplicemente spostare debiti già pagati tra pubblici diversi. Dopo un ripristino le rivelazioni programmate restano sospese per controllo.",
+      "Sgancia applica la privacy nel software: non offre cifratura end-to-end tra utenti e amministratore del server."
+    ]
+  },
+  {
+    "id": "valute",
+    "title": "Valute e conversione",
+    "paragraphs": [
+      "La valuta principale si gestisce nelle impostazioni del gruppo. Per una spesa in valuta diversa scegli la valuta originale e, se desiderato, il cambio automatico: la quotazione disponibile viene applicata all’inserimento e conservata con la spesa. Non è un cambio in tempo reale garantito né una transazione bancaria. Se il servizio non è disponibile puoi usare un tasso manuale.",
+      "Il cambio della valuta principale richiede anteprima e conferma perché converte i conti esistenti e conserva lo storico. In panoramica valute diverse restano separate: non si sommano EUR e USD senza una conversione esplicita."
+    ]
+  },
+  {
+    "id": "saldi",
+    "title": "Anticipi, debiti e algoritmo Smart",
+    "paragraphs": [
+      "Spese del gruppo comprende tutte le spese visibili al tuo account, incluse le riservate autorizzate. Hai anticipato è quanto hai pagato. Ti devono tornare e Devi restituire indicano importi ancora aperti: non coincidono necessariamente con il saldo netto.",
+      "Clicca Ti devono tornare per vedere chi deve pagarti e confermare quanto hai davvero ricevuto. Clicca Devi restituire per vedere i destinatari. La panoramica aggrega i gruppi riconoscendo l’account; gli omonimi senza account restano distinti. Una conferma aggregata viene ripartita nei gruppi dal software con controllo degli importi correnti.",
+      "Smart è attivo di default per gruppo e riduce i passaggi di pagamento nei limiti della visibilità. Puoi disattivarlo nelle impostazioni del gruppo. Non cambia le quote dovute e non trasferisce denaro. Ambiti riservati diversi restano protetti."
+    ]
+  },
+  {
+    "id": "rimborsi",
+    "title": "Saldato, rimborsi e contestazioni",
+    "paragraphs": [
+      "Saldato conferma denaro effettivamente ricevuto. Per un membro ordinario può premerlo soltanto il ricevente, non chi deve dare soldi. Il debitore può registrare una segnalazione in attesa: i conti cambiano quando il ricevente conferma. Per persone senza account valgono le deleghe e le regole dei gestori.",
+      "In Rimborsi consulta lo stato, conferma o contesta con motivazione. Ripristina rimborso annulla la conferma e riapre il debito conservando lo storico; non restituisce denaro sul conto bancario. Eliminare una spesa non cancella un trasferimento già registrato.",
+      "Una contestazione della spesa si consulta nello storico; le revisioni precedenti restano disponibili alle persone autorizzate."
+    ]
+  },
+  {
+    "id": "allegati",
+    "title": "Scontrini, immagini e cestino",
+    "paragraphs": [
+      "Allega foto o documenti alla spesa o al pagamento autorizzato. Formati e limiti sono indicati dal software e configurabili dall’admin. Le immagini vengono normalizzate e i file sono serviti con verifica dei permessi; non sono URL pubblici permanenti.",
+      "Puoi ripristinare spese e gruppi dal rispettivo cestino secondo il tuo ruolo. I gruppi archiviati sono nascosti per impostazione predefinita: usa l’icona archivio vicino a I tuoi gruppi per mostrarli. Il cestino non equivale alla cancellazione fisica dei backup."
+    ]
+  },
+  {
+    "id": "strumenti",
+    "title": "Modelli, ricorrenze, ricerca e report",
+    "paragraphs": [
+      "Duplica una spesa o crea un modello per riutilizzare le voci. Le ricorrenze richiedono configurazione e conferma esplicita; dopo un ripristino vengono sospese. Gli anticipi sono pagamenti distinti con regole proprie: controlla sempre l’anteprima.",
+      "Ricerca, statistiche e conti offre filtri, grafici, budget, simulazioni e chiusura del gruppo. Una simulazione non registra pagamenti. Importa/esporta supporta CSV e JSON e report PDF nei limiti del tuo pubblico. Prima dell’importazione controlla associazioni, quote e provenienza per evitare duplicati."
+    ]
+  },
+  {
+    "id": "notifiche",
+    "title": "Notifiche e aggiornamento automatico",
+    "paragraphs": [
+      "Il centro notifiche mostra solo eventi autorizzati. Imposta frequenza, fuso orario, durata e soglie per account o gruppo. Email e Telegram sono facoltativi; l’email richiede indirizzo verificato e SMTP configurato. I messaggi esterni sono generici e rimandano ai dati protetti nel software.",
+      "L’app aggiorna dopo una modifica e gli altri client si riallineano circa ogni due secondi quando la pagina è visibile. I moduli già modificati non vengono sovrascritti. Se la rete manca, verifica lo stato prima di riprovare: un errore di collegamento non significa che la modifica non sia stata salvata."
+    ]
+  },
+  {
+    "id": "telegram",
+    "title": "Telegram dal tuo account",
+    "paragraphs": [
+      "L’admin abilita Telegram nelle impostazioni globali e salva; non occorre usare il terminale. Apri il bot dalla Panoramica, invia /id, inserisci quell’ID nelle impostazioni account e genera un collegamento monouso valido cinque minuti. Solo il tuo ID può completarlo in chat privata.",
+      "Riservate e notifiche richiedono consensi separati, inizialmente spenti. Usa /gruppi, /saldi, /spesa, /spese, /cestino, /foto, /rimborsi e /notifiche. Il wizard propone un’anteprima da confermare. Puoi scollegarti dal web o con /scollega; i comandi avanzati rimandano al web.",
+      "Non inviare mai chiave globale, password o codici MFA al bot. Telegram è un servizio esterno che riceve i dati autorizzati. L’OCR delle foto non è ancora disponibile."
+    ]
+  },
+  {
+    "id": "admin",
+    "title": "Amministratori e recupero dell’installazione",
+    "paragraphs": [
+      "L’admin globale gestisce registrazioni, ruoli globali, SMTP, chiave d’accesso, politiche, Telegram, link ospiti, audit e backup. L’admin del gruppo gestisce soltanto il proprio gruppo. Il primo account del bootstrap è il superadmin permanente: rinominare un altro utente non assegna questo ruolo.",
+      "I backup automatici e i link ospiti sono inizialmente spenti; le notifiche esterne e Telegram richiedono configurazione. Custodisci le chiavi di cifratura e recupero separatamente dal server. Un backup cifrato senza le chiavi originali non è recuperabile.",
+      "Il ripristino revoca sessioni, inviti e collegamenti sensibili e sospende automatismi: prima di riabilitarli controlla utenti, saldi e pianificazioni. Per aggiornamenti e recupero seguire le guide operative della versione installata."
+    ]
+  },
+  {
+    "id": "stato",
+    "title": "Disponibile, da abilitare e in arrivo",
+    "paragraphs": [
+      "Disponibile: account e sicurezza, gruppi e ruoli, spese composte/riservate, valute, saldi Smart, rimborsi, allegati, storico, import/export, statistiche, notifiche e bot Telegram.",
+      "Da abilitare o configurare: Telegram, SMTP e verifica email, email di notifica, backup automatici e prove di recupero, link ospiti, ricorrenze e rivelazioni. Alcune opzioni spettano all’admin globale; altre all’autore o ai gestori del gruppo.",
+      "In arrivo: PWA/offline completa, OCR locale e ulteriori miglioramenti della roadmap. Restano prove reali di passkey su Mac/iPhone, SMTP e Telegram, server Linux, HTTPS/proxy e CI remota. La versione corrente è di sviluppo, non una dichiarazione di prima release stabile."
+    ]
+  }
 ]

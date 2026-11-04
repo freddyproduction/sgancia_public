@@ -72,3 +72,7 @@ Nessuna passkey reale è stata creata/rimossa dall’agente e nessuna password/M
 L’azione revoca tutte le sessioni, challenge e link temporanei del destinatario; password, email, stato e ruoli non cambiano. Un account sospeso resta sospeso. Al successivo accesso servono password e gli eventuali fattori conservati. Operazione tracciata nell’audit per ogni tipo di fattore selezionato e limitata a cinque richieste ogni cinque minuti per admin. Non crea sessioni di accesso per l’operatore e non restituisce password, segreti o codici del destinatario.
 
 Il superadmin non può usare né subire questa scorciatoia amministrativa: gestisce i propri fattori dai percorsi personali. In caso di perdita totale resta la procedura locale del server dopo verifica manuale dell’identità, distinta dai privilegi web.
+
+## Popup di conferma identità
+
+Quando un’operazione richiede una verifica recente compare automaticamente un popup sopra la pagina corrente. Inserire la password del proprio account, non la chiave globale, e il codice MFA/recupero se attivo. Gli errori restano nel popup. Dopo il successo premere Torna all’operazione e ripetere esplicitamente il comando dal modulo: nessuna azione sensibile viene ripetuta automaticamente. Annulla chiude il popup senza verificare l’identità e senza eseguire l’operazione.

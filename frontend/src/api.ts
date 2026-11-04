@@ -1,9 +1,10 @@
+import {requestIdentity} from './identityEvents'
 import { notifyChange } from './live'
 export class ApiError extends Error { status:number; constructor(status:number,message:string){super(message);this.status=status} }
 export async function api<T=unknown>(path:string, options:RequestInit={}):Promise<T>{
   const csrf=document.cookie.split('; ').find(v=>v.startsWith('sg_csrf='))?.split('=')[1]??''
   const res=await fetch('/api/v1'+path,{...options,credentials:'same-origin',headers:{'Content-Type':'application/json','X-CSRF-Token':decodeURIComponent(csrf),...options.headers}})
-  if(!res.ok){const body=await res.json().catch(()=>({}));throw new ApiError(res.status,typeof body.detail==='string'?body.detail:'Controlla i dati inseriti e riprova.')}
+  if(!res.ok){const body=await res.json().catch(()=>({}));const message=typeof body.detail==='string'?body.detail:'Controlla i dati inseriti e riprova.';requestIdentity(res.status,message);throw new ApiError(res.status,message)}
   const result=res.status===204?undefined as T:await res.json()
   const method=(options.method??'GET').toUpperCase()
   if(!['GET','HEAD','OPTIONS'].includes(method)&&(!path.startsWith('/auth/')||path==='/auth/preferences')&&path!=='/calculator'&&path!=='/currency-conversion'&&!path.endsWith('/preview')&&path!=='/guest/view')notifyChange()
@@ -27,7 +28,7 @@ export type Finance={summary:{expenses_total:number;paid:number;owed:number;sent
 
 export async function apiBlob(path:string,options:RequestInit={}):Promise<Blob>{
  const res=await fetch('/api/v1'+path,{...options,credentials:'same-origin',headers:{'Content-Type':'application/json',...options.headers}})
- if(!res.ok){const body=await res.json().catch(()=>({}));throw new ApiError(res.status,typeof body.detail==='string'?body.detail:'File non disponibile.')}
+ if(!res.ok){const body=await res.json().catch(()=>({}));const message=typeof body.detail==='string'?body.detail:'File non disponibile.';requestIdentity(res.status,message);throw new ApiError(res.status,message)}
  return res.blob()
 }
 export function saveBlob(blob:Blob,filename:string){const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000)}

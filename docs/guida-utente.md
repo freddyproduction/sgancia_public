@@ -12,7 +12,7 @@ Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin g
 
 ## Account, aspetto e metodi di pagamento
 
-In Impostazioni modifica nome, email e password, gestisci MFA, passkey e sessioni. Le operazioni sensibili richiedono Conferma identità recente. Il tema chiaro o scuro è salvato sull’account e si applica anche agli altri dispositivi.
+In Impostazioni modifica nome, email e password, gestisci MFA, passkey e sessioni. Le operazioni sensibili richiedono Conferma identità recente: quando necessario si apre un popup per password account e codice MFA/recupero se attivo. Dopo la verifica torna al modulo e premi di nuovo il pulsante dell’operazione; non viene ripetuta automaticamente. Il tema chiaro o scuro è salvato sull’account e si applica anche agli altri dispositivi.
 
 Aggiungi i tuoi metodi di pagamento con descrizione, dati utili e immagine nei limiti indicati. Sono recapiti per ricevere denaro: Sgancia non conserva carte per addebiti e non effettua pagamenti. Controlla destinatario e importo prima di usare servizi esterni.
 
