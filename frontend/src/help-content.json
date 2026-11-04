@@ -34,7 +34,8 @@
       "Premi Aggiungi spesa, compila titolo, data, categoria e note. Aggiungi una o più voci. Per ogni voce la casella accanto al nome indica chi divide il costo, la stella chi ha anticipato. Più pagatori possono indicare anticipi precisi o dividere automaticamente il resto. Puoi creare categorie del gruppo.",
       "Sono disponibili parti uguali, percentuali, importi esatti, pesi e quantità. Nei campi importo puoi usare 12,50 + 8,90 oppure 100 * (1 - 20%). Controlla sempre l’anteprima: la somma dei pagatori e delle quote deve coincidere con il totale.",
       "Esempio sintetico: Anna anticipa 60 EUR per Anna, Luca e Bea in parti uguali. Ogni quota è 20 EUR; ad Anna devono tornare 40 EUR. I resti al centesimo sono distribuiti in modo deterministico.",
-      "Usa la matita per modificare, il cestino per eliminare. Nel modulo puoi togliere una voce; eliminando l’ultima si elimina l’intera spesa. La cronologia conserva le revisioni. Se qualcuno ha cambiato la stessa spesa, ricarica la versione corrente prima di confermare."
+      "Usa la matita per modificare, il cestino per eliminare. Nel modulo puoi togliere una voce; eliminando l’ultima si elimina l’intera spesa. La cronologia conserva le revisioni. Se qualcuno ha cambiato la stessa spesa, ricarica la versione corrente prima di confermare.",
+      "Su mobile le azioni di ogni spesa sono raggruppate con nomi visibili: Cronologia, Allegati, Modello, Duplica, Modifica ed Elimina; Visibilità compare per le spese riservate modificabili. Su computer passa il mouse sulle icone per leggere le descrizioni. Il pulsante ? accanto a Le spese apre la spiegazione di tutte le azioni, anche da telefono o tastiera, senza eseguirle."
     ]
   },
   {

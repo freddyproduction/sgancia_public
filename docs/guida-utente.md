@@ -38,6 +38,8 @@ Esempio sintetico: Anna anticipa 60 EUR per Anna, Luca e Bea in parti uguali. Og
 
 Usa la matita per modificare, il cestino per eliminare. Nel modulo puoi togliere una voce; eliminando l’ultima si elimina l’intera spesa. La cronologia conserva le revisioni. Se qualcuno ha cambiato la stessa spesa, ricarica la versione corrente prima di confermare.
 
+Su mobile le azioni di ogni spesa sono raggruppate con nomi visibili: Cronologia, Allegati, Modello, Duplica, Modifica ed Elimina; Visibilità compare per le spese riservate modificabili. Su computer passa il mouse sulle icone per leggere le descrizioni. Il pulsante ? accanto a Le spese apre la spiegazione di tutte le azioni, anche da telefono o tastiera, senza eseguirle.
+
 ## Spese riservate e rivelazione
 
 Per un regalo o altra spesa riservata scegli il pubblico autorizzato. Autore, pagatori e partecipanti alle quote devono essere inclusi. Gli esclusi non vedono la spesa né indizi nei saldi, report o notifiche. I gestori del gruppo non possono superare questo pubblico.

@@ -21,3 +21,9 @@ Con Chrome installato, eseguire `npm ci` e poi `SGANCIA_A11Y_URL=http://localhos
 Questi controlli non certificano la conformità completa e non sostituiscono l’uso reale con tecnologie assistive. Restano da provare VoiceOver su Mac, Safari e iPhone reale: accesso, navigazione per titoli/campi, errore di compilazione, creazione/modifica spesa, conferma rimborso, popup annidati, ingrandimento e orientamenti. Controllare anche l’annuncio degli aggiornamenti senza eccessive interruzioni. La relativa voce TODO resta aperta; nessuna prova su iPhone viene dichiarata eseguita.
 
 Riferimenti di revisione: [dialoghi WAI APG](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), [reflow W3C](https://www.w3.org/WAI/WCAG21/Understanding/reflow), [WCAG 2.1](https://www.w3.org/TR/WCAG21/).
+
+## Gruppi e azioni delle spese su mobile
+
+Le azioni sono raccolte in una barra con icona e nome visibile sugli schermi piccoli. Sul desktop le icone hanno descrizioni al passaggio del mouse; i nomi accessibili includono la spesa interessata. Il pulsante Aiuto sulle azioni delle spese apre una guida anche con tocco o tastiera; Escape la chiude e ripristina il focus. Pulsanti principali e sezioni delle impostazioni hanno disposizione regolare su mobile, senza frammentare le parole. Le schede gruppo restano quadrate e compatte.
+
+Verifica dedicata a 320/390/540/768 px: assenza di overflow orizzontale, etichette visibili, azioni larghe almeno100px e alte almeno44px, axe e guida da tastiera; regressione browser completa inclusa.
