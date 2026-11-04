@@ -43,3 +43,5 @@ Aggiornamento guidato e recupero sono descritti in `aggiornamenti.md` e `backup-
 ## Prove e limiti
 
 111 test mirati PostgreSQL, controllo schema upgrade/check/downgrade, altri 9 test operativi finali e 15 frontend. Backup cifrato con immagine sintetica e ripristino isolato realmente eseguiti. UI: politiche, backup verificato e associazione con anteprima. Script update e restore completi su Compose QA: identità e ledger conservati. SMTP esterno e installazione server Linux/Nginx/Cloudflare reali restano verifiche dei blocchi 04/15; nessun dato o account reale usato per QA.
+
+Chiave ricordata e login hanno ora [durate indipendenti configurabili](durate-accesso.md). Il logout personale conserva la chiave verificata; il modulo di accesso permette di dimenticarla esplicitamente. Modalità browser oppure minuti/ore/giorni/mesi/anni per i nuovi accessi; verifica recente delle operazioni sensibili invariata.

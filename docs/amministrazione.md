@@ -43,3 +43,5 @@ Telegram parte insieme a Sgancia e resta in attesa: configurare token e abilitaz
 La guida nell’app è accessibile anche prima dell’accesso su /help e non include dati utente. Email dello sviluppatore, repository e donazioni si configurano in backend/app/project_info.py: [dettagli](contatti.md).
 
 Inviti di sola registrazione e coda di approvazione: [gestione globale](inviti-globali.md), con stato, durata, rinnovo, rigenerazione, revoca e conferme. Gli inviti account + gruppo restano distinti.
+
+Chiave ricordata e login hanno ora [durate indipendenti configurabili](durate-accesso.md). Il logout personale conserva la chiave verificata; il modulo di accesso permette di dimenticarla esplicitamente. Modalità browser oppure minuti/ore/giorni/mesi/anni per i nuovi accessi; verifica recente delle operazioni sensibili invariata.

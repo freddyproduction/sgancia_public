@@ -87,7 +87,9 @@ def unlock_verify(body:VerifyIn,request:Request,response:Response,db=Depends(get
         handle=body.credential.get('response',{}).get('userHandle')
         if handle and base64url_to_bytes(handle)!=('installation:'+user.id).encode():raise ValueError()
     except Exception:raise HTTPException(400,'Verifica passkey fallita') from None
-    key.sign_count=result.new_sign_count;clear=token();db.add(GateGrant(token_hash=digest(clear),expires=int(time.time())+86400,version=instance.gate_version,credential_id=key.credential_id));audit(db,user.id,'installation_passkey.unlocked');db.commit();set_cookie(response,'sg_gate',clear,86400,request)
+    from .runtime_policy import access_lifetime
+    duration,cookie_age=access_lifetime(db,'gate')
+    key.sign_count=result.new_sign_count;clear=token();db.add(GateGrant(token_hash=digest(clear),expires=int(time.time())+duration,version=instance.gate_version,credential_id=key.credential_id));audit(db,user.id,'installation_passkey.unlocked');db.commit();set_cookie(response,'sg_gate',clear,cookie_age,request)
     return {'registration':instance.registration}
 
 

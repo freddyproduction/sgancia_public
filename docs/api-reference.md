@@ -45,6 +45,7 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | POST | `/api/v1/auth/email/verify` | Confirm Email |
 | GET | `/api/v1/auth/entry-policy` | Entry Policy |
 | POST | `/api/v1/auth/gate` | Unlock |
+| POST | `/api/v1/auth/gate/forget` | Forget Gate |
 | GET | `/api/v1/auth/installation-passkeys` | Keys |
 | POST | `/api/v1/auth/installation-passkeys/register/options` | Registration Options |
 | POST | `/api/v1/auth/installation-passkeys/register/verify` | Registration Verify |

@@ -21,3 +21,5 @@ Salvataggio e compilazione rimangono sotto il controllo del browser/gestore pass
 Verificati backend con firme reali sintetiche e percorso browser completo con autenticatore virtuale residente. Biometria reale e proposta/autofill nel gestore password di Mac/iPhone ancora da confermare, insieme alle prove hardware del blocco 04.
 
 Riferimenti: [passkey discoverable](https://developer.mozilla.org/en-US/docs/Web/Security/Authentication/Passkeys), [salvataggio credenziali nel browser](https://developer.mozilla.org/en-US/docs/Web/API/CredentialsContainer/store), [autocomplete dei moduli](https://developer.chrome.com/docs/modern-web-guidance/guides/forms/autofill-sign-in-form).
+
+Chiave ricordata e login hanno ora [durate indipendenti configurabili](durate-accesso.md). Il logout personale conserva la chiave verificata; il modulo di accesso permette di dimenticarla esplicitamente. Modalità browser oppure minuti/ore/giorni/mesi/anni per i nuovi accessi; verifica recente delle operazioni sensibili invariata.

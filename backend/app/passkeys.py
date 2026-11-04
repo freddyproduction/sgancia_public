@@ -135,12 +135,13 @@ def login_verify(body:VerifyIn,request:Request,response:Response,db=Depends(get_
     if old: db.delete(old)
     from .runtime_policy import policy,check_verified
     check_verified(db,user)
-    duration=policy(db)['session_hours']*3600
+    from .runtime_policy import access_lifetime
+    duration,cookie_age=access_lifetime(db,'session')
     db.add(Session(token_hash=digest(clear),csrf_hash=digest(csrf),user_id=user.id,expires=int(time.time())+duration,gate_version=instance.gate_version,auth_version=user.auth_version))
     audit(db,user.id,'session.passkey_created')
     db.commit()
-    set_cookie(response,'sg_session',clear,duration,request)
-    set_cookie(response,'sg_csrf',csrf,duration,request)
+    set_cookie(response,'sg_session',clear,cookie_age,request)
+    set_cookie(response,'sg_csrf',csrf,cookie_age,request)
     return user_out(user,db)
 
 

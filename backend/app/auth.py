@@ -38,10 +38,12 @@ def unlock(body: GateIn, request: Request, response: Response, db=Depends(get_db
     instance = db.get(Instance, 1)
     if not verify(instance.gate_hash if instance else DUMMY, body.key) or not instance:
         raise HTTPException(403, 'Chiave non valida')
+    from .runtime_policy import access_lifetime
+    duration,cookie_age=access_lifetime(db,'gate')
     clear = token()
-    db.add(GateGrant(token_hash=digest(clear), expires=int(time.time()) + 86400, version=instance.gate_version))
+    db.add(GateGrant(token_hash=digest(clear), expires=int(time.time()) + duration, version=instance.gate_version))
     db.commit()
-    set_cookie(response, 'sg_gate', clear, 86400, request)
+    set_cookie(response, 'sg_gate', clear, cookie_age, request)
     return {'registration': instance.registration}
 
 
@@ -116,12 +118,13 @@ def login(body: Credentials, request: Request, response: Response, db=Depends(ge
     clear, csrf = token(), token()
     from .runtime_policy import policy,check_verified
     check_verified(db,user)
-    duration = policy(db)['session_hours'] * 3600
+    from .runtime_policy import access_lifetime
+    duration,cookie_age=access_lifetime(db,'session')
     db.add(Session(token_hash=digest(clear), csrf_hash=digest(csrf), user_id=user.id, expires=int(time.time()) + duration, gate_version=instance.gate_version,auth_version=user.auth_version))
     audit(db, user.id, 'session.created')
     db.commit()
-    set_cookie(response, 'sg_session', clear, duration, request)
-    set_cookie(response, 'sg_csrf', csrf, duration, request)
+    set_cookie(response, 'sg_session', clear, cookie_age, request)
+    set_cookie(response, 'sg_csrf', csrf, cookie_age, request)
     return user_out(user,db)
 
 
@@ -143,8 +146,21 @@ def logout(request: Request, response: Response, user=Depends(current), db=Depen
     db.delete(request.state.session)
     audit(db, user.id, 'session.revoked')
     db.commit()
-    for name in ('sg_session', 'sg_csrf', 'sg_gate'):
+    for name in ('sg_session', 'sg_csrf'):
         response.delete_cookie(name, path='/', secure=cookie_secure(request), httponly=name != 'sg_csrf', samesite='strict')
+
+
+@router.post('/gate/forget',status_code=204)
+def forget_gate(request:Request,response:Response,db=Depends(get_db)):
+    session=db.get(Session,digest(request.cookies.get('sg_session','')))
+    if session and session.expires>time.time() and not secrets.compare_digest(session.csrf_hash,digest(request.headers.get('X-CSRF-Token',''))):raise HTTPException(403,'Verifica CSRF fallita')
+    grant=db.get(GateGrant,digest(request.cookies.get('sg_gate','')))
+    if grant:db.delete(grant)
+    if session:
+        db.delete(session);audit(db,session.user_id,'session.revoked')
+    db.commit()
+    for name in ('sg_gate','sg_session','sg_csrf'):
+        response.delete_cookie(name,path='/',secure=cookie_secure(request),httponly=name!='sg_csrf',samesite='strict')
 
 
 @router.get('/sessions')

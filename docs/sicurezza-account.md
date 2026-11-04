@@ -76,3 +76,5 @@ Il superadmin non può usare né subire questa scorciatoia amministrativa: gesti
 ## Popup di conferma identità
 
 Quando un’operazione richiede una verifica recente compare automaticamente un popup sopra la pagina corrente. Inserire la password del proprio account, non la chiave globale, e il codice MFA/recupero se attivo. Gli errori restano nel popup. Dopo il successo premere Torna all’operazione e ripetere esplicitamente il comando dal modulo: nessuna azione sensibile viene ripetuta automaticamente. Annulla chiude il popup senza verificare l’identità e senza eseguire l’operazione.
+
+Chiave ricordata e login hanno ora [durate indipendenti configurabili](durate-accesso.md). Il logout personale conserva la chiave verificata; il modulo di accesso permette di dimenticarla esplicitamente. Modalità browser oppure minuti/ore/giorni/mesi/anni per i nuovi accessi; verifica recente delle operazioni sensibili invariata.

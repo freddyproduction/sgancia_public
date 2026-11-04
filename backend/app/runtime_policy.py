@@ -1,10 +1,23 @@
 """Installation policy overrides; environment values remain the initial defaults."""
-from pydantic import Field
+from pydantic import Field,model_validator
+from typing import Literal
 from .schemas import Strict
 from .config import settings
 from .models import Instance
+class Duration(Strict):
+    unit:Literal['browser','minutes','hours','days','months','years']='days'
+    value:int=Field(default=1,ge=1,le=52560000)
+    @model_validator(mode='after')
+    def bounded(self):
+        if self.unit!='browser' and self.value*UNITS[self.unit]>100*365*86400:raise ValueError('Durata massima 100 anni')
+        return self
+
+UNITS={'minutes':60,'hours':3600,'days':86400,'months':30*86400,'years':365*86400}
+
 class Policy(Strict):
-    session_hours:int=Field(default=24,ge=1,le=168)
+    session_hours:int=Field(default=24,ge=1,le=876000)
+    session_duration:Duration|None=None
+    gate_duration:Duration=Field(default_factory=Duration)
     require_verified_email:bool=False
     uploads_enabled:bool=True
     attachment_max_bytes:int=Field(default=10485760,ge=1024,le=20971520)
@@ -31,3 +44,12 @@ def check_verified(db,user):
         # A successful proof of password/passkey is required before reaching this helper.
         if configured(db):issue_token(db,user,'verify');db.commit()
         raise HTTPException(403,'Verifica prima la tua email: controlla il messaggio ricevuto e riprova l’accesso')
+
+
+def access_lifetime(db,kind):
+    cfg=policy(db)
+    duration=cfg['gate_duration'] if kind=='gate' else cfg['session_duration']
+    if duration is None:return cfg['session_hours']*3600,cfg['session_hours']*3600
+    if duration['unit']=='browser':return 30*86400,None
+    seconds=duration['value']*UNITS[duration['unit']]
+    return seconds,seconds

@@ -2,6 +2,8 @@
 
 ## 0.2.0-dev — 4 novembre 2026
 
+- Chiave installazione ricordata anche dopo logout, con durata separata dalla sessione utente e unità personalizzabili dal pannello globale.
+
 - Gestione inviti globali con stati, durata, rinnovo, rigenerazione e revoca; coda di approvazione/rifiuto account con controllo conflitti.
 
 - Telegram bidirezionale con collegamento verificato, consensi, wizard, foto, saldi e rimborsi; attivazione interamente dal pannello globale.

@@ -10,6 +10,8 @@ Registrazioni libere, con approvazione, su invito o chiuse dipendono dalla polic
 
 Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin globale può recuperare i fattori degli altri utenti, escluso il superadmin fondatore. Non esistono password universali.
 
+La chiave dell’installazione e il login hanno durate separate, configurabili dall’admin globale. Esci revoca l’account ma conserva la chiave già verificata; al ritorno trovi direttamente il login finché il cancello è valido. Per cancellarlo usa Dimentica la chiave dell’installazione nel modulo di accesso. La modalità Immediato usa cookie fino alla chiusura del browser, con limite server di 30 giorni; il ripristino delle sessioni del browser può conservarli. Le durate si applicano ai nuovi accessi e sono distinte dalla conferma identità delle operazioni sensibili.
+
 ## Account, aspetto e metodi di pagamento
 
 In Impostazioni modifica nome, email e password, gestisci MFA, passkey e sessioni. Le operazioni sensibili richiedono Conferma identità recente: quando necessario si apre un popup per password account e codice MFA/recupero se attivo. Dopo la verifica torna al modulo e premi di nuovo il pulsante dell’operazione; non viene ripetuta automaticamente. Il tema chiaro o scuro è salvato sull’account e si applica anche agli altri dispositivi.

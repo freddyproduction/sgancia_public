@@ -1,0 +1,6 @@
+export type AccessDuration={unit:'browser'|'minutes'|'hours'|'days'|'months'|'years';value:number}
+const units={browser:'Immediato · fino alla chiusura del browser',minutes:'Minuti',hours:'Ore',days:'Giorni',months:'Mesi (30 giorni)',years:'Anni (365 giorni)'}
+const limits={browser:1,minutes:52560000,hours:876000,days:36500,months:1216,years:100}
+export function AccessDurationField({title,value,onChange,disabled}:{title:string;value:AccessDuration;onChange:(value:AccessDuration)=>void;disabled:boolean}){
+ return <fieldset className="access-duration"><legend>{title}</legend><label>Unità di durata<select aria-label={title+' · unità'} disabled={disabled} value={value.unit} onChange={e=>{const unit=e.target.value as AccessDuration['unit'];onChange({unit,value:Math.min(value.value,limits[unit])})}}>{Object.entries(units).map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>{value.unit!=='browser'?<label>Quantità<input aria-label={title+' · quantità'} disabled={disabled} type="number" min={1} max={limits[value.unit]} required value={value.value} onChange={e=>onChange({...value,value:Number(e.target.value)})}/></label>:<p className="small muted">Cookie di sessione del browser, senza scadenza persistente. Limite massimo lato server: 30 giorni.</p>}</fieldset>
+}

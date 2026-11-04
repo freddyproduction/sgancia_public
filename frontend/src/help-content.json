@@ -5,7 +5,8 @@
     "paragraphs": [
       "Apri l’indirizzo indicato dall’amministratore. Se il cancello d’installazione è attivo, inserisci la chiave o usa la passkey dell’installazione; poi accedi al tuo account con password e, se richiesta, MFA, oppure con una passkey personale. Le due passkey hanno scopi distinti.",
       "Registrazioni libere, con approvazione, su invito o chiuse dipendono dalla policy globale. Per verificare l’email richiedi il messaggio in Impostazioni account: SMTP deve essere configurato dall’amministratore. Un link di verifica o recupero scade e si usa una sola volta. Non condividere password, codici MFA, inviti o chiavi.",
-      "Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin globale può recuperare i fattori degli altri utenti, escluso il superadmin fondatore. Non esistono password universali."
+      "Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin globale può recuperare i fattori degli altri utenti, escluso il superadmin fondatore. Non esistono password universali.",
+      "La chiave dell’installazione e il login hanno durate separate, configurabili dall’admin globale. Esci revoca l’account ma conserva la chiave già verificata; al ritorno trovi direttamente il login finché il cancello è valido. Per cancellarlo usa Dimentica la chiave dell’installazione nel modulo di accesso. La modalità Immediato usa cookie fino alla chiusura del browser, con limite server di 30 giorni; il ripristino delle sessioni del browser può conservarli. Le durate si applicano ai nuovi accessi e sono distinte dalla conferma identità delle operazioni sensibili."
     ]
   },
   {
