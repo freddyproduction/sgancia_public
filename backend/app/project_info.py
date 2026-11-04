@@ -4,11 +4,11 @@ from urllib.parse import urlsplit
 VERSION = '0.2.0-dev'
 DEVELOPER = 'PjChaosEOW'
 # INSERISCI QUI la tua email pubblica (nessuna email viene inviata automaticamente).
-DEVELOPER_EMAIL = ''
+DEVELOPER_EMAIL = 'freddy.productionsound@gmail.com'
 # INSERISCI QUI il link HTTPS reale alla pagina Buy Me a Coffee.
 DONATION_URL = ''
 # INSERISCI QUI il link HTTPS reale al repository GitHub pubblico.
-REPOSITORY_URL = ''
+REPOSITORY_URL = 'https://github.com/freddyproduction/sgancia_public'
 # Testo approvato dal titolare il 4 novembre 2026.
 DONATION_DISCLAIMER_APPROVED = True
 DONATION_DISCLAIMER = ('La donazione è interamente volontaria: non acquista funzionalità né comporta obblighi, '

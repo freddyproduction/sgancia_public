@@ -23,7 +23,7 @@ try{
  const begin=Date.now();const reads=await Promise.all(Array.from({length:30},()=>page.request.get(base+'/api/v1/groups/qa-group/finance')));assert(reads.every(r=>r.status()===200));console.log('30 finance reads ms:',Date.now()-begin);
  await context.setOffline(true);await context.setOffline(false);await page.reload();await page.getByRole('heading',{name:/Ciao,/}).waitFor();
  await page.getByRole('button',{name:'Impostazioni',exact:true}).first().click();await page.getByRole('heading',{name:'Amministrazione e operatività'}).waitFor();await page.getByText('Bot Telegram · configurazione e servizio',{exact:true}).click();assert.equal(await page.getByText('docker compose --profile telegram up -d telegram',{exact:true}).count(),0);await page.getByRole('button',{name:'Salva e applica Telegram',exact:true}).waitFor();
- const p=await(await page.request.get(base+'/api/v1/project')).json();assert.equal(p.developer,'PjChaosEOW');assert.equal(p.version,'0.2.0-dev');assert.equal(p.email,null);assert.equal(p.donation_url,null);console.log('PASS: help light/dark/mobile, login, expense/preview, exact finance, 30 reads, network recovery, global Telegram controls');
+ const p=await(await page.request.get(base+'/api/v1/project')).json();assert.equal(p.developer,'PjChaosEOW');assert.equal(p.version,'0.2.0-dev');assert(p.email===null||/^[^\s@]+@[^\s@]+$/.test(p.email));assert(p.repository_url===null||p.repository_url.startsWith('https://github.com/'));assert(p.donation_url===null||p.donation_url.startsWith('https://buymeacoffee.com/'));console.log('PASS: help light/dark/mobile, login, expense/preview, exact finance, 30 reads, network recovery, global Telegram controls');
  }
  assert.deepEqual(errors,[]);
 }finally{await browser.close()}
