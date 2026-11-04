@@ -320,6 +320,12 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | email | VARCHAR(254) | no |  |
 | expires | BIGINT | no |  |
 | used | BOOLEAN | no |  |
+| id | VARCHAR(36) | no |  |
+| created | BIGINT | no |  |
+| revoked | BOOLEAN | no |  |
+| version | INTEGER | no |  |
+| issuer_id | VARCHAR(36) | sì | users.id |
+| used_by | VARCHAR(36) | sì | users.id |
 
 ## ledger_entries
 

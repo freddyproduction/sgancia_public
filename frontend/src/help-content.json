@@ -109,7 +109,8 @@
     "paragraphs": [
       "L’admin globale gestisce registrazioni, ruoli globali, SMTP, chiave d’accesso, politiche, Telegram, link ospiti, audit e backup. L’admin del gruppo gestisce soltanto il proprio gruppo. Il primo account del bootstrap è il superadmin permanente: rinominare un altro utente non assegna questo ruolo.",
       "I backup automatici e i link ospiti sono inizialmente spenti; le notifiche esterne e Telegram richiedono configurazione. Custodisci le chiavi di cifratura e recupero separatamente dal server. Un backup cifrato senza le chiavi originali non è recuperabile.",
-      "Il ripristino revoca sessioni, inviti e collegamenti sensibili e sospende automatismi: prima di riabilitarli controlla utenti, saldi e pianificazioni. Per aggiornamenti e recupero seguire le guide operative della versione installata."
+      "Il ripristino revoca sessioni, inviti e collegamenti sensibili e sospende automatismi: prima di riabilitarli controlla utenti, saldi e pianificazioni. Per aggiornamenti e recupero seguire le guide operative della versione installata.",
+      "In Registrazioni e inviti globali scegli la modalità corrente e gestisci le richieste in attesa: Approva attiva l’account, Rifiuta lo sospende senza cancellarlo. Gli inviti globali hanno durata da 1 a 90 giorni, stato e filtri. Rinnova conserva il codice; Rigenera ne crea uno nuovo e revoca il precedente; Rimuovi / revoca lo invalida conservando lo storico. Il link si copia solo alla creazione o rigenerazione e non viene inviato automaticamente. Gli inviti account + gruppo restano nel gruppo."
     ]
   },
   {

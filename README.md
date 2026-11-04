@@ -57,7 +57,7 @@ Sono supportati dominio HTTPS, localhost, 127.0.0.1 e IP LAN HTTP dichiarato esp
 ## Guide
 
 - **[Guida utente](docs/guida-utente.md)**, disponibile anche nell’app da Guida e informazioni e prima del login su `/help`.
-- [Telegram](docs/telegram.md), [account e sicurezza](docs/sicurezza-account.md), [metodi di pagamento](docs/metodi-pagamento.md), [accesso ai gruppi](docs/accesso-gruppi.md).
+- [Telegram](docs/telegram.md), [account e sicurezza](docs/sicurezza-account.md), [metodi di pagamento](docs/metodi-pagamento.md), [accesso ai gruppi](docs/accesso-gruppi.md), [inviti globali e approvazioni](docs/inviti-globali.md).
 - [Allegati](docs/allegati.md), [import/export](docs/importazione-esportazione.md), [notifiche](docs/notifiche.md), [modelli e ricorrenze](docs/modelli-ricorrenze-anticipi.md).
 - [Backup/ripristino](docs/backup-ripristino.md), [aggiornamenti](docs/aggiornamenti.md), [troubleshooting](docs/troubleshooting.md), [operatività](docs/operativita.md).
 - [API](docs/api.md), [database](docs/schema-database.md), [architettura e permessi](docs/architettura-sicurezza.md), [sviluppo](docs/sviluppo.md), [Git e pubblicazione](docs/git.md).

@@ -11,7 +11,7 @@ from .smtp_admin import require_admin_session
 from .db import get_db,SessionLocal
 from .runtime_policy import Policy,policy
 router=APIRouter(prefix='/api/v1/admin/operations',tags=['Amministrazione operativa'])
-SAFE_EVENTS=('installation.','user.','account.','session.','passkey.','installation_passkey.','mfa.','backup.','operations.','telegram.')
+SAFE_EVENTS=('invitation.','registration.','installation.','user.','account.','session.','passkey.','installation_passkey.','mfa.','backup.','operations.','telegram.')
 
 class BackupPolicy(Strict):
     enabled:bool=False

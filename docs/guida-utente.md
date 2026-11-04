@@ -98,6 +98,8 @@ I backup automatici e i link ospiti sono inizialmente spenti; le notifiche ester
 
 Il ripristino revoca sessioni, inviti e collegamenti sensibili e sospende automatismi: prima di riabilitarli controlla utenti, saldi e pianificazioni. Per aggiornamenti e recupero seguire le guide operative della versione installata.
 
+In Registrazioni e inviti globali scegli la modalità corrente e gestisci le richieste in attesa: Approva attiva l’account, Rifiuta lo sospende senza cancellarlo. Gli inviti globali hanno durata da 1 a 90 giorni, stato e filtri. Rinnova conserva il codice; Rigenera ne crea uno nuovo e revoca il precedente; Rimuovi / revoca lo invalida conservando lo storico. Il link si copia solo alla creazione o rigenerazione e non viene inviato automaticamente. Gli inviti account + gruppo restano nel gruppo.
+
 ## Disponibile, da abilitare e in arrivo
 
 Disponibile: account e sicurezza, gruppi e ruoli, spese composte/riservate, valute, saldi Smart, rimborsi, allegati, storico, import/export, statistiche, notifiche e bot Telegram.

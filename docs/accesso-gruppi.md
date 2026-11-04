@@ -23,3 +23,5 @@ Restano disabilitati globalmente per default, anche in questa consegna. Solo l�
 Incollare un link ospite nel modulo membri mostra Apri come ospite e non esegue l’accettazione di un invito. Link di un’altra installazione o URL con credenziali vengono rifiutati. I token restano nel frammento URL, non nei log di query. Revoca, scadenza, gruppo non disponibile e interruttore globale vengono controllati anche dalle API.
 
 Un recupero da backup revoca link ospiti e vecchi inviti/associazioni e disattiva gli ospiti globalmente, impedendo il ritorno di autorizzazioni già revocate. I membri già collegati conservano identità e dati; i gestori possono emettere nuovi inviti dopo il controllo.
+
+Inviti di sola registrazione e coda di approvazione: [gestione globale](inviti-globali.md), con stato, durata, rinnovo, rigenerazione, revoca e conferme. Gli inviti account + gruppo restano distinti.

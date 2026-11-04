@@ -41,3 +41,5 @@ In Gestione utenti e ruoli globali è disponibile Recupera MFA/passkey, con sele
 Telegram parte insieme a Sgancia e resta in attesa: configurare token e abilitazione nel pannello globale, quindi Salva e applica. Nessun comando separato. Link ospiti e backup automatici sono inizialmente spenti. SMTP richiede parametri e prova reale; email di notifica anche indirizzo verificato e preferenze. Vedere [operatività](operativita.md) e [roadmap](../ROADMAP.md).
 
 La guida nell’app è accessibile anche prima dell’accesso su /help e non include dati utente. Email dello sviluppatore, repository e donazioni si configurano in backend/app/project_info.py: [dettagli](contatti.md).
+
+Inviti di sola registrazione e coda di approvazione: [gestione globale](inviti-globali.md), con stato, durata, rinnovo, rigenerazione, revoca e conferme. Gli inviti account + gruppo restano distinti.

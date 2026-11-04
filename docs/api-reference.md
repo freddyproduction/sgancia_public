@@ -17,7 +17,11 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | GET | `/api/v1/admin/installation/smtp` | Smtp Settings |
 | PUT | `/api/v1/admin/installation/smtp` | Save Smtp |
 | POST | `/api/v1/admin/installation/smtp/test` | Test Smtp |
+| GET | `/api/v1/admin/invitations` | Invitations |
 | POST | `/api/v1/admin/invitations` | Invite |
+| POST | `/api/v1/admin/invitations/{identity}/regenerate` | Regenerate |
+| POST | `/api/v1/admin/invitations/{identity}/renew` | Renew |
+| POST | `/api/v1/admin/invitations/{identity}/revoke` | Revoke |
 | GET | `/api/v1/admin/operations/audit` | Events |
 | POST | `/api/v1/admin/operations/backup` | Queue Backup |
 | GET | `/api/v1/admin/operations/backups` | Backups |
@@ -28,6 +32,7 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | GET | `/api/v1/admin/operations/status` | Status |
 | GET | `/api/v1/admin/operations/telegram` | Telegram |
 | PUT | `/api/v1/admin/operations/telegram` | Telegram Save |
+| GET | `/api/v1/admin/registration` | Registration |
 | PUT | `/api/v1/admin/registration` | Policy |
 | GET | `/api/v1/admin/users` | Users |
 | PUT | `/api/v1/admin/users/{user_id}` | Edit User |

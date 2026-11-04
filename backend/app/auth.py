@@ -59,6 +59,7 @@ def entry_policy(db=Depends(get_db)):
 @router.post('/register', status_code=201)
 def register(body: Register, request: Request, db=Depends(get_db), instance=Depends(gate)):
     throttle(db, 'register:' + peer(request), 5)
+    instance=db.scalar(select(Instance).where(Instance.id==1).with_for_update().execution_options(populate_existing=True))
     if instance.registration == 'disabled':
         raise HTTPException(403, 'Registrazioni disabilitate')
     invitation = None
@@ -67,7 +68,7 @@ def register(body: Register, request: Request, db=Depends(get_db), instance=Depe
         lock_invitation_group(db,digest(body.invite.strip()))
         invitation = db.scalar(select(Invite).where(Invite.token_hash == digest(body.invite.strip())).with_for_update())
         group_invitation = db.scalar(select(GroupInvite).where(GroupInvite.token_hash == digest(body.invite.strip())).with_for_update().execution_options(populate_existing=True))
-        if invitation and (invitation.used or invitation.expires <= time.time() or invitation.email != body.email):
+        if invitation and (invitation.used or invitation.revoked or invitation.expires <= time.time() or invitation.email != body.email):
             raise HTTPException(403, 'Invito di registrazione scaduto, già usato o destinato a un’altra email')
         if not invitation and not group_invitation:
             raise HTTPException(403, 'Codice invito non riconosciuto: copia il codice completo senza modificarlo')
@@ -83,6 +84,7 @@ def register(body: Register, request: Request, db=Depends(get_db), instance=Depe
     db.add(user)
     try:
         db.flush()
+        if invitation:invitation.used_by=user.id
         group = join_from_invitation(db, group_invitation, user) if group_invitation else None
         from .mail_delivery import configured
         if configured(db):

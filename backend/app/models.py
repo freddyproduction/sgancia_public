@@ -91,6 +91,13 @@ class Invite(Base):
     expires: Mapped[int] = mapped_column(BigInteger)
     used: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    id: Mapped[str] = mapped_column(String(36),default=uid,unique=True)
+    created: Mapped[int] = mapped_column(BigInteger,default=lambda:int(time.time()))
+    revoked: Mapped[bool] = mapped_column(Boolean,default=False)
+    version: Mapped[int] = mapped_column(default=1)
+    issuer_id: Mapped[str | None] = mapped_column(ForeignKey('users.id'))
+    used_by: Mapped[str | None] = mapped_column(ForeignKey('users.id'))
+
 
 class Group(Base):
     __tablename__ = 'groups'

@@ -33,6 +33,7 @@ DO $$ BEGIN
   IF to_regclass('service_heartbeats') IS NOT NULL THEN EXECUTE 'DELETE FROM service_heartbeats'; END IF;
   IF to_regclass('group_invitations') IS NOT NULL THEN EXECUTE 'UPDATE group_invitations SET used=true'; END IF;
   IF to_regclass('participant_claims') IS NOT NULL THEN EXECUTE 'UPDATE participant_claims SET used=true'; END IF;
+  IF EXISTS(SELECT 1 FROM information_schema.columns WHERE table_name='invitations' AND column_name='revoked') THEN EXECUTE 'UPDATE invitations SET revoked=true WHERE NOT used'; END IF;
   IF to_regclass('invitations') IS NOT NULL THEN EXECUTE 'UPDATE invitations SET used=true'; END IF;
   IF to_regclass('expense_plans') IS NOT NULL THEN EXECUTE 'UPDATE expense_plans SET enabled=false, error=''restore_review'' WHERE kind=''recurring'''; END IF;
   IF to_regclass('guest_links') IS NOT NULL THEN EXECUTE 'UPDATE guest_links SET revoked=true'; END IF;

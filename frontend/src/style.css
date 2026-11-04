@@ -74,3 +74,5 @@ dialog.overlay .modal{max-height:calc(100dvh - 48px);min-width:0}
 [data-theme=dark] .privacy-option>label{color:#d8bce7}
 
 .help-page{display:grid;gap:24px;max-width:1000px;margin-inline:auto}.help-page .panel{padding:clamp(18px,4vw,32px)}.help-page details{border-top:1px solid var(--line);padding:16px 0}.help-page summary{cursor:pointer;font-weight:600}.help-page p{line-height:1.7;overflow-wrap:anywhere}.help-page textarea{min-height:130px}.idea-preview{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}.public-help{max-width:1080px;margin:auto;padding:24px}.public-help>.secondary{margin-bottom:24px}.project-signature{border-left:4px solid var(--accent)}.donation-box{margin-top:20px}
+
+.registration-admin{grid-column:1/-1}.invitation-row{padding:18px 0;border-top:1px solid var(--line);overflow-wrap:anywhere}.invitation-row p{margin:8px 0}.invitation-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.registration-admin h3{margin-top:28px}.registration-admin .secret-code{max-width:100%;overflow-wrap:anywhere}

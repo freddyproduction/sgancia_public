@@ -2,6 +2,8 @@
 
 ## 0.2.0-dev — 4 novembre 2026
 
+- Gestione inviti globali con stati, durata, rinnovo, rigenerazione e revoca; coda di approvazione/rifiuto account con controllo conflitti.
+
 - Telegram bidirezionale con collegamento verificato, consensi, wizard, foto, saldi e rimborsi; attivazione interamente dal pannello globale.
 - Pannello operativo, backup pianificabili con prove di recupero e aggiornamento conservativo.
 - Notifiche personalizzabili, inviti con anteprima e associazione delle persone esistenti.
