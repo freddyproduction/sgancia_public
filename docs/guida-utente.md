@@ -80,7 +80,7 @@ Ricerca, statistiche e conti offre filtri, grafici, budget, simulazioni e chiusu
 
 ## Notifiche e aggiornamento automatico
 
-Il centro notifiche mostra solo eventi autorizzati. Imposta frequenza, fuso orario, durata e soglie per account o gruppo. Email e Telegram sono facoltativi; l’email richiede indirizzo verificato e SMTP configurato. I messaggi esterni sono generici e rimandano ai dati protetti nel software.
+Apri Impostazioni → Notifiche per le preferenze e Mostra notifiche per gli aggiornamenti ricevuti. Il centro notifiche mostra solo eventi autorizzati. Imposta frequenza, fuso orario, durata e soglie per account o gruppo. Email e Telegram sono facoltativi; l’email richiede indirizzo verificato e SMTP configurato. I messaggi esterni sono generici e rimandano ai dati protetti nel software.
 
 L’app aggiorna dopo una modifica e gli altri client si riallineano circa ogni due secondi quando la pagina è visibile. I moduli già modificati non vengono sovrascritti. Se la rete manca, verifica lo stato prima di riprovare: un errore di collegamento non significa che la modifica non sia stata salvata.
 

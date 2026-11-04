@@ -1,6 +1,6 @@
 # Notifiche e promemoria
 
-Il pulsante **Notifiche** è nella pagina principale, disponibile anche da mobile. Mostra spese create/modificate, eventi dei rimborsi e cambiamenti operativi del gruppo. È possibile aprire il gruppo, segnare una notifica come letta o segnarle tutte. Sono mostrate per default le ultime 100 notifiche autorizzate; puoi scegliere 20–200 elementi nell’account e disponibilità da 1 a 365 giorni, anche per gruppo. Il contatore comprende le notifiche non lette autorizzate nel periodo scelto. Non viene importata la cronologia precedente all’aggiornamento.
+Apri **Impostazioni → Notifiche → Mostra notifiche**, disponibile anche da mobile. Mostra spese create/modificate, eventi dei rimborsi e cambiamenti operativi del gruppo. È possibile aprire il gruppo, segnare una notifica come letta o segnarle tutte. Sono mostrate per default le ultime 100 notifiche autorizzate; puoi scegliere 20–200 elementi nell’account e disponibilità da 1 a 365 giorni, anche per gruppo. Il contatore comprende le notifiche non lette autorizzate nel periodo scelto. Non viene importata la cronologia precedente all’aggiornamento.
 
 Da **Preferenze** si impostano i valori predefiniti dell’account o una personalizzazione per gruppo. “Usa le preferenze dell’account” elimina la personalizzazione. Disattivare le notifiche sull’account prevale su tutti i gruppi. Gli eventi nell’app sono attivi inizialmente; email, promemoria e riepiloghi programmati sono inizialmente spenti.
 
