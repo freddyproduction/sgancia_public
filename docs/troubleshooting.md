@@ -21,3 +21,7 @@ La password POSTGRES_PASSWORD viene usata dall’immagine PostgreSQL solo alla p
 - **Telegram in attesa:** verificare token, abilitazione e Salva e applica nel pannello globale. Il processo parte con Sgancia; nessun comando separato è richiesto. Cambi di configurazione possono richiedere un nuovo collegamento account.
 - **Contatti o donazioni assenti:** è intenzionale se le costanti pubbliche in backend/app/project_info.py sono vuote; non sono errori di rete.
 - **Guida non allineata:** modificare frontend/src/help-content.json e rigenerare docs/guida-utente.md con scripts/sync_user_guide.py.
+
+### Primo avvio: required variable / missing a value
+
+`POSTGRES_PASSWORD is missing a value` o `SGANCIA_ENCRYPTION_KEY is missing a value` significa che il `.env` manca o contiene righe vuote: copiare il modello non genera credenziali. Seguire la sezione Configurazione iniziale di [installazione.md](installazione.md), compilare anche SGANCIA_BACKUP_KEY, salvare e riprovare `docker compose config --quiet`. Eseguire i comandi nella cartella che contiene `.env` e docker-compose.yml. Se il DB esiste già, recuperare i valori originali; non rigenerare le chiavi e non cancellare i dati.

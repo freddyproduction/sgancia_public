@@ -6,7 +6,15 @@ Docker Engine/Desktop con Docker Compose v2 e spazio persistente per PostgreSQL.
 
 ## Configurazione iniziale
 
-Copiare `.env.example` in `.env`. Non versionare `.env`. Impostare:
+**Passaggio obbligatorio prima di build, avvio e bootstrap.** I modelli hanno password e chiavi vuote per evitare credenziali condivise. Copiare il modello non genera i valori.
+
+Dalla cartella del repository sul nuovo server:
+
+```sh
+test -e .env || cp .env.server.example .env
+```
+
+Per una prova soltanto su localhost si può invece partire da `.env.example`. Se `.env` esiste già, non sovrascriverlo. Non versionare il file. Impostare:
 
 - `POSTGRES_PASSWORD`: password casuale distinta; usare ad esempio un valore esadecimale di almeno 32 byte, senza caratteri riservati URL.
 - `SGANCIA_ENCRYPTION_KEY`: chiave Fernet base64 di 32 byte; protegge i segreti TOTP nel database. Conservarne copia di recupero separata.
@@ -22,7 +30,23 @@ docker run --rm python:3.13-slim python -c 'import secrets; print(secrets.token_
 docker run --rm python:3.13-slim python -c 'import secrets,base64; print(base64.urlsafe_b64encode(secrets.token_bytes(32)).decode())'
 ```
 
-Il primo comando genera la password DB; eseguire il secondo due volte per due chiavi distinte. Non usare i valori degli esempi o delle prove automatiche come credenziali reali.
+Il primo comando genera il valore di `POSTGRES_PASSWORD`. Eseguire il secondo **due volte**: il primo risultato va in `SGANCIA_ENCRYPTION_KEY`, il secondo in `SGANCIA_BACKUP_KEY`. Sono tre valori distinti, da incollare dopo `=` nelle rispettive righe del `.env` usando `nano .env`. Non inserire i nomi dei segnaposto come password. In nano salvare con Ctrl+O, Invio, poi Ctrl+X.
+
+Compilare anche dominio, IP LAN, origini e proxy secondo le sezioni seguenti. La chiave d’accesso iniziale al sito verrà scelta nel bootstrap ed è distinta da queste credenziali tecniche. Conservare una copia protetta delle chiavi, separata dal server; non inviarle in chat o issue. Non usare i valori delle prove automatiche come credenziali reali.
+
+Dopo aver compilato e salvato `.env`:
+
+```sh
+chmod 600 .env
+docker compose config --quiet &&
+docker compose build migrate &&
+docker compose up -d &&
+docker compose exec api python -m app.cli init
+```
+
+Il controllo `config --quiet` non stampa i valori; se fallisce, correggere `.env` prima di proseguire. La sequenza con `&&` si arresta al primo errore. Non usare `docker compose config` senza `--quiet` in output da condividere, perché può mostrare segreti.
+
+**Su un’installazione esistente non generare nuove chiavi né ricopiare il modello per un aggiornamento.** Preservare password DB, chiave applicativa e chiave backup originali. Cambiare il `.env` non cambia automaticamente la password di un database già inizializzato.
 
 ## Solo Mac / localhost
 

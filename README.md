@@ -16,13 +16,39 @@ Telegram, link ospiti e backup automatici richiedono attivazione/configurazione;
 
 Il runtime completo è in Docker: API/frontend, database e servizi automatici, incluso Telegram in attesa quando disabilitato. Sul server non servono Python o Node installati separatamente.
 
-```sh
-cp .env.example .env
-# Generare nuove chiavi e configurare le origini secondo docs/installazione.md.
-docker compose build migrate
-docker compose up -d
-docker compose exec api python -m app.cli init
-```
+**Prima dell’avvio devi compilare `.env`: i modelli lasciano le tre credenziali vuote apposta. Copiare il file e avviare subito Compose produce gli errori “POSTGRES_PASSWORD is missing” e “SGANCIA_ENCRYPTION_KEY is missing”.**
+
+1. Nella cartella clonata, prepara il modello server senza sovrascrivere un `.env` esistente:
+
+   ```sh
+   test -e .env || cp .env.server.example .env
+   ```
+
+2. Genera i tre valori **sul nuovo server**, senza installare Python. Esegui ogni comando qui sotto una volta e conserva separatamente i risultati:
+
+   ```sh
+   # Risultato da inserire in POSTGRES_PASSWORD
+   docker run --rm python:3.13-slim python -c 'import secrets; print(secrets.token_hex(32))'
+   # Risultato da inserire in SGANCIA_ENCRYPTION_KEY
+   docker run --rm python:3.13-slim python -c 'import secrets,base64; print(base64.urlsafe_b64encode(secrets.token_bytes(32)).decode())'
+   # Altro risultato, distinto, da inserire in SGANCIA_BACKUP_KEY
+   docker run --rm python:3.13-slim python -c 'import secrets,base64; print(base64.urlsafe_b64encode(secrets.token_bytes(32)).decode())'
+   ```
+
+3. Apri `nano .env`, incolla i tre valori nelle rispettive righe e compila dominio/IP LAN, origini, bind e proxy fidati secondo la [guida d’installazione](docs/installazione.md). Non incollare credenziali in chat, issue o Git. In nano salva con Ctrl+O, Invio, poi esci con Ctrl+X.
+4. Solo dopo aver salvato la configurazione, controlla e avvia:
+
+   ```sh
+   chmod 600 .env
+   docker compose config --quiet &&
+   docker compose build migrate &&
+   docker compose up -d &&
+   docker compose exec api python -m app.cli init
+   ```
+
+   `config --quiet` verifica la configurazione senza stampare i segreti; `&&` ferma la sequenza al primo errore. Il bootstrap interattivo crea il primo superadmin e la chiave d’accesso al sito, distinta dalle tre credenziali tecniche sopra.
+
+**Questa procedura genera chiavi per una nuova installazione. Se il database esiste già, conserva password e chiavi originali: non rigenerarle per aggiornare o correggere un errore.** Per un aggiornamento usa [la procedura dedicata](docs/aggiornamenti.md). Per prove solo locali segui la sezione localhost della guida.
 
 Porta predefinita **8088**, bind predefinito loopback; il database non espone porte. L’inizializzazione interattiva crea il primo superadmin: non ci sono credenziali universali. Non copiare chiavi, account, database o dati di sviluppo su una nuova installazione.
 
