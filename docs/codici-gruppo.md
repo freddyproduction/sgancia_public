@@ -1,10 +1,12 @@
-# Codici di invito del gruppo
+# Codici e link di invito del gruppo
 
-In **Impostazioni gruppo → Inviti e ospiti** (oppure **Codici invito** per gli altri ruoli) trovi i codici riutilizzabili:
+In **Impostazioni gruppo → Inviti e ospiti** (oppure **Codici invito** per gli altri ruoli) trovi codici e link diretti riutilizzabili:
 
 - **Membro**: visibile ai membri e agli amministratori del gruppo.
 - **Visualizzatore**: visibile anche ai visualizzatori.
 - **Admin**: visibile solo al proprietario e agli admin del gruppo. Non assegna ruoli globali della piattaforma.
+
+Ogni ruolo ha anche un link diretto da copiare: aprirlo porta al modulo di ingresso con il codice già inserito, mantenendolo durante il login. Link e codice condividono ruolo e validità; rigenerare il codice invalida anche il vecchio link. Il link usa l’indirizzo da cui stai aprendo Sgancia: per condividerlo fuori dalla LAN apri il sito dal dominio pubblico prima di copiarlo.
 
 Il destinatario deve avere un account Sgancia attivo e aver effettuato l’accesso. Dalla panoramica sceglie **Ho un invito**, inserisce il codice e controlla gruppo e ruolo. Può creare un nuovo partecipante oppure selezionare la propria persona senza account; può anche cambiare il nome visualizzato in quel gruppo, senza modificare il nome dell’account.
 

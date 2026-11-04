@@ -26,7 +26,7 @@ Puoi aggiungere partecipanti senza account. Per associare un account successivam
 
 I link per nuovi account, i codici per account già registrati e i link ospite sono percorsi distinti. I link ospite sono in sola lettura e solo pubblici; inizialmente sono disabilitati globalmente. Se abilitati possono avere password, scadenza e limite di aperture. Condividili privatamente.
 
-Ogni gruppo ha codici riutilizzabili per membro, visualizzatore e admin in Impostazioni gruppo → Inviti e ospiti / Codici invito. Gli admin vedono tutti i codici e possono rigenerarli; i membri vedono membro e visualizzatore. Da Ho un invito puoi entrare come nuova persona oppure collegare la tua persona senza account conservando spese e saldi, e scegliere il nome nel gruppo. Condividi privatamente i codici: permettono di collegare i virtuali e non autorizzano la registrazione alla piattaforma.
+Ogni gruppo ha codici e link diretti riutilizzabili per membro, visualizzatore e admin in Impostazioni gruppo → Inviti e ospiti / Codici invito. Gli admin vedono tutti i codici e possono rigenerarli; i membri vedono membro e visualizzatore. Aprendo il link trovi il codice già inserito anche dopo il login. Copia il link dal dominio pubblico se devi condividerlo fuori dalla LAN. Da Ho un invito puoi entrare come nuova persona oppure collegare la tua persona senza account conservando spese e saldi, e scegliere il nome nel gruppo. Condividi privatamente i codici: permettono di collegare i virtuali e non autorizzano la registrazione alla piattaforma.
 
 ## Inserire e modificare una spesa
 
