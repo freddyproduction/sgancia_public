@@ -6,6 +6,12 @@ from .db import get_db
 from .models import GroupInvite,ParticipantClaim,Participant,Group,Invite
 from .security import current,recent,audit,digest,throttle
 from .sharing import Accept
+from pydantic import Field
+
+class JoinAccept(Accept):
+    participant_id:str|None=Field(default=None,max_length=36)
+    name:str|None=Field(default=None,max_length=100)
+
 from .invitations import check_group_invitation
 router=APIRouter(prefix='/api/v1',tags=['Accesso ai gruppi'])
 
@@ -19,6 +25,9 @@ def issuer_valid(db,uid,gid):
 
 
 def preview_access(db,clear,user):
+    from .group_codes import preview as code_preview
+    data=code_preview(db,clear,user)
+    if data:return data
     hashed=digest(clear.strip());inv=db.get(GroupInvite,hashed)
     if inv:
         group=db.get(Group,inv.group_id)
@@ -44,7 +53,8 @@ def preview(body:Accept,user=Depends(current),db=Depends(get_db)):
 
 
 @router.post('/group-access/accept')
-def accept(body:Accept,user=Depends(current),db=Depends(get_db)):
+def accept(body:JoinAccept,user=Depends(current),db=Depends(get_db)):
+    throttle(db,'group-access:'+user.id,30)
     data=preview_access(db,body.token,user)
     db.scalar(select(Group).where(Group.id==data['group_id']).with_for_update())
     db.expire_all()
@@ -52,6 +62,10 @@ def accept(body:Accept,user=Depends(current),db=Depends(get_db)):
     user=db.scalar(select(User).where(User.id==user.id).with_for_update().execution_options(populate_existing=True))
     if not user or user.status!='active':raise HTTPException(403,'Account non disponibile')
     data=preview_access(db,body.token,user)
+    if data['kind']=='group_code':
+        from .group_codes import join
+        return join(db,body,user,data)
+    if body.participant_id or body.name is not None:raise HTTPException(422,'Questo invito non permette di scegliere una persona')
     if data['already_member']:return {'group_id':data['group_id'],'already_member':True}
     if data['kind']=='association':
         from .lifecycle import claim,TokenIn
@@ -78,3 +92,14 @@ def revoke_invitation(gid:str,iid:str,user=Depends(current),db=Depends(get_db)):
     registration=db.get(Invite,row.token_hash)
     if registration:registration.used=True
     audit(db,user.id,'group_invitation.revoked');db.commit()
+
+
+@router.get('/groups/{gid}/join-codes')
+def group_codes(gid:str,user=Depends(current),db=Depends(get_db)):
+    from .group_codes import codes
+    return codes(db,gid,user)
+
+@router.post('/groups/{gid}/join-codes/{role}/rotate')
+def rotate_code(gid:str,role:str,user=Depends(current),db=Depends(get_db)):
+    from .group_codes import codes
+    return codes(db,gid,user,role)

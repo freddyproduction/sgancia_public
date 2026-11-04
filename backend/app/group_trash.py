@@ -1,8 +1,8 @@
 from fastapi import APIRouter,Depends,HTTPException,Header
-from sqlalchemy import select,update
+from sqlalchemy import select,update,delete
 from .db import get_db
 from .security import current,audit
-from .models import Group,Participant,GuestLink,GroupInvite,Invite,ParticipantClaim
+from .models import Group,Participant,GuestLink,GroupInvite,Invite,ParticipantClaim,GroupJoinCode
 from .groups import group_out
 router=APIRouter(prefix='/api/v1',tags=['Cestino gruppi'])
 
@@ -25,6 +25,7 @@ def remove_group(gid:str,if_match:int=Header(ge=1),user=Depends(current),db=Depe
     if group.deleted and if_match in (group.metadata_version,group.metadata_version-1):return
     if group.deleted or group.metadata_version!=if_match:raise HTTPException(409,'Il gruppo è cambiato: aggiorna prima di eliminarlo')
     group.deleted=True;group.metadata_version+=1
+    db.execute(delete(GroupJoinCode).where(GroupJoinCode.group_id==gid))
     db.execute(update(GuestLink).where(GuestLink.group_id==gid).values(revoked=True))
     hashes=select(GroupInvite.token_hash).where(GroupInvite.group_id==gid)
     db.execute(update(Invite).where(Invite.token_hash.in_(hashes)).values(used=True))

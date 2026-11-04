@@ -618,3 +618,12 @@ class TelegramOutbox(Base):
     attempts: Mapped[int] = mapped_column(default=0)
     next_attempt: Mapped[int] = mapped_column(BigInteger,default=0)
     expires: Mapped[int] = mapped_column(BigInteger)
+
+
+class GroupJoinCode(Base):
+    __tablename__ = 'group_join_codes'
+    token_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    group_id: Mapped[str] = mapped_column(ForeignKey('groups.id', ondelete='CASCADE'), index=True)
+    role: Mapped[str] = mapped_column(String(16))
+    secret: Mapped[bytes] = mapped_column(LargeBinary)
+    __table_args__ = (UniqueConstraint('group_id', 'role'), CheckConstraint("role in ('admin','member','viewer')"))

@@ -1,0 +1,10 @@
+import {useEffect,useState} from 'react'
+import {api,send} from './api'
+import {ErrorMessage} from './ui'
+type Code={role:string;token:string}
+export function GroupCodes({gid,manager,role}:{gid:string;manager:boolean;role:string}){
+ const[codes,setCodes]=useState<Code[]>([]),[error,setError]=useState(''),[busy,setBusy]=useState(false),[copied,setCopied]=useState('')
+ useEffect(()=>{api<Code[]>('/groups/'+gid+'/join-codes').then(setCodes).catch(e=>setError(e.message))},[gid,role])
+ async function rotate(role:string){if(!confirm('Rigenerare questo codice? Il codice precedente smetterà di funzionare.'))return;setBusy(true);setError('');try{setCodes(await api('/groups/'+gid+'/join-codes/'+role+'/rotate',send('POST')));setCopied('')}catch(e){setError((e as Error).message)}finally{setBusy(false)}}
+ return <section className="panel"><h2>Codici di invito del gruppo</h2><p className="small muted">Condividi il codice con chi ha già un account Sgancia: potrà inserirlo in Panoramica → Ho un invito, entrare come nuova persona o collegare la propria persona senza account, conservando spese e saldi. I codici sono riutilizzabili fino alla rigenerazione.</p><p className="small muted">Chi riceve un codice può scegliere una persona virtuale: condividilo solo con persone fidate. Il codice admin concede l’amministrazione di questo gruppo, senza ruoli globali.</p><ErrorMessage error={error}/>{codes.filter(c=>manager||c.role==='viewer'||(role==='member'&&c.role==='member')).map(c=><div className="preview" key={c.role}><label>Codice {{member:'membro',viewer:'visualizzatore',admin:'admin'}[c.role]}<input readOnly value={c.token} onFocus={e=>e.target.select()}/></label><div className="payment-actions"><button className="secondary" onClick={()=>navigator.clipboard.writeText(c.token).then(()=>setCopied(c.role)).catch(()=>setError('Seleziona e copia il codice manualmente.'))}>{copied===c.role?'Copiato':'Copia codice'}</button>{manager&&<button className="text-btn" disabled={busy} onClick={()=>void rotate(c.role)}>Rigenera codice</button>}</div></div>)}</section>
+}
