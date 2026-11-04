@@ -120,7 +120,8 @@
     "paragraphs": [
       "Disponibile: account e sicurezza, gruppi e ruoli, spese composte/riservate, valute, saldi Smart, rimborsi, allegati, storico, import/export, statistiche, notifiche e bot Telegram.",
       "Da abilitare o configurare: Telegram, SMTP e verifica email, email di notifica, backup automatici e prove di recupero, link ospiti, ricorrenze e rivelazioni. Alcune opzioni spettano all’admin globale; altre all’autore o ai gestori del gruppo.",
-      "In arrivo: PWA/offline completa, OCR locale e ulteriori miglioramenti della roadmap. Restano prove reali di passkey su Mac/iPhone, SMTP e Telegram, server Linux, HTTPS/proxy e CI remota. La versione corrente è di sviluppo, non una dichiarazione di prima release stabile."
+      "In arrivo: PWA/offline completa, OCR locale e ulteriori miglioramenti della roadmap. Restano prove reali di passkey su Mac/iPhone, SMTP e Telegram, server Linux, HTTPS/proxy e CI remota. La versione corrente è di sviluppo, non una dichiarazione di prima release stabile.",
+      "Nuove richieste future: backup portabile completo, backup selettivi dei gruppi e personalizzazione; rafforzamento della sicurezza con prove di attacco isolate; studio di cifratura end-to-end (oggi non disponibile); accesso Google/GitHub aggiuntivo senza rimuovere gli account Sgancia. Gestione multipla dei superadmin e permessi degli admin globali è richiesta e non ancora rilasciata. La roadmap distingue le funzioni pianificate da quelle realmente disponibili."
     ]
   }
 ]
