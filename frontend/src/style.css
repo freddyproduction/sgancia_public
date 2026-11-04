@@ -85,3 +85,14 @@ dialog.overlay .modal{max-height:calc(100dvh - 48px);min-width:0}
 
 .group-cover img{inset:0;margin:auto;width:auto;height:100%;max-width:100%;aspect-ratio:1/1;object-fit:contain}.group-image-preview img{object-fit:contain}
 .hero .hero-kicker{color:#516044}.group-card-body>span{color:var(--green)}
+/* Square cards keep the former compact height instead of expanding to column width. */
+.group-grid{grid-template-columns:repeat(auto-fill,minmax(0,290px));justify-content:start;align-items:start}
+.group-card,.group-grid>.new-group{width:100%;aspect-ratio:1/1;min-height:0}
+.group-card{display:grid;grid-template-rows:minmax(0,1fr) auto}
+.group-card .group-cover{height:100%;min-height:0;padding:0}
+.group-card-body{min-width:0;padding:16px}
+.group-card-body h3{margin-bottom:8px}
+.group-card-body h3>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.group-card-body p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-bottom:12px}
+.group-card-body>span{padding-top:10px}
+@media(max-width:340px){.group-grid{grid-template-columns:minmax(0,1fr)}}
