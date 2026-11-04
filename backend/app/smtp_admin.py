@@ -34,7 +34,9 @@ class SMTPIn(Strict):
 
 def require_admin_session(db,request,user):
     recent(request);user=locked_user(db,user.id);ensure_live_session(db,request,user)
-    if not user.admin:raise HTTPException(403,'Solo l’amministratore globale può configurare l’installazione')
+    if not user or not user.admin or user.status!='active':raise HTTPException(403,'Solo l’amministratore globale può configurare l’installazione')
+    from .admin_permissions import check_request
+    check_request(db,user,request)
     return user
 
 

@@ -190,6 +190,8 @@ def change_gate(body:GatePolicy,request:Request,user=Depends(admin),db=Depends(g
     from .passkeys import ensure_live_session
     ensure_live_session(db,request,user)
     if not user.admin:raise HTTPException(403,'Solo l’amministratore globale può modificare il gate')
+    from .admin_permissions import check_request
+    check_request(db,user,request)
     if instance.gate_enabled==body.enabled:return {'ok':True,'login_required':False}
     instance.gate_enabled=body.enabled;instance.gate_version+=1
     db.execute(delete(GateGrant));db.execute(delete(Session));audit(db,user.id,'gate.enabled' if body.enabled else 'gate.disabled');db.commit()

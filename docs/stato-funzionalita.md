@@ -112,3 +112,5 @@ Blocco 09A consegnato: notifiche con fusi/durata/filtri e pianificazione persona
 Blocchi 14/18 consegnati: politiche/monitoraggio/audit amministrativi, backup schedulati con probe isolato e retention, aggiornamento guidato, inviti/associazioni con anteprima/revoca e separazione ospiti. Telegram aggiunto successivamente nel blocco 11. Prove server reale nei blocchi successivi.
 
 Blocchi 15/16: versione 0.2.0-dev; guida integrata/Markdown sincronizzata, firma PjChaosEOW, idee e recapiti configurabili, roadmap pubblica, changelog e cataloghi API/DB. Qualifica locale completa e copia pubblicabile separata; server Linux reale, CI remota, dispositivi e revisione finale sicurezza/licenze restano aperti. Non dichiarare release stabile.
+
+Aggiornamento 4 novembre — autorità globale: la precedente permanenza del solo fondatore è superata dalla richiesta esplicita di più superadmin. Solo un altro superadmin revoca il ruolo; l’ultimo è protetto e nessun account viene eliminato. Permessi per-admin e ruoli negli inviti/approvazioni disponibili: docs/ruoli-globali.md.

@@ -58,6 +58,8 @@ async def boundary(request: Request, call_next):
 
 from .registration_admin import router as registration_admin
 app.include_router(registration_admin)
+from .authority import router as authority
+app.include_router(authority)
 app.include_router(project_info)
 
 @app.get('/health/live', include_in_schema=False)

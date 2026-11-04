@@ -18,6 +18,7 @@ class RecoveryIn(Proof):
 def reset_factors(user_id:str,body:RecoveryIn,request:Request,user=Depends(admin),db=Depends(get_db)):
     throttle(db,'admin-factor-reset:'+user.id,5)
     actor,target=locked_admin(db,request,user,user_id)
+    if (target.admin or target.requested_role!='user') and not is_superadmin(db,actor.id):raise HTTPException(403,'Solo un superadmin può recuperare altri amministratori')
     if is_superadmin(db,target.id):raise HTTPException(403,'Il recupero amministrativo non può modificare MFA o passkey del superadmin: usa i suoi percorsi personali o il recupero locale del server')
     if actor.id==target.id:raise HTTPException(403,'Per il tuo account usa i comandi personali di MFA e passkey')
     if not body.confirm_reset or not(body.remove_mfa or body.remove_passkeys):raise HTTPException(422,'Scegli almeno un fattore e conferma esplicitamente il recupero')

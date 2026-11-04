@@ -11,6 +11,7 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | GET | `/api/v1/account/payment-methods/{mid}/image` | Own Image |
 | GET | `/api/v1/admin/access-policy` | Access Policy |
 | PUT | `/api/v1/admin/access-policy` | Change Gate |
+| GET | `/api/v1/admin/authority-options` | Options |
 | PUT | `/api/v1/admin/gate` | Rotate Gate |
 | GET | `/api/v1/admin/installation/guest-links` | Admin Policy |
 | PUT | `/api/v1/admin/installation/guest-links` | Change Policy |
@@ -35,6 +36,7 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | GET | `/api/v1/admin/registration` | Registration |
 | PUT | `/api/v1/admin/registration` | Policy |
 | GET | `/api/v1/admin/users` | Users |
+| PUT | `/api/v1/admin/users/{identity}/authority` | Change Authority |
 | PUT | `/api/v1/admin/users/{user_id}` | Edit User |
 | PUT | `/api/v1/admin/users/{user_id}/global-role` | Change Role |
 | POST | `/api/v1/admin/users/{user_id}/reset-factors` | Reset Factors |

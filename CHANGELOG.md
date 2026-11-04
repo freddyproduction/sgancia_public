@@ -2,6 +2,8 @@
 
 ## 0.2.0-dev — 4 novembre 2026
 
+- Più superadmin, permessi granulari per admin globali e ruolo negli inviti/approvazioni, con prove aggiuntive e protezione dell’ultimo superadmin.
+
 - Chiave installazione ricordata anche dopo logout, con durata separata dalla sessione utente e unità personalizzabili dal pannello globale.
 
 - Gestione inviti globali con stati, durata, rinnovo, rigenerazione e revoca; coda di approvazione/rifiuto account con controllo conflitti.

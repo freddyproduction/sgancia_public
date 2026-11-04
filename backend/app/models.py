@@ -33,13 +33,16 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(256))
     status: Mapped[str] = mapped_column(String(20), default='active')
     admin: Mapped[bool] = mapped_column(Boolean, default=False)
+    superadmin: Mapped[bool] = mapped_column(Boolean,default=False)
+    admin_permissions: Mapped[list | None] = mapped_column(JSON,nullable=True)
+    requested_role: Mapped[str] = mapped_column(String(16),default='user')
     theme: Mapped[str] = mapped_column(String(5), default='light')
     email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     auth_version: Mapped[int] = mapped_column(default=1)
     totp_secret: Mapped[str | None] = mapped_column(String(512))
     totp_pending: Mapped[str | None] = mapped_column(String(512))
     totp_last_counter: Mapped[int] = mapped_column(BigInteger, default=-1)
-    __table_args__ = (CheckConstraint("status in ('active','pending','suspended')"),CheckConstraint("theme in ('light','dark')",name='ck_users_theme'))
+    __table_args__ = (CheckConstraint("not superadmin or (admin and status='active')",name='ck_users_superadmin_active'),CheckConstraint("status in ('active','pending','suspended')"),CheckConstraint("theme in ('light','dark')",name='ck_users_theme'))
 
 
 class Session(Base):
@@ -97,6 +100,9 @@ class Invite(Base):
     version: Mapped[int] = mapped_column(default=1)
     issuer_id: Mapped[str | None] = mapped_column(ForeignKey('users.id'))
     used_by: Mapped[str | None] = mapped_column(ForeignKey('users.id'))
+
+    requested_role: Mapped[str] = mapped_column(String(16),default='user')
+    issuer_auth_version: Mapped[int | None] = mapped_column(Integer,nullable=True)
 
 
 class Group(Base):

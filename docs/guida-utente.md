@@ -8,7 +8,7 @@ Apri l’indirizzo indicato dall’amministratore. Se il cancello d’installazi
 
 Registrazioni libere, con approvazione, su invito o chiuse dipendono dalla policy globale. Per verificare l’email richiedi il messaggio in Impostazioni account: SMTP deve essere configurato dall’amministratore. Un link di verifica o recupero scade e si usa una sola volta. Non condividere password, codici MFA, inviti o chiavi.
 
-Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin globale può recuperare i fattori degli altri utenti, escluso il superadmin fondatore. Non esistono password universali.
+Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin globale può recuperare i fattori degli altri utenti, esclusi i superadmin. Non esistono password universali.
 
 La chiave dell’installazione e il login hanno durate separate, configurabili dall’admin globale. Esci revoca l’account ma conserva la chiave già verificata; al ritorno trovi direttamente il login finché il cancello è valido. Per cancellarlo usa Dimentica la chiave dell’installazione nel modulo di accesso. La modalità Immediato usa cookie fino alla chiusura del browser, con limite server di 30 giorni; il ripristino delle sessioni del browser può conservarli. Le durate si applicano ai nuovi accessi e sono distinte dalla conferma identità delle operazioni sensibili.
 
@@ -94,13 +94,15 @@ Non inviare mai chiave globale, password o codici MFA al bot. Telegram è un ser
 
 ## Amministratori e recupero dell’installazione
 
-L’admin globale gestisce registrazioni, ruoli globali, SMTP, chiave d’accesso, politiche, Telegram, link ospiti, audit e backup. L’admin del gruppo gestisce soltanto il proprio gruppo. Il primo account del bootstrap è il superadmin permanente: rinominare un altro utente non assegna questo ruolo.
+L’admin globale gestisce registrazioni, ruoli globali, SMTP, chiave d’accesso, politiche, Telegram, link ospiti, audit e backup. L’admin del gruppo gestisce soltanto il proprio gruppo. Il primo account del bootstrap è superadmin. Un altro superadmin può assegnare o revocare questo ruolo, senza cancellare l’account; l’ultimo è protetto. Il nome non determina i privilegi.
 
 I backup automatici e i link ospiti sono inizialmente spenti; le notifiche esterne e Telegram richiedono configurazione. Custodisci le chiavi di cifratura e recupero separatamente dal server. Un backup cifrato senza le chiavi originali non è recuperabile.
 
 Il ripristino revoca sessioni, inviti e collegamenti sensibili e sospende automatismi: prima di riabilitarli controlla utenti, saldi e pianificazioni. Per aggiornamenti e recupero seguire le guide operative della versione installata.
 
 In Registrazioni e inviti globali scegli la modalità corrente e gestisci le richieste in attesa: Approva attiva l’account, Rifiuta lo sospende senza cancellarlo. Gli inviti globali hanno durata da 1 a 90 giorni, stato e filtri. Rinnova conserva il codice; Rigenera ne crea uno nuovo e revoca il precedente; Rimuovi / revoca lo invalida conservando lo storico. Il link si copia solo alla creazione o rigenerazione e non viene inviato automaticamente. Gli inviti account + gruppo restano nel gruppo.
+
+Solo i superadmin assegnano ruoli globali e scelgono i permessi degli admin: account, registrazioni, SMTP, accesso, politiche, ospiti, Telegram, backup, audit e sessioni. I nuovi admin partono senza permessi aggiuntivi. Negli inviti si può proporre il ruolo; in modalità approvazione rimane senza effetto finché un superadmin non conferma la richiesta. Le nomine privilegiate richiedono password e MFA se attiva. La revoca del ruolo non elimina account o conti.
 
 ## Disponibile, da abilitare e in arrivo
 
@@ -110,4 +112,4 @@ Da abilitare o configurare: Telegram, SMTP e verifica email, email di notifica, 
 
 In arrivo: PWA/offline completa, OCR locale e ulteriori miglioramenti della roadmap. Restano prove reali di passkey su Mac/iPhone, SMTP e Telegram, server Linux, HTTPS/proxy e CI remota. La versione corrente è di sviluppo, non una dichiarazione di prima release stabile.
 
-Nuove richieste future: backup portabile completo, backup selettivi dei gruppi e personalizzazione; rafforzamento della sicurezza con prove di attacco isolate; studio di cifratura end-to-end (oggi non disponibile); accesso Google/GitHub aggiuntivo senza rimuovere gli account Sgancia. Gestione multipla dei superadmin e permessi degli admin globali è richiesta e non ancora rilasciata. La roadmap distingue le funzioni pianificate da quelle realmente disponibili.
+Nuove richieste future: backup portabile completo, backup selettivi dei gruppi e personalizzazione; rafforzamento della sicurezza con prove di attacco isolate; studio di cifratura end-to-end (oggi non disponibile); accesso Google/GitHub aggiuntivo senza rimuovere gli account Sgancia. Gestione multipla dei superadmin, ruoli negli inviti/approvazioni e permessi degli admin globali sono disponibili nella gestione globale. La roadmap distingue le funzioni pianificate da quelle realmente disponibili.

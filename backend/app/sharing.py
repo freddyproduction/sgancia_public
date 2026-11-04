@@ -117,6 +117,8 @@ def invite(group_id:str,body:InviteIn,request:Request,user=Depends(current),db=D
         try:email=Credentials.email_valid(email)
         except ValueError:raise HTTPException(422,'Email destinatario non valida') from None
     if body.registration:
+        from .admin_permissions import require_permission
+        require_permission(db,user,'registrations')
         if not user.admin:
             raise HTTPException(403,'Solo l’amministratore dell’installazione può invitare nuovi account')
         recent(request)

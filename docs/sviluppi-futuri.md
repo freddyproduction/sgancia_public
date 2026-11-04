@@ -16,6 +16,6 @@ La richiesta di impedire al gestore del server di leggere i contenuti richiede u
 
 Metodi aggiuntivi e facoltativi. Gli account normali Sgancia rimangono con password, MFA e passkey. Configurazione globale dei provider con segreti cifrati; gate e modalità libere/approvazione/invito/disabilitate restano rispettati. Gli utenti esistenti collegano esplicitamente il provider con verifica recente; niente fusione automatica basata sulla sola email. Gestire email private/mancanti, impostazione sicura di una password locale e rimozione dell’ultimo metodo. Definire come applicare la MFA Sgancia agli accessi federati. Proteggere callback, state/nonce/PKCE, token e revoche; provare sospensioni, inviti, approvazioni e indisponibilità provider. Ordine proposto: struttura comune, Google, GitHub, prove e guide.
 
-## Ruoli globali avanzati
+## Ruoli globali avanzati — ora disponibili
 
-Richiesti più superadmin e permessi configurabili per ciascun admin globale, oltre alla scelta del ruolo negli inviti e nelle approvazioni. La revoca riguarda il ruolo, non l’eliminazione dell’account. L’ultimo superadmin deve rimanere protetto. Non sono ancora funzioni rilasciate: il collegamento ai controlli amministrativi richiede autorizzazione alla modifica e verifiche isolate prima della pubblicazione applicativa.
+Consegnati dopo la richiesta: più superadmin, ruoli negli inviti e approvazioni e permessi granulari degli admin globali. Revoca del ruolo senza cancellare account; ultimo superadmin protetto. Non è più una voce futura: [guida aggiornata](ruoli-globali.md).

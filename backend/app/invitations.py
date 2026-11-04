@@ -17,6 +17,8 @@ def check_group_invitation(db, invitation, email,new_account=False):
         from .models import User
         issuer=db.get(User,invitation.issuer_id)
         if not issuer or not issuer.admin:raise HTTPException(403,'Invito di registrazione non più autorizzato: chiedi un nuovo codice')
+        from .admin_permissions import require_permission
+        require_permission(db,issuer,'registrations')
     if invitation.participant_id:
         person = db.scalar(select(Participant).where(Participant.id == invitation.participant_id, Participant.group_id == group.id).with_for_update())
         if not person or not person.active or person.merged_into or person.user_id is not None:

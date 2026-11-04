@@ -3,11 +3,16 @@ import pyotp
 from fastapi.testclient import TestClient
 from sqlalchemy import select,func
 from app.main import app
-from app.models import User,Participant,Session,Audit,RecoveryCode
+from app.models import Instance,User,Participant,Session,Audit,RecoveryCode
 from app.security import cipher,digest
 from conftest import login
 from test_api import group,expense
 
+
+import pytest
+@pytest.fixture(autouse=True)
+def root_authority(database):
+    with database() as db:db.get(Instance,1).superadmin_id='alice';db.get(User,'alice').superadmin=True;db.commit()
 
 def change(client,uid,enabled,expected,**proof):
     return client.put(f'/api/v1/admin/users/{uid}/global-role',json={'enabled':enabled,'expected_admin':expected,'password':'password-very-long',**proof})
@@ -44,7 +49,7 @@ def test_global_promotion_revokes_sessions_preserves_group_role_and_private_acce
 
 def test_last_admin_active_target_stale_expected_and_csrf(client,database):
     login(client)
-    assert change(client,'alice',False,True).status_code==409
+    assert change(client,'alice',False,True).status_code==403
     assert client.get('/api/v1/auth/me').json()['admin'] is True
     with database() as db:db.get(User,'bob').status='suspended';db.commit()
     assert change(client,'bob',True,False).status_code==409
@@ -52,10 +57,8 @@ def test_last_admin_active_target_stale_expected_and_csrf(client,database):
     assert change(client,'bob',True,False).status_code==200
     assert change(client,'bob',False,False).status_code==409
     assert client.put('/api/v1/admin/users/bob/global-role',json={'enabled':False,'expected_admin':True,'password':'password-very-long'},headers={'X-CSRF-Token':'wrong'}).status_code==403
-    result=change(client,'alice',False,True);assert result.status_code==200 and result.json()['login_required']
-    assert client.get('/api/v1/auth/me').status_code==401
-    login(client)
-    assert client.get('/api/v1/admin/users').status_code==403
+    assert change(client,'alice',False,True).status_code==403
+    assert client.get('/api/v1/auth/me').json()['superadmin'] is True
 
 
 def test_role_change_requires_password_mfa_and_recent_identity(client,database):
@@ -77,22 +80,20 @@ def test_suspended_or_pending_admin_cannot_be_the_only_remaining_admin(client,da
     login(client)
     with database() as db:
         db.get(User,'bob').admin=True;db.get(User,'bob').status='suspended';db.commit()
-    assert change(client,'alice',False,True).status_code==409
+    assert change(client,'alice',False,True).status_code==403
     assert client.put('/api/v1/admin/users/alice/status',json={'status':'suspended'}).status_code==403
     assert client.put('/api/v1/admin/users/alice',json={'name':'Alice','email':'alice@example.org','status':'suspended'}).status_code==403
 
 
-def test_concurrent_self_demotions_keep_one_admin_on_postgres(client,database):
-    import concurrent.futures,pytest
-    with database() as db:
-        if db.bind.dialect.name!='postgresql':pytest.skip('PostgreSQL installation lock required')
-    login(client);assert change(client,'bob',True,False).status_code==200
+def test_concurrent_self_demotions_require_other_superadmin(client,database):
+    import concurrent.futures
+    login(client)
+    with database() as db:db.get(User,'bob').admin=True;db.get(User,'bob').superadmin=True;db.commit()
     with TestClient(app,base_url='http://localhost:8088') as bob:
         login(bob,'bob')
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
             a=pool.submit(change,client,'alice',False,True);b=pool.submit(change,bob,'bob',False,True)
-            assert sorted([a.result().status_code,b.result().status_code])==[200,409]
-    with database() as db:assert db.scalar(select(func.count()).select_from(User).where(User.admin.is_(True),User.status=='active'))==1
+            assert sorted([a.result().status_code,b.result().status_code])==[403,403]
 
 
 def test_concurrent_revoked_actor_cannot_remove_last_admin_on_postgres(client,database):

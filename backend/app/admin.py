@@ -18,12 +18,18 @@ class Policy(Strict):
 
 class Status(Strict):
     status: Literal['active', 'suspended']
+    role: Literal['user','admin','superadmin'] | None = None
+    password: str = Field(default='',max_length=128)
+    code: str = Field(default='',max_length=100)
     expected_status: Literal['pending','active','suspended'] | None = None
 
 
 class Invitation(Strict):
     email: str = Field(min_length=3, max_length=254)
     days: int = Field(default=7,ge=1,le=90)
+    role: Literal['user','admin','superadmin']='user'
+    password: str = Field(default='',max_length=128)
+    code: str = Field(default='',max_length=100)
     @field_validator('email')
     @classmethod
     def valid_email(cls,value):return Credentials.email_valid(value)
@@ -31,7 +37,7 @@ class Invitation(Strict):
 
 @router.get('/users')
 def users(user=Depends(admin), db=Depends(get_db)):
-    return [{'id': u.id, 'name': u.name, 'email': u.email, 'status': u.status, 'admin': u.admin,'email_verified':u.email_verified,'superadmin':db.get(Instance,1).superadmin_id==u.id} for u in db.scalars(select(User).order_by(User.email))]
+    return [{'id': u.id, 'name': u.name, 'email': u.email, 'status': u.status, 'admin': u.admin,'email_verified':u.email_verified,'superadmin':__import__('app.superadmin',fromlist=['is_superadmin']).is_superadmin(db,u.id),'admin_permissions':__import__('app.admin_permissions',fromlist=['permissions']).permissions(db,u),'requested_role':u.requested_role,'auth_version':u.auth_version} for u in db.scalars(select(User).order_by(User.email))]
 
 
 @router.put('/registration')
@@ -48,6 +54,10 @@ def policy(body: Policy, request: Request, user=Depends(admin), db=Depends(get_d
 @router.put('/users/{user_id}/status')
 def status(user_id: str, body: Status, request: Request, user=Depends(admin), db=Depends(get_db)):
     from .global_roles import locked_admin
+    preliminary=db.get(User,user_id)
+    if body.role in ('admin','superadmin') or (preliminary and preliminary.requested_role!='user'):
+        from .security import throttle
+        throttle(db,'authority-proof:'+user.id,10)
     user,target=locked_admin(db,request,user,user_id)
     from .superadmin import is_superadmin
     if is_superadmin(db,target.id):raise HTTPException(403,'Il superadmin dell’installazione non può essere sospeso')
@@ -55,6 +65,12 @@ def status(user_id: str, body: Status, request: Request, user=Depends(admin), db
         raise HTTPException(403, 'Gli amministratori non possono essere sospesi da questa operazione')
     if body.expected_status is not None and target.status!=body.expected_status:raise HTTPException(409,'La richiesta è già stata gestita: aggiorna la lista')
     was_pending=target.status=='pending'
+    from .admin_permissions import require_permission
+    require_permission(db,user,'registrations' if was_pending else 'users')
+    if was_pending:
+        from .authority import approve_role
+        approve_role(db,user,target,body)
+    elif body.role is not None:raise HTTPException(409,'Modifica il ruolo dalla gestione dei ruoli')
     target.status = body.status
     if body.status == 'suspended':
         db.execute(delete(Session).where(Session.user_id == user_id))
@@ -75,6 +91,8 @@ def rotate_gate(body: GateIn, request: Request, user=Depends(admin), db=Depends(
     if len(body.key) < 16:
         raise HTTPException(422, 'Usa almeno 16 caratteri')
     instance = db.scalar(select(Instance).where(Instance.id == 1).with_for_update().execution_options(populate_existing=True))
+    from .smtp_admin import require_admin_session
+    require_admin_session(db,request,user)
     instance.gate_hash = passwords.hash(body.key)
     instance.gate_version += 1
     db.execute(delete(GateGrant))

@@ -2,7 +2,7 @@
 
 ## Impostazioni personali
 
-La pagina Impostazioni contiene email/verifica, cambio email e password, autenticazione a due fattori, passkey, sessioni e metodi di pagamento. Il ruolo di amministratore globale della piattaforma è distinto dai ruoli proprietario/amministratore dei gruppi. Il primo account del bootstrap è il superadmin fondatore permanente: non può essere declassato, sospeso o eliminato tramite l’app/API; gli altri admin non possono modificarne l’account. Un amministratore di gruppo non accede a impostazioni SMTP, gate, registrazioni o utenti dell’installazione.
+La pagina Impostazioni contiene email/verifica, cambio email e password, autenticazione a due fattori, passkey, sessioni e metodi di pagamento. Il ruolo di amministratore globale della piattaforma è distinto dai ruoli proprietario/amministratore dei gruppi. Il primo account del bootstrap è superadmin; altri superadmin possono revocargli il ruolo, senza eliminare l’account. L’ultimo superadmin rimane protetto e gli admin ordinari non modificano i superadmin. Un amministratore di gruppo non accede a impostazioni SMTP, gate, registrazioni o utenti dell’installazione.
 
 Il cambio password richiede quella attuale e, se attiva, la verifica MFA; mantiene la sessione corrente e revoca le altre. I token temporanei e le richieste passkey pendenti vengono invalidati. Le sessioni hanno anche una versione di autenticazione confrontata con l’account, per impedire che sessioni emesse contemporaneamente a una revoca tornino valide con la vecchia versione. Le passkey già registrate restano metodi validi fino alla loro revoca esplicita.
 
@@ -78,3 +78,7 @@ Il superadmin non può usare né subire questa scorciatoia amministrativa: gesti
 Quando un’operazione richiede una verifica recente compare automaticamente un popup sopra la pagina corrente. Inserire la password del proprio account, non la chiave globale, e il codice MFA/recupero se attivo. Gli errori restano nel popup. Dopo il successo premere Torna all’operazione e ripetere esplicitamente il comando dal modulo: nessuna azione sensibile viene ripetuta automaticamente. Annulla chiude il popup senza verificare l’identità e senza eseguire l’operazione.
 
 Chiave ricordata e login hanno ora [durate indipendenti configurabili](durate-accesso.md). Il logout personale conserva la chiave verificata; il modulo di accesso permette di dimenticarla esplicitamente. Modalità browser oppure minuti/ore/giorni/mesi/anni per i nuovi accessi; verifica recente delle operazioni sensibili invariata.
+
+## Aggiornamento ruoli globali
+
+Le descrizioni storiche del fondatore permanente sono sostituite dalla [gestione aggiornata dei superadmin e dei permessi](ruoli-globali.md): più superadmin, revoca soltanto da parte di un altro, protezione dell’ultimo e account conservato. Solo i superadmin assegnano ruoli privilegiati negli inviti/approvazioni o modificano capacità degli admin.

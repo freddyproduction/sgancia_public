@@ -1,6 +1,6 @@
 # Amministrazione
 
-Il ruolo amministratore globale è distinto dai ruoli dei gruppi. Il bootstrap interattivo crea il primo amministratore come superadmin permanente dell’installazione. Non esistono password universali. La chiave globale è un filtro aggiuntivo e non sostituisce l’account personale.
+Il ruolo amministratore globale è distinto dai ruoli dei gruppi. Il bootstrap interattivo crea il primo amministratore come superadmin iniziale dell’installazione. Non esistono password universali. La chiave globale è un filtro aggiuntivo e non sostituisce l’account personale.
 
 Dal pannello Impostazioni un amministratore può scegliere registrazioni libere, con approvazione, tramite invito o disabilitate; generare inviti di registrazione; attivare utenti in attesa e sospendere account non amministratori. La sospensione revoca le loro sessioni.
 
@@ -15,18 +15,16 @@ Audit essenziale in `audit_events`, senza contenuti delle spese segrete o token.
 
 ## Assegnazione operativa dei ruoli
 
-Impostazioni → Gestione utenti e ruoli globali → **Nomina admin globale** assegna il ruolo di amministratore dell’intera installazione a un account già attivo. **Rimuovi admin globale** lo revoca. L’operazione richiede identità confermata di recente, password dell’amministratore che agisce, codice MFA/recupero se attivo e conferma esplicita del destinatario in UI. Gli utenti sospesi o in attesa devono essere attivati prima della promozione.
+Solo un superadmin può aprire **Impostazioni → Gestione utenti e ruoli globali → Ruolo e permessi**, scegliere Utente/Admin globale/Superadmin e personalizzare le capacità dell’admin. Servono identità recente, password personale, MFA se attiva e conferma esplicita. Gli account non attivi devono essere prima approvati o attivati.
 
-Il cambiamento revoca tutte le sessioni dell’account interessato, le challenge passkey pendenti e i token temporanei: serve un nuovo accesso con il nuovo ruolo. Le passkey già registrate restano credenziali valide. Ogni modifica è registrata nell’audit; lo stato atteso impedisce di sovrascrivere un ruolo modificato nel frattempo. Non è possibile rimuovere l’ultimo amministratore globale attivo; la protezione vale anche per richieste contemporanee e non conta gli admin sospesi/in attesa. Gli amministratori globali ordinari possono rinunciare al proprio ruolo se resta un altro admin attivo; l’autorimozione provoca logout. Questa possibilità non riguarda il superadmin fondatore, il cui ruolo è permanente.
+Le modifiche revocano le sessioni del destinatario e conservano identità, gruppi e conti. La versione attesa impedisce aggiornamenti concorrenti incompatibili. Un superadmin non può revocarsi il ruolo da solo: serve un altro superadmin; l’ultimo rimane protetto. Gli admin globali ordinari non assegnano ruoli o permessi.
 
 Per assegnare esclusivamente il ruolo in un gruppo, aprire **Impostazioni gruppo → Membri → Modifica partecipante → Ruolo nel gruppo → Amministratore del gruppo**. Anche gli inviti indicano esplicitamente “Ruolo nel gruppo”. La promozione globale non cambia Participant.role, non aggiunge l’account a gruppi e non amplia il pubblico delle spese riservate. La revoca globale conserva gli eventuali ruoli amministrativi nei gruppi.
 
 
 ## Superadmin dell’installazione
 
-Il primo account creato da `python -m app.cli init` è il superadmin, sempre amministratore globale attivo. L’identità è registrata in `instance.superadmin_id` tramite riferimento all’ID dell’account, senza dipendere da nome visualizzato o email: rinominare qualcuno con il nome del fondatore non assegna privilegi.
-
-Il fondatore non può essere declassato, sospeso, cancellato o sostituito con un altro account tramite l’app/API. PostgreSQL protegge anche gli aggiornamenti/cancellazioni delle righe interessate con FK e trigger. L’interfaccia mostra “Superadmin · fondatore protetto” e non propone la rimozione del ruolo. Gli altri amministratori globali non possono modificarne nome, email o stato. Il titolare può modificare il proprio nome e gestire password, email e MFA dai percorsi personali autenticati; per la sua email non è disponibile la scorciatoia generica della gestione utenti.
+Il primo account creato da `python -m app.cli init` è superadmin. La migrazione conserva questo ruolo. L’installazione può avere più superadmin, identificati tramite ID e attributi di autorità, non nome o email. Un altro superadmin può revocare il ruolo del primo senza cancellarne l’account. Il riferimento `instance.superadmin_id` mantiene un superadmin attivo e passa a un altro quando necessario. FK, vincoli e trigger proteggono il riferimento e l’ultimo superadmin.
 
 Gli admin globali ordinari restano assegnabili/revocabili. Nessun ruolo globale, superadmin incluso, aggiunge appartenenze ai gruppi o concede accesso alle spese riservate di cui l’account non fa parte. L’uscita da un gruppo riguarda solo la partecipazione a quel gruppo: non cancella l’account né il ruolo di superadmin. Le normali verifiche di login/MFA e la revoca delle sessioni restano attive anche per il fondatore.
 
@@ -45,3 +43,7 @@ La guida nell’app è accessibile anche prima dell’accesso su /help e non inc
 Inviti di sola registrazione e coda di approvazione: [gestione globale](inviti-globali.md), con stato, durata, rinnovo, rigenerazione, revoca e conferme. Gli inviti account + gruppo restano distinti.
 
 Chiave ricordata e login hanno ora [durate indipendenti configurabili](durate-accesso.md). Il logout personale conserva la chiave verificata; il modulo di accesso permette di dimenticarla esplicitamente. Modalità browser oppure minuti/ore/giorni/mesi/anni per i nuovi accessi; verifica recente delle operazioni sensibili invariata.
+
+## Aggiornamento ruoli globali
+
+Le descrizioni storiche del fondatore permanente sono sostituite dalla [gestione aggiornata dei superadmin e dei permessi](ruoli-globali.md): più superadmin, revoca soltanto da parte di un altro, protezione dell’ultimo e account conservato. Solo i superadmin assegnano ruoli privilegiati negli inviti/approvazioni o modificano capacità degli admin.

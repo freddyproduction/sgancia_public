@@ -19,6 +19,8 @@ def locked_admin(db,request,user,target_id):
     ensure_live_session(db,request,actor);recent(request)
     target=people.get(target_id)
     if not target:raise HTTPException(404,'Account non trovato')
+    from .admin_permissions import check_request
+    check_request(db,actor,request)
     return actor,target
 
 
@@ -41,6 +43,7 @@ def change_role(user_id:str,body:GlobalRoleIn,request:Request,user=Depends(admin
         count=db.scalar(select(func.count()).select_from(User).where(User.admin.is_(True),User.status=='active'))
         if count<=1:raise HTTPException(409,'Non puoi rimuovere l’ultimo amministratore globale attivo: nominane prima un altro')
     target.admin=body.enabled
+    target.admin_permissions=None
     revoke_access(db,target)
     audit(db,actor.id,'global_admin.granted' if body.enabled else 'global_admin.revoked',target.id)
     db.commit()

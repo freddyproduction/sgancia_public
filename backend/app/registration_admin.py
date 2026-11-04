@@ -5,7 +5,7 @@ from sqlalchemy import select,func
 from pydantic import Field
 from .schemas import Strict
 from .db import get_db
-from .security import admin,audit,token,digest
+from .security import admin,audit,token,digest,throttle
 from .models import Instance,Invite,GroupInvite,User
 from .smtp_admin import require_admin_session
 from .config import settings
@@ -14,6 +14,8 @@ router=APIRouter(prefix='/api/v1/admin',tags=['Registrazioni e inviti globali'])
 class Change(Strict):
     expected_version:int=Field(ge=1)
     days:int=Field(default=7,ge=1,le=90)
+    password:str=Field(default='',max_length=128)
+    code:str=Field(default='',max_length=100)
 
 def lock_admin(db,request,user):
     instance=db.scalar(select(Instance).where(Instance.id==1).with_for_update().execution_options(populate_existing=True))
@@ -24,7 +26,7 @@ def state(row):
     return 'revoked' if row.revoked else 'used' if row.used else 'expired' if row.expires<=time.time() else 'active'
 
 def output(row):
-    return {'id':row.id,'email':row.email,'expires':row.expires,'created':row.created,'state':state(row),'version':row.version,'used_by':row.used_by}
+    return {'id':row.id,'email':row.email,'expires':row.expires,'created':row.created,'state':state(row),'version':row.version,'used_by':row.used_by,'role':row.requested_role}
 
 def standalone():return ~select(GroupInvite.token_hash).where(GroupInvite.token_hash==Invite.token_hash).exists()
 
@@ -32,14 +34,17 @@ def available_email(db,email,exclude_id=None):
     if db.scalar(select(User.id).where(User.email==email)):raise HTTPException(409,'Esiste già un account con questa email: gestiscilo nella lista utenti o richieste in attesa')
     if db.scalar(select(Invite.id).where(Invite.email==email,Invite.used.is_(False),Invite.revoked.is_(False),Invite.expires>time.time(),standalone(),Invite.id!=exclude_id if exclude_id else True)):raise HTTPException(409,'Esiste già un invito attivo per questa email: rinnova o rigenera quello esistente')
 
-def issue(db,email,days,user):
-    clear=token();row=Invite(token_hash=digest(clear),email=email,expires=int(time.time())+86400*days,issuer_id=user.id)
+def issue(db,email,days,user,desired='user'):
+    clear=token();row=Invite(token_hash=digest(clear),email=email,expires=int(time.time())+86400*days,issuer_id=user.id,requested_role=desired,issuer_auth_version=user.auth_version)
     db.add(row);db.flush()
     return row,{'token':clear,'expires_in':days*86400,'url':settings.public_origin+'/invite?register=1#'+clear,**output(row)}
 
 def create_invite(body,request,user,db):
+    if body.role!='user':throttle(db,'authority-proof:'+user.id,10)
     lock_admin(db,request,user);available_email(db,body.email)
-    row,result=issue(db,body.email,body.days,user);audit(db,user.id,'invitation.created',row.id);db.commit();return result
+    from .authority import grant_proof
+    grant_proof(db,user,body.role,body.password,body.code)
+    row,result=issue(db,body.email,body.days,user,body.role);audit(db,user.id,'invitation.created',row.id);db.commit();return result
 
 @router.get('/registration')
 def registration(user=Depends(admin),db=Depends(get_db)):
@@ -63,20 +68,30 @@ def editable(db,identity,version):
 
 @router.post('/invitations/{identity}/renew')
 def renew(identity:str,body:Change,request:Request,user=Depends(admin),db=Depends(get_db)):
+    throttle(db,'invitation-mutate:'+user.id,30)
     lock_admin(db,request,user);row=editable(db,identity,body.expected_version)
+    from .authority import grant_proof
+    grant_proof(db,user,row.requested_role,body.password,body.code)
     if row.used or row.revoked:raise HTTPException(409,'Un invito usato o revocato non si può rinnovare')
     available_email(db,row.email,row.id)
+    if row.requested_role!='user':row.issuer_id=user.id;row.issuer_auth_version=user.auth_version
     row.expires=int(time.time())+body.days*86400;row.version+=1;audit(db,user.id,'invitation.renewed',row.id);db.commit();return output(row)
 
 @router.post('/invitations/{identity}/regenerate')
 def regenerate(identity:str,body:Change,request:Request,user=Depends(admin),db=Depends(get_db)):
+    throttle(db,'invitation-mutate:'+user.id,30)
     lock_admin(db,request,user);row=editable(db,identity,body.expected_version)
+    from .authority import grant_proof
+    grant_proof(db,user,row.requested_role,body.password,body.code)
     if row.used:raise HTTPException(409,'Un invito utilizzato non si può rigenerare: gestisci l’account creato')
     row.revoked=True;row.version+=1;db.flush();available_email(db,row.email)
-    new,result=issue(db,row.email,body.days,user);audit(db,user.id,'invitation.regenerated',row.id);db.commit();return result
+    new,result=issue(db,row.email,body.days,user,row.requested_role);audit(db,user.id,'invitation.regenerated',row.id);db.commit();return result
 
 @router.post('/invitations/{identity}/revoke')
 def revoke(identity:str,body:Change,request:Request,user=Depends(admin),db=Depends(get_db)):
+    throttle(db,'invitation-mutate:'+user.id,30)
     lock_admin(db,request,user);row=editable(db,identity,body.expected_version)
+    from .admin_permissions import require_superadmin
+    if row.requested_role!='user':require_superadmin(db,user)
     if row.used:raise HTTPException(409,'Invito già utilizzato: gestisci l’account creato')
     row.revoked=True;row.version+=1;audit(db,user.id,'invitation.revoked',row.id);db.commit();return output(row)

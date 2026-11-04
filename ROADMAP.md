@@ -48,6 +48,6 @@ I requisiti non ancora consegnati restano nel perimetro; le attività interne so
 - [ ] Rafforzamento della sicurezza con simulazioni di attacco su ambienti isolati, revisione accessi e dipendenze, recupero e documentazione dei limiti. Nessuna promessa di eliminare ogni vulnerabilità.
 - [ ] Studio della cifratura end-to-end per impedire anche al gestore del server di leggere i contenuti: modello chiavi/recupero/condivisione e compatibilità con calcoli, bot, report, ricerca e backup da progettare e approvare. **Non disponibile oggi: la privacy attuale è applicativa.**
 - [ ] Accesso e registrazione Google e GitHub aggiuntivi, mantenendo account Sgancia, password/MFA/passkey, gate e policy invito/approvazione. Collegamenti espliciti senza fusione automatica per email; configurazione provider globale e test anti-replay.
-- [ ] Più superadmin, ruolo predefinito negli inviti/approvazioni e permessi configurabili degli admin globali: lavorazione richiesta, non ancora rilasciata. Revoca del ruolo tra superadmin senza cancellare account e con protezione dell’ultimo.
+- [x] Più superadmin, ruolo negli inviti/approvazioni e permessi configurabili degli admin globali. Revoca del ruolo tra superadmin senza cancellare account e con protezione dell’ultimo: [guida](docs/ruoli-globali.md).
 
 Queste voci provengono dalla TODO del titolare e rimangono pianificate finché implementazione e prove non sono completate. Dettagli: [sviluppi futuri](docs/sviluppi-futuri.md).

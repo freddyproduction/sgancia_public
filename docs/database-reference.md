@@ -326,6 +326,8 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | version | INTEGER | no |  |
 | issuer_id | VARCHAR(36) | sì | users.id |
 | used_by | VARCHAR(36) | sì | users.id |
+| requested_role | VARCHAR(16) | no |  |
+| issuer_auth_version | INTEGER | sì |  |
 
 ## ledger_entries
 
@@ -610,6 +612,9 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | password_hash | VARCHAR(256) | no |  |
 | status | VARCHAR(20) | no |  |
 | admin | BOOLEAN | no |  |
+| superadmin | BOOLEAN | no |  |
+| admin_permissions | JSON | sì |  |
+| requested_role | VARCHAR(16) | no |  |
 | theme | VARCHAR(5) | no |  |
 | email_verified | BOOLEAN | no |  |
 | auth_version | INTEGER | no |  |

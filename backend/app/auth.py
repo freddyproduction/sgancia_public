@@ -16,7 +16,7 @@ router = APIRouter(prefix='/api/v1/auth', tags=['Autenticazione'])
 
 def user_out(user,db):
     from .superadmin import is_superadmin
-    return {'id': user.id, 'name': user.name, 'email': user.email, 'admin': user.admin, 'totp': bool(user.totp_secret), 'theme': user.theme, 'email_verified':user.email_verified,'superadmin':is_superadmin(db,user.id)}
+    return {'id': user.id, 'name': user.name, 'email': user.email, 'admin': user.admin, 'totp': bool(user.totp_secret), 'theme': user.theme, 'email_verified':user.email_verified,'superadmin':is_superadmin(db,user.id),'admin_permissions':__import__('app.admin_permissions',fromlist=['permissions']).permissions(db,user)}
 
 
 def totp_check(db, user, code):
@@ -80,9 +80,13 @@ def register(body: Register, request: Request, db=Depends(get_db), instance=Depe
         raise HTTPException(403, 'Per creare un account è richiesto un invito di registrazione')
     if group_invitation:
         check_group_invitation(db, group_invitation, body.email,new_account=True)
+    from .authority import invitation_role
+    requested_role=invitation_role(db,invitation) if invitation else 'user'
     if invitation:
         invitation.used = True
     user = User(email=body.email, name=body.name.strip(), password_hash=passwords.hash(body.password), status='pending' if instance.registration == 'approval' else 'active')
+    user.requested_role=requested_role if user.status=='pending' else 'user'
+    if user.status=='active' and requested_role!='user':user.admin=True;user.superadmin=requested_role=='superadmin';user.admin_permissions=[]
     db.add(user)
     try:
         db.flush()

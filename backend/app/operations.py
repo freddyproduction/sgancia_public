@@ -11,7 +11,7 @@ from .smtp_admin import require_admin_session
 from .db import get_db,SessionLocal
 from .runtime_policy import Policy,policy
 router=APIRouter(prefix='/api/v1/admin/operations',tags=['Amministrazione operativa'])
-SAFE_EVENTS=('invitation.','registration.','installation.','user.','account.','session.','passkey.','installation_passkey.','mfa.','backup.','operations.','telegram.')
+SAFE_EVENTS=('authority.','global_admin.','invitation.','registration.','installation.','user.','account.','session.','passkey.','installation_passkey.','mfa.','backup.','operations.','telegram.')
 
 class BackupPolicy(Strict):
     enabled:bool=False
@@ -141,7 +141,8 @@ def revoke_sessions(body:Confirm,request:Request,user=Depends(admin),db=Depends(
     if not body.confirm:raise HTTPException(422,'Conferma la revoca')
     root=db.get(Instance,1).superadmin_id
     q=delete(Session).where(Session.token_hash!=request.state.session.token_hash)
-    if user.id!=root:q=q.where(Session.user_id!=root)
+    from .superadmin import is_superadmin
+    if not is_superadmin(db,user.id):q=q.where(Session.user_id.not_in(select(User.id).where((User.superadmin.is_(True)) | (User.id==root))))
     count=db.execute(q).rowcount;audit(db,user.id,'operations.sessions_revoked');db.commit();return {'revoked':count}
 
 

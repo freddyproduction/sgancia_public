@@ -21,3 +21,7 @@ Il codice e il link vengono restituiti soltanto al momento della creazione o rig
 Le operazioni richiedono una verifica recente dell’identità; se necessaria si apre il popup dell’account. Dopo la conferma ripetere esplicitamente l’operazione. Versioni attese, lock installazione e transazioni impediscono rinnovi/rigenerazioni concorrenti incompatibili e corse con consumo o revoca. Un invito non supera il cancello globale, la verifica email richiesta, la modalità approvazione o il blocco delle registrazioni.
 
 Il backup comprende la metadata degli inviti. Il ripristino invalida i non consumati come revocati e mantiene i già usati non riutilizzabili. Le vecchie versioni di backup senza metadata conservano la precedente invalidazione tramite used. Non fare downgrade su inviti revocati/rinnovati: la migrazione rifiuta la perdita di quei controlli.
+
+## Aggiornamento ruoli globali
+
+Le descrizioni storiche del fondatore permanente sono sostituite dalla [gestione aggiornata dei superadmin e dei permessi](ruoli-globali.md): più superadmin, revoca soltanto da parte di un altro, protezione dell’ultimo e account conservato. Solo i superadmin assegnano ruoli privilegiati negli inviti/approvazioni o modificano capacità degli admin.

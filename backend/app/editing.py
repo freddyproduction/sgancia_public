@@ -96,6 +96,8 @@ def edit_user(user_id: str, body: UserUpdate, request: Request, user=Depends(adm
     from .global_roles import locked_admin
     user,person=locked_admin(db,request,user,user_id)
     from .superadmin import is_superadmin
+    if person.admin and not is_superadmin(db,user.id) and person.id!=user.id:raise HTTPException(403,'Solo un superadmin può modificare altri amministratori')
+    if person.requested_role!='user' and not is_superadmin(db,user.id):raise HTTPException(403,'Richiesta con ruolo riservata ai superadmin')
     if is_superadmin(db,person.id):
         if person.id!=user.id:raise HTTPException(403,'Solo il superadmin può modificare il proprio account')
         if body.status!='active' or body.email!=person.email:raise HTTPException(403,'Superadmin protetto: cambia la tua email dalle impostazioni personali con password e MFA')

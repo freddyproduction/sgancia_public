@@ -11,7 +11,7 @@ export async function api<T=unknown>(path:string, options:RequestInit={}):Promis
   return result
 }
 export const send=(method:string,body?:unknown):RequestInit=>({method,body:body===undefined?undefined:JSON.stringify(body)})
-export type User={id:string;name:string;email:string;admin:boolean;superadmin?:boolean;totp:boolean;email_verified?:boolean;theme:'light'|'dark'}
+export type User={id:string;name:string;email:string;admin:boolean;superadmin?:boolean;admin_permissions?:string[];totp:boolean;email_verified?:boolean;theme:'light'|'dark'}
 export type Group={id:string;name:string;currency:string;state:string;description:string;icon:string;image_url:string|null;metadata_version:number;smart_balances:boolean}
 export type Person={id:string;name:string;virtual:boolean;role:string;active?:boolean;merged_into?:string|null}
 export type Detail=Group&{participants:Person[];my_participant:string;role:string}

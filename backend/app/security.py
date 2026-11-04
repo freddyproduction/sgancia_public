@@ -89,9 +89,15 @@ def current(request: Request, db=Depends(get_db), instance=Depends(gate)):
     return user
 
 
-def admin(user=Depends(current)):
-    if not user.admin:
-        raise HTTPException(403, 'Permesso amministratore richiesto')
+def admin(request:Request,user=Depends(current),db=Depends(get_db)):
+    from sqlalchemy import select
+    db.scalar(select(Instance).where(Instance.id==1).with_for_update().execution_options(populate_existing=True))
+    from .account_security import locked_user
+    from .passkeys import ensure_live_session
+    user=locked_user(db,user.id);ensure_live_session(db,request,user)
+    if not user or not user.admin or user.status!='active':raise HTTPException(403,'Permesso amministratore richiesto')
+    from .admin_permissions import check_request
+    check_request(db,user,request)
     return user
 
 

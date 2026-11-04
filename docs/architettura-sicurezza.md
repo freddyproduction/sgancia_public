@@ -4,7 +4,7 @@ Sgancia usa frontend React compilato e API FastAPI nella stessa immagine/origine
 
 ## Identità e permessi
 
-Il cancello globale è un filtro opzionale, distinto dall’account; è attivo inizialmente. Sessioni HttpOnly, CSRF sulle scritture, origini esatte, rate limit, verifica recente per azioni sensibili, MFA e passkey. Il superadmin fondatore è identificato da ID permanente. Admin globali, proprietari/admin/membri/visualizzatori di gruppo e pubblico della singola spesa sono livelli distinti: un ruolo amministrativo non amplia il pubblico di una spesa riservata.
+Il cancello globale è un filtro opzionale, distinto dall’account; è attivo inizialmente. Sessioni HttpOnly, CSRF sulle scritture, origini esatte, rate limit, verifica recente per azioni sensibili, MFA e passkey. I superadmin sono identificati da ID e attributi di autorità, con un riferimento protetto a un superadmin attivo. Admin globali, proprietari/admin/membri/visualizzatori di gruppo e pubblico della singola spesa sono livelli distinti: un ruolo amministrativo non amplia il pubblico di una spesa riservata.
 
 I servizi verificano appartenenza e pubblico anche per allegati, export, storico, notifiche e bot. Risorse invisibili restituiscono errori senza contenuti privati. Un invito/claim non associa in base al nome; richiede la concessione corretta. Gli ospiti leggono soltanto dati pubblici autorizzati e sono disattivati globalmente inizialmente.
 
@@ -23,3 +23,7 @@ Telegram verifica ID e chat privata, codici/pulsanti monouso, pin delle versioni
 ## Minacce e limiti residui
 
 Proteggere da compromissione host/chiavi, phishing, configurazione proxy errata, file ostili, accessi simultanei, reinvio di richieste e fughe tra pubblici. I test coprono questi controlli applicativi, ma non equivalgono a penetration test indipendente o qualifica del proprio server. Dipendenze, configurazione reale, recupero e dispositivi vanno riesaminati a ogni release. Nessuna attestazione completa di sicurezza è implicita nel blocco 15.
+
+## Aggiornamento ruoli globali
+
+Le descrizioni storiche del fondatore permanente sono sostituite dalla [gestione aggiornata dei superadmin e dei permessi](ruoli-globali.md): più superadmin, revoca soltanto da parte di un altro, protezione dell’ultimo e account conservato. Solo i superadmin assegnano ruoli privilegiati negli inviti/approvazioni o modificano capacità degli admin.
