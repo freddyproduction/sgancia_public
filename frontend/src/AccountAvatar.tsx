@@ -2,7 +2,8 @@ import {useEffect,useState} from 'react'
 import {api,send,type User} from './api'
 import {ImagePicker} from './ImagePicker'
 import {ErrorMessage} from './ui'
-export function Avatar({user}:{user:User}){return <span className="avatar">{user.avatar_url?<img src={user.avatar_url} alt=""/>:user.avatar_icon||user.name[0]}</span>}
+export function Avatar({user}:{user:{name:string;avatar_url?:string|null;avatar_icon?:string|null}}){const[failed,setFailed]=useState('');return <span className="avatar">{user.avatar_url&&user.avatar_url!==failed?<img src={user.avatar_url} alt="" onError={()=>setFailed(user.avatar_url||'')}/>:user.avatar_icon||user.name[0]}</span>}
+
 export function AccountAvatar({user,onChanged}:{user:User;onChanged:(user:User)=>void}){
  const[icon,setIcon]=useState(user.avatar_icon||''),[image,setImage]=useState<string|null|undefined>(),[dirty,setDirty]=useState(false),[error,setError]=useState(''),[busy,setBusy]=useState(false),[version,setVersion]=useState(user.avatar_version||1)
  useEffect(()=>{if(!dirty){setIcon(user.avatar_icon||'');setImage(undefined);setVersion(user.avatar_version||1)}},[user,dirty])

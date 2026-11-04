@@ -96,3 +96,5 @@ dialog.overlay .modal{max-height:calc(100dvh - 48px);min-width:0}
 .group-card-body p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-bottom:12px}
 .group-card-body>span{padding-top:10px}
 @media(max-width:340px){.group-grid{grid-template-columns:minmax(0,1fr)}}
+
+.greeting-avatar{display:inline-flex;vertical-align:middle;margin-left:14px}.greeting-avatar .avatar{width:48px;height:48px;font-size:1.4rem;letter-spacing:normal}.greeting-avatar .avatar img{object-fit:contain}

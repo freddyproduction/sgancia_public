@@ -39,7 +39,7 @@ class User(Base):
     avatar: Mapped[bytes | None] = mapped_column(LargeBinary)
     avatar_icon: Mapped[str] = mapped_column(String(16),default='')
     avatar_version: Mapped[int] = mapped_column(default=1)
-    theme: Mapped[str] = mapped_column(String(5), default='light')
+    theme: Mapped[str] = mapped_column(String(5), default='dark',server_default='dark')
     email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     auth_version: Mapped[int] = mapped_column(default=1)
     totp_secret: Mapped[str | None] = mapped_column(String(512))

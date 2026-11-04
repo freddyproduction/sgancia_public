@@ -58,9 +58,23 @@ def create_group(body: GroupIn, user=Depends(current), db=Depends(get_db)):
 @router.get('/groups/{group_id}')
 def group_detail(group_id: str, user=Depends(current), db=Depends(get_db)):
     group, participant = membership(db, group_id, user)
-    members = db.scalars(select(Participant).where(Participant.group_id == group_id).order_by(Participant.name))
-    return {**group_out(group), 'my_participant': participant.id, 'role': participant.role,
-            'participants': [{'id': p.id, 'name': p.name, 'virtual': p.user_id is None, 'role': p.role, 'active': p.active, 'merged_into': p.merged_into} for p in members]}
+    rows=db.execute(select(Participant,User.avatar_icon,User.avatar_version,User.avatar.is_not(None)).outerjoin(User,(Participant.user_id==User.id)&(User.status=='active')).where(Participant.group_id==group_id).order_by(Participant.name))
+    people=[]
+    for p,icon,version,has_image in rows:
+        profile=p.active and not p.merged_into
+        people.append({'id':p.id,'name':p.name,'virtual':p.user_id is None,'role':p.role,'active':p.active,'merged_into':p.merged_into,'avatar_icon':icon if profile else None,'avatar_url':f'/api/v1/groups/{group_id}/participants/{p.id}/avatar?v={version}' if profile and has_image else None})
+    return {**group_out(group),'my_participant':participant.id,'role':participant.role,'participants':people}
+
+
+@router.get('/groups/{group_id}/participants/{participant_id}/avatar')
+def participant_avatar(group_id:str,participant_id:str,user=Depends(current),db=Depends(get_db)):
+    from fastapi import Response
+    membership(db,group_id,user)
+    person=db.get(Participant,participant_id)
+    if not person or person.group_id!=group_id or not person.active or person.merged_into or not person.user_id:raise HTTPException(404,'Immagine non disponibile')
+    account=db.get(User,person.user_id)
+    if not account or account.status!='active' or not account.avatar:raise HTTPException(404,'Immagine non disponibile')
+    return Response(content=account.avatar,media_type='image/webp',headers={'Cache-Control':'private, no-store'})
 
 
 @router.post('/groups/{group_id}/participants', status_code=201)
