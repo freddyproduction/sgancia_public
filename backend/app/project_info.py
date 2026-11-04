@@ -6,7 +6,7 @@ DEVELOPER = 'PjChaosEOW'
 # INSERISCI QUI la tua email pubblica (nessuna email viene inviata automaticamente).
 DEVELOPER_EMAIL = 'freddy.productionsound@gmail.com'
 # INSERISCI QUI il link HTTPS reale alla pagina Buy Me a Coffee.
-DONATION_URL = ''
+DONATION_URL = 'https://buymeacoffee.com/chaoseow'
 # INSERISCI QUI il link HTTPS reale al repository GitHub pubblico.
 REPOSITORY_URL = 'https://github.com/freddyproduction/sgancia_public'
 # Testo approvato dal titolare il 4 novembre 2026.
