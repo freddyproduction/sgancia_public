@@ -16,7 +16,7 @@ router = APIRouter(prefix='/api/v1/auth', tags=['Autenticazione'])
 
 def user_out(user,db):
     from .superadmin import is_superadmin
-    return {'id': user.id, 'name': user.name, 'email': user.email, 'admin': user.admin, 'totp': bool(user.totp_secret), 'theme': user.theme, 'email_verified':user.email_verified,'superadmin':is_superadmin(db,user.id),'admin_permissions':__import__('app.admin_permissions',fromlist=['permissions']).permissions(db,user)}
+    return {'avatar_icon':user.avatar_icon,'avatar_version':user.avatar_version,'avatar_url':f'/api/v1/account/avatar?v={user.avatar_version}' if user.avatar else None,'id': user.id, 'name': user.name, 'email': user.email, 'admin': user.admin, 'totp': bool(user.totp_secret), 'theme': user.theme, 'email_verified':user.email_verified,'superadmin':is_superadmin(db,user.id),'admin_permissions':__import__('app.admin_permissions',fromlist=['permissions']).permissions(db,user)}
 
 
 def totp_check(db, user, code):

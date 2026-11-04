@@ -196,3 +196,28 @@ def change_gate(body:GatePolicy,request:Request,user=Depends(admin),db=Depends(g
     instance.gate_enabled=body.enabled;instance.gate_version+=1
     db.execute(delete(GateGrant));db.execute(delete(Session));audit(db,user.id,'gate.enabled' if body.enabled else 'gate.disabled');db.commit()
     return {'ok':True,'login_required':True}
+
+
+class AvatarIn(Strict):
+    icon:str=Field(default='',max_length=16)
+    image:str|None=Field(default=None,max_length=2_800_000)
+
+
+@router.put('/account/avatar')
+def update_avatar(body:AvatarIn,request:Request,user=Depends(current),db=Depends(get_db)):
+    throttle(db,'avatar:'+user.id,30,60)
+    user=locked_user(db,user.id)
+    if request.headers.get('if-match')!=str(user.avatar_version):raise HTTPException(409,'Immagine account modificata: aggiorna le impostazioni')
+    from .group_settings import normalize_image
+    if 'image' in body.model_fields_set:user.avatar=normalize_image(body.image) if body.image else None
+    user.avatar_icon=body.icon.strip();user.avatar_version+=1
+    audit(db,user.id,'account.avatar_updated');db.commit()
+    from .auth import user_out
+    return user_out(user,db)
+
+
+@router.get('/account/avatar')
+def avatar(user=Depends(current)):
+    from fastapi import Response
+    if not user.avatar:raise HTTPException(404,'Immagine account non presente')
+    return Response(content=user.avatar,media_type='image/webp',headers={'Cache-Control':'private, no-store'})
