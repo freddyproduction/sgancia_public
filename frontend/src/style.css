@@ -83,5 +83,5 @@ dialog.overlay .modal{max-height:calc(100dvh - 48px);min-width:0}
 @media(max-width:760px){.settings-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.settings-tabs [role=tab]{padding:12px 10px;text-align:left;font-size:.78rem;flex-wrap:wrap}.settings-tabs small{margin-left:26px}.settings-role-badge{align-self:flex-start}.settings-scope{padding:13px 15px}}
 .image-preparation-preview{display:block;max-width:100%;max-height:320px;width:auto;height:auto;margin:1rem auto;background:var(--paper);border:1px solid var(--line);border-radius:12px}.avatar img{width:100%;height:100%;object-fit:contain;border-radius:inherit}.account-avatar-preview{width:96px;height:96px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;border-radius:24px;overflow:hidden;background:var(--pale)}.account-avatar-preview img{width:100%;height:100%;object-fit:contain}
 
-.group-cover{height:auto;aspect-ratio:1/1}.group-cover img{object-fit:contain}.group-image-preview img{object-fit:contain}
+.group-cover img{inset:0;margin:auto;width:auto;height:100%;max-width:100%;aspect-ratio:1/1;object-fit:contain}.group-image-preview img{object-fit:contain}
 .hero .hero-kicker{color:#516044}.group-card-body>span{color:var(--green)}
