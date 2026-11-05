@@ -101,22 +101,29 @@ docker compose -f docker-compose.yml -f docker-compose.tls.yml up -d
 
 Il certificato deve essere riconosciuto dai dispositivi utilizzati. Le passkey sono legate all’hostname configurato come origine principale; usarle tramite quell’hostname. Password e TOTP funzionano anche sulle altre origini autorizzate, inclusa la LAN HTTP esplicita. Le passkey sul dominio non sono trasferibili a localhost/IP; l’app indica l’indirizzo principale quando si tenta di usarle da un alias. Usare lo stesso hostname con DNS locale è l’opzione più semplice per passkey sia in LAN sia da remoto.
 
-## Avvio e primo amministratore
+## Avvio, primo amministratore o migrazione
+
+Dopo aver completato `.env`:
 
 ```sh
-docker compose build
+docker compose config --quiet &&
+docker compose build migrate &&
 docker compose up -d
-docker compose exec api python -m app.cli init
 docker compose ps
 ```
 
-L’inizializzazione richiede email/nome, password personale di almeno 12 caratteri e chiave globale di almeno 16, senza credenziali predefinite. La registrazione iniziale è soltanto tramite invito. Fino al bootstrap la readiness segnala non pronto: è previsto. Una seconda inizializzazione non sovrascrive l’istanza.
+Apri il frontend sulla porta configurata. Se il database è vuoto, **Configura l’installazione** offre:
 
-PostgreSQL persiste in `data/postgres/` dentro la cartella del progetto. Non modificare manualmente quei file. Backup in `backups/`, esclusi da Git. Il Compose include mail, automazioni, backup e Telegram (in attesa se disabilitato); non richiedono altre porte. Il bot e gli altri servizi opzionali saranno aggiunti quando implementati.
+- **Nuova installazione:** autorizza con `SGANCIA_ENCRYPTION_KEY` del nuovo server, poi scegli nome/email, password personale di almeno 12 caratteri e chiave globale di almeno 16. Il primo account è superadmin; registrazione iniziale soltanto tramite invito.
+- **Ripristina o migra:** autorizza con la chiave tecnica del nuovo server e carica il backup completo `.sgp` con la sua password. Non creare prima un altro admin: vengono conservati account, chiave globale e superadmin originali. [Procedura completa](backup-portabile.md).
+
+La CLI `docker compose exec api python -m app.cli init` resta un’alternativa per una nuova installazione, senza ripristino. Una seconda inizializzazione non sovrascrive l’istanza. La readiness ora può essere pronta anche prima del bootstrap, per permettere la configurazione web; se non è pronta verifica database e migrazioni, non creare tabelle manualmente.
+
+PostgreSQL persiste in `data/postgres/`, allegati in `data/attachments/` e backup server in `backups/`, esclusi da Git. Non modificare manualmente i file PostgreSQL. Il Compose include mail, automazioni, backup e Telegram (in attesa quando disabilitato), senza ulteriori porte pubblicate.
 
 ## Storage privato degli allegati
 
-Compose include storage-init (una tantum, inizializza permessi UID 10001) e monta data/attachments in lettura/scrittura nell’API, mantenendo il resto del filesystem runtime in sola lettura. Nessuna porta storage o DB esposta. Lo storage rimane dentro la cartella progetto ed è escluso dal contesto di build insieme ai dati PostgreSQL. Per i limiti vedere .env.example e [allegati](allegati.md). I backup ora comprendono anche questi file: non copiare il solo volume PostgreSQL come backup completo. Nginx deve ammettere gli upload della dimensione prevista (esempio 12 MiB per file limite 10 MiB).
+Compose include storage-init (una tantum, inizializza permessi UID 10001) e monta data/attachments in lettura/scrittura nell’API, mantenendo il resto del filesystem runtime in sola lettura. Nessuna porta storage o DB esposta. Lo storage rimane dentro la cartella progetto ed è escluso dal contesto di build insieme ai dati PostgreSQL. Per i limiti vedere .env.example e [allegati](allegati.md). I backup ora comprendono anche questi file: non copiare il solo volume PostgreSQL come backup completo. Nginx deve ammettere gli upload della dimensione prevista: per gli allegati, ad esempio 12 MiB con limite file 10 MiB; per il ripristino `.sgp` adegua separatamente limite corpo e timeout ai backup scelti (128 MB predefiniti, fino a 512 MB). Gli eventuali limiti del tunnel/proxy esterno vanno verificati dal gestore.
 
 
 ### Email dell’installazione
@@ -124,4 +131,4 @@ Configurare SMTP da Impostazioni → Impostazioni dell’installazione, come amm
 
 ## Prima release e documentazione
 
-Seguire anche [rilascio.md](rilascio.md) per la qualifica Linux/LAN/HTTPS, le due copie Git e le prove ancora aperte. Guida pubblica nell’app su /help; firma e contatti configurabili in backend/app/project_info.py. Non copiare dati o credenziali demo: generare chiavi nuove e completare il bootstrap sul server.
+Seguire anche [rilascio.md](rilascio.md) per la qualifica Linux/LAN/HTTPS, le due copie Git e le prove ancora aperte. Guida pubblica nell’app su /help; firma e contatti configurabili in backend/app/project_info.py. Non copiare dati o credenziali demo: generare chiavi nuove sul nuovo server e scegliere configurazione da zero oppure ripristino web. Negli aggiornamenti dello stesso server conservare invece le chiavi esistenti.

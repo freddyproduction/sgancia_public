@@ -1,7 +1,7 @@
 # Troubleshooting
 
 - **Porta 8088 non raggiungibile:** verificare `docker compose ps` e `docker compose logs --tail=100 api migrate db`. Il bind dipende da SGANCIA_BIND_IP; il default è loopback. Sul server verificare bind, firewall e proxy gestiti dall’utente.
-- **Readiness non pronta al primo avvio:** completare `docker compose exec api python -m app.cli init`. Se migrate fallisce, non inizializzare tabelle a mano.
+- **Primo avvio:** su database vuoto aprire il frontend e scegliere Nuova installazione oppure Ripristina o migra; non creare prima un admin se si recupera un `.sgp`. La readiness può essere pronta prima della configurazione. Se non è pronta o migrate fallisce, verificare i log e non inizializzare tabelle a mano.
 - **Chiave richiesta dopo rotazione:** tutti i gate e le sessioni sono revocati; rientrare con la nuova chiave.
 - **Sessione che non resta attiva:** verificare l’origine esatta. Per LAN HTTP indicare l’IP con porta in `SGANCIA_HTTP_LAN_ORIGINS`, mantenendo `SGANCIA_SECURE_COOKIES=true` sul server. HTTPS continua a usare cookie Secure. Controllare che Nginx inoltri Host originale e X-Forwarded-Proto=https e che il suo IP reale sia fidato.
 - **Origine non autorizzata:** usare host, schema e porta configurati. Alias localhost/127.0.0.1 e altre origini HTTPS in `SGANCIA_ALLOWED_ORIGINS`; soli IP privati HTTP in `SGANCIA_HTTP_LAN_ORIGINS`. `Indirizzo non autorizzato` indica un Host/porta/schema non configurato.
@@ -10,7 +10,7 @@
 - **MFA rifiutata:** verificare orario del dispositivo, codice non già consumato e corretta chiave di cifratura dell’installazione. Usare un codice di recupero monouso se necessario. Non disabilitare i controlli per aggirare il problema.
 - **Rimborso verso un virtuale:** usare le deleghe e le conferme dei gestori autorizzati; per un ricevente registrato conferma il ricevente.
 - **Spesa non divisibile:** controllare somma pagatori, somma quote personalizzate/percentuali e inclusione di tutti i soggetti nel pubblico autorizzato.
-- **Backup non decifrabile:** controllare la chiave backup originale e l’integrità del file; non ripristinare output parziali.
+- **Backup non decifrabile:** per `.sgp` serve la password scelta alla creazione, per `.sgb` la chiave backup originale; controllare formato, versione e integrità del file; non ripristinare output parziali.
 
 Evitare di condividere log con password, cookie, chiavi, dump o contenuti delle spese riservate. Le verifiche del server reale e di Nginx/Cloudflare non sono state eseguite sul Mac.
 

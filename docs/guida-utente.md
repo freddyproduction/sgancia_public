@@ -106,7 +106,7 @@ Non inviare mai chiave globale, password o codici MFA al bot. Telegram è un ser
 
 L’admin globale gestisce registrazioni, ruoli globali, SMTP, chiave d’accesso, politiche, Telegram, link ospiti, audit e backup. L’admin del gruppo gestisce soltanto il proprio gruppo. Il primo account del bootstrap è superadmin. Un altro superadmin può assegnare o revocare questo ruolo, senza cancellare l’account; l’ultimo è protetto. Il nome non determina i privilegi.
 
-I backup automatici e i link ospiti sono inizialmente spenti; le notifiche esterne e Telegram richiedono configurazione. Custodisci le chiavi di cifratura e recupero separatamente dal server. Un backup cifrato senza le chiavi originali non è recuperabile.
+I backup automatici e i link ospiti sono inizialmente spenti; le notifiche esterne e Telegram richiedono configurazione. Custodisci le chiavi di cifratura e recupero separatamente dal server. Per recuperare un .sgb servono le chiavi originali; per un .sgp serve la password del file, mentre la nuova chiave del server autorizza la configurazione iniziale.
 
 Il ripristino revoca sessioni, inviti e collegamenti sensibili e sospende automatismi: prima di riabilitarli controlla utenti, saldi e pianificazioni. Per aggiornamenti e recupero seguire le guide operative della versione installata.
 
@@ -118,6 +118,8 @@ Gli inviti condivisi si creano in Amministrazione → Registrazioni e inviti glo
 
 I superadmin possono scaricare un archivio portabile completo .sgp. Sulla destinazione vuota si ripristina dalla configurazione iniziale, senza creare altri admin, usando SGANCIA_ENCRYPTION_KEY del nuovo server e la password del file. Le impostazioni amministrative controllano abilitazione e limiti dei backup di gruppo.
 
+Per una migrazione: scarica il backup completo .sgp dalla sorgente, installa una versione compatibile su una destinazione vuota con nuove chiavi tecniche, apri Configura l’installazione → Ripristina o migra e inserisci SGANCIA_ENCRYPTION_KEY del nuovo server, file e password. Non creare prima un admin. Dopo il recupero usa chiave globale e account originali e verifica gli automatismi prima di riattivarli. I file .sgb seguono la procedura server, non questo modulo.
+
 ## Disponibile, da abilitare e in arrivo
 
 Disponibile: account e sicurezza, gruppi e ruoli, spese composte/riservate, valute, saldi Smart, rimborsi, allegati, storico, import/export, statistiche, notifiche e bot Telegram.
@@ -126,4 +128,4 @@ Da abilitare o configurare: Telegram, SMTP e verifica email, email di notifica, 
 
 In arrivo: PWA/offline completa, OCR locale e ulteriori miglioramenti della roadmap. Restano prove reali di passkey su Mac/iPhone, SMTP e Telegram, server Linux, HTTPS/proxy e CI remota. La versione corrente è di sviluppo, non una dichiarazione di prima release stabile.
 
-Nuove richieste future: backup portabile completo, backup selettivi dei gruppi e personalizzazione; rafforzamento della sicurezza con prove di attacco isolate; studio di cifratura end-to-end (oggi non disponibile); accesso Google/GitHub aggiuntivo senza rimuovere gli account Sgancia. Gestione multipla dei superadmin, ruoli negli inviti/approvazioni e permessi degli admin globali sono disponibili nella gestione globale. La roadmap distingue le funzioni pianificate da quelle realmente disponibili.
+Backup portabili dell’installazione e dei singoli gruppi, ripristino iniziale e personalizzazione sono disponibili. Restano in programma: rafforzamento della sicurezza con prove di attacco isolate; studio di cifratura end-to-end (oggi non disponibile); accesso Google/GitHub aggiuntivo senza rimuovere gli account Sgancia. Gestione multipla dei superadmin, ruoli negli inviti/approvazioni e permessi degli admin globali sono disponibili nella gestione globale. La roadmap distingue le funzioni pianificate da quelle realmente disponibili.

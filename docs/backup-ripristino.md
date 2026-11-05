@@ -1,5 +1,7 @@
 # Backup e ripristino
 
+**Questa pagina descrive il recupero server `.sgb`.** Per il ripristino dal browser durante la configurazione iniziale e per i singoli gruppi usa la [guida `.sgp` a backup portabile e migrazione](backup-portabile.md). Password del file `.sgp` e chiavi tecniche del vecchio `.sgb` hanno scopi distinti.
+
 La procedura copre PostgreSQL (identità, revisioni, contabilità, preferenze e immagini gruppo) **e i file privati delle spese/ricevute**, comprese anteprime e allegati rimossi ancora recuperabili. Database e file sono raccolti in un bundle con manifest e digest, poi cifrati con autenticazione.
 
 Configurare `SGANCIA_BACKUP_KEY` con una chiave casuale base64 di 32 byte, diversa da `SGANCIA_ENCRYPTION_KEY`. Conservare una copia di entrambe al di fuori del server: il dump del database non contiene le chiavi applicative. Non inviare chiavi nelle chat o nei log.
@@ -13,10 +15,10 @@ Il backup usa `pg_dump -Fc`, aggiunge i file immutabili riferiti dai metadati e 
 Ripristino: prima fare una copia di sicurezza dello stato attuale. Il comando sostituisce lo schema/dati del database corrente e richiede conferma esplicita tramite argomento.
 
 ```sh
-docker compose stop api mail worker backup
+docker compose stop api mail worker backup telegram
 scripts/restore.sh backups/NOME.sgb --confirm-restore
 docker compose run --rm --no-deps migrate
-docker compose start api mail worker
+docker compose start api mail worker backup telegram
 ```
 
 La decifratura viene interamente autenticata prima di modificare il database. Il bundle viene validato integralmente (nomi ammessi, dimensioni, digest, file mancanti/duplicati e divieto di link/percorso esterno) prima di pubblicare i blob ripristinati. I file immutabili vengono pubblicati prima del ripristino DB: se pg_restore fallisce, la transazione DB viene annullata e possono restare soltanto file non referenziati, senza sovrascrivere contenuti diversi già esistenti. Il dump temporaneo in `.local/` è privato e rimosso all’uscita; `pg_restore` opera in una sola transazione e si ferma agli errori. Una chiave sbagliata o un file alterato/incompleto impediscono il ripristino. Mantenere la chiave TOTP originaria dopo il ripristino.

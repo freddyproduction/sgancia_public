@@ -1,6 +1,6 @@
 # Amministrazione
 
-Il ruolo amministratore globale è distinto dai ruoli dei gruppi. Il bootstrap interattivo crea il primo amministratore come superadmin iniziale dell’installazione. Non esistono password universali. La chiave globale è un filtro aggiuntivo e non sostituisce l’account personale.
+Il ruolo amministratore globale è distinto dai ruoli dei gruppi. La configurazione web (o il bootstrap CLI alternativo) crea il primo account come superadmin; il ripristino iniziale `.sgp` recupera quelli originali senza crearne un altro. Non esistono password universali. La chiave globale è un filtro aggiuntivo e non sostituisce l’account personale.
 
 Dal pannello Impostazioni un amministratore può scegliere registrazioni libere, con approvazione, tramite invito o disabilitate; generare inviti di registrazione; attivare utenti in attesa e sospendere account non amministratori. La sospensione revoca le loro sessioni.
 
@@ -24,11 +24,11 @@ Per assegnare esclusivamente il ruolo in un gruppo, aprire **Impostazioni gruppo
 
 ## Superadmin dell’installazione
 
-Il primo account creato da `python -m app.cli init` è superadmin. La migrazione conserva questo ruolo. L’installazione può avere più superadmin, identificati tramite ID e attributi di autorità, non nome o email. Un altro superadmin può revocare il ruolo del primo senza cancellarne l’account. Il riferimento `instance.superadmin_id` mantiene un superadmin attivo e passa a un altro quando necessario. FK, vincoli e trigger proteggono il riferimento e l’ultimo superadmin.
+Il primo account creato dalla configurazione web o dalla CLI `python -m app.cli init` è superadmin. La migrazione conserva questo ruolo. L’installazione può avere più superadmin, identificati tramite ID e attributi di autorità, non nome o email. Un altro superadmin può revocare il ruolo del primo senza cancellarne l’account. Il riferimento `instance.superadmin_id` mantiene un superadmin attivo e passa a un altro quando necessario. FK, vincoli e trigger proteggono il riferimento e l’ultimo superadmin.
 
 Gli admin globali ordinari restano assegnabili/revocabili. Nessun ruolo globale, superadmin incluso, aggiunge appartenenze ai gruppi o concede accesso alle spese riservate di cui l’account non fa parte. L’uscita da un gruppo riguarda solo la partecipazione a quel gruppo: non cancella l’account né il ruolo di superadmin. Le normali verifiche di login/MFA e la revoca delle sessioni restano attive anche per il fondatore.
 
-Aggiornamento da versione precedente: la migrazione identifica l’unico amministratore iniziale attivo che non risulta nominato tramite la nuova funzione di promozione. Se l’identità è ambigua, si arresta senza assegnazioni arbitrarie: l’operatore del server deve verificare l’ID del fondatore e passarlo in `SGANCIA_LEGACY_SUPERADMIN_ID` al servizio migrate. Il nome/email non vengono usati come scorciatoia. Il riferimento, una volta assegnato, non può essere cambiato dall’ambiente o dall’app. Il downgrade della migrazione su un’installazione inizializzata è bloccato per non rimuovere silenziosamente la protezione.
+Aggiornamento da versione precedente: la migrazione identifica l’unico amministratore iniziale attivo che non risulta nominato tramite la nuova funzione di promozione. Se l’identità è ambigua, si arresta senza assegnazioni arbitrarie: l’operatore del server deve verificare l’ID del fondatore e passarlo in `SGANCIA_LEGACY_SUPERADMIN_ID` al servizio migrate. Il nome/email non vengono usati come scorciatoia. L’ambiente non riassegna un riferimento già configurato; l’app può trasferirlo a un altro superadmin attivo durante le operazioni autorizzate, preservando la protezione dell’ultimo. Il downgrade della migrazione su un’installazione inizializzata è bloccato per non rimuovere silenziosamente la protezione.
 
 
 ## Recupero MFA e passkey degli altri utenti

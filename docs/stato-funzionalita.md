@@ -1,6 +1,6 @@
 # Stato delle funzionalità — 3 novembre 2026
 
-Il nucleo è eseguibile e verificato; il perimetro del primo prompt resta interamente approvato e viene consegnato progressivamente. Versione ancora di sviluppo. Checklist operativa: [TODO-SVILUPPO](../TODO-SVILUPPO.md).
+Il nucleo è eseguibile e verificato; il perimetro del primo prompt resta interamente approvato e viene consegnato progressivamente. Versione ancora di sviluppo. Avanzamento pubblico: [roadmap](../ROADMAP.md); consegna backup e Amici nella [checklist blocco 17](blocco-17-stato.md).
 
 | Area | Stato verificato | Ancora da completare |
 |---|---|---|
@@ -76,7 +76,9 @@ Lock installazione e utenti ordinati con rilettura del ruolo/sessione correnti, 
 157 backend PostgreSQL + 9 frontend passati, build e ciclo migrazioni riusciti. Test dedicati promozione/revoca/sessioni, nessuna espansione dei gruppi, separazione ruolo gruppo, password/MFA/CSRF/identità recente, ultimo admin e due gare concorrenti. Backup completo pre-aggiornamento riuscito, API/DB healthy e mail avviato. Nessun ruolo reale modificato. La sessione browser aperta risultava disconnessa: verifica manuale della pagina autenticata da fare al prossimo accesso del titolare; nessuna credenziale reale letta o inserita per forzarla. Documentazione amministrazione aggiornata. Verifiche esterne del blocco 04 (SMTP reale/passkey Mac-iPhone) restano aperte.
 
 
-## Superadmin fondatore permanente — 3 novembre 2026
+## Storico: superadmin fondatore permanente — 3 novembre 2026
+
+Questa sezione descrive una fase precedente, superata dai superadmin multipli e dalle operazioni su altri account. Le regole attuali sono in [ruoli globali](ruoli-globali.md) ed [eliminazione account](eliminazione-account.md).
 
 Richiesta esplicita dell’utente: il primo account dell’installazione diventa superadmin permanente. Implementato tramite instance.superadmin_id immutabile e FK all’ID, senza nomi/email hardcoded. L’istanza attuale è stata verificata senza stampare dati personali: l’admin iniziale è identificabile e coincide col primo attore registrato. Migrazione f913a762bd08 applicata: fondatore assegnato, admin attivo e identità originale confermati. Nessun account aggiuntivo creato o promosso nell’istanza reale.
 

@@ -42,8 +42,8 @@ I requisiti non ancora consegnati restano nel perimetro; le attività interne so
 
 ## Nuove richieste di sviluppo
 
-- [ ] Backup completo portabile dell’installazione con procedura di ripristino dedicata: estendere il bundle cifrato DB/allegati già esistente, definendo come gestire configurazione e chiavi senza inserirle in Git.
-- [ ] Backup selettivi dei gruppi, con appartenenze, contabilità, allegati e controlli di visibilità; anteprima e conflitti al ripristino.
+- [x] Backup completo portabile `.sgp` e ripristino iniziale senza nuovo admin; chiavi ricifrate sul nuovo server e configurazione host separata. [Guida](docs/backup-portabile.md).
+- [x] Backup del singolo gruppo completo, compresi i contenuti riservati; ripristino in copia congelata con destinatari conservati e altri partecipanti virtuali, senza conflitti con l’originale. [Limiti](docs/backup-portabile.md).
 - [x] Backup portabili di installazione e gruppi, ripristino iniziale senza nuovo admin, nomi/limiti e sottocartelle automatiche; percorsi host tramite Compose. [Guida](docs/backup-portabile.md).
 - [ ] Rafforzamento della sicurezza con simulazioni di attacco su ambienti isolati, revisione accessi e dipendenze, recupero e documentazione dei limiti. Nessuna promessa di eliminare ogni vulnerabilità.
 - [ ] Studio della cifratura end-to-end per impedire anche al gestore del server di leggere i contenuti: modello chiavi/recupero/condivisione e compatibilità con calcoli, bot, report, ricerca e backup da progettare e approvare. **Non disponibile oggi: la privacy attuale è applicativa.**
