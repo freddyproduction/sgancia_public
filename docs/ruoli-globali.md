@@ -1,6 +1,6 @@
 # Superadmin e permessi degli admin globali
 
-Queste regole sostituiscono la precedente protezione permanente del solo fondatore, su richiesta esplicita del titolare. Il primo account resta superadmin all’aggiornamento. Possono esistere più superadmin, e soltanto un altro superadmin può revocare quel ruolo: l’account, i gruppi e i conti non vengono cancellati. L’ultimo superadmin attivo è protetto anche a livello database.
+Queste regole sostituiscono la precedente protezione permanente del solo fondatore, su richiesta esplicita del titolare. Il primo account resta superadmin all’aggiornamento. Possono esistere più superadmin, e soltanto un altro superadmin può revocare quel ruolo: la sola revoca del ruolo non cancella account, gruppi e conti. L’ultimo superadmin attivo è protetto anche a livello database.
 
 ## Ruolo e permessi
 
@@ -14,7 +14,7 @@ La revoca di un ruolo non interrompe i backup già autorizzati e accodati. I per
 
 ## Inviti e approvazioni
 
-Il superadmin può scegliere Utente, Admin globale o Superadmin durante la creazione di un invito globale. Le nomine privilegiate richiedono nuovamente password e MFA del superadmin. Il codice resta legato all’email, monouso e soggetto a scadenza e revoca. Per inviti privilegiati si verifica anche che l’emittente sia ancora superadmin attivo e che la sua versione di sicurezza corrisponda: dopo variazioni di sicurezza o revoche può servire un nuovo invito autorizzato.
+Il superadmin può scegliere Utente, Admin globale o Superadmin durante la creazione di un invito globale. Le nomine privilegiate richiedono nuovamente password e MFA del superadmin. Gli inviti personali restano legati all’email e monouso; sono disponibili anche link condivisi per più account con scadenza, quota e rigenerazione (vedi inviti-condivisi.md). Per inviti privilegiati si verifica anche che l’emittente sia ancora superadmin attivo e che la sua versione di sicurezza corrisponda: dopo variazioni di sicurezza o revoche può servire un nuovo invito autorizzato.
 
 In modalità approvazione, la registrazione resta **in attesa e senza privilegi**, anche se l’invito propone superadmin. Alla conferma un superadmin sceglie il ruolo effettivo e fornisce la prova aggiuntiva per ruoli elevati. Gli admin delegati alle registrazioni approvano soltanto richieste ordinarie. Nessun invito aggira le registrazioni disabilitate, la chiave installazione o le regole di verifica email. Gli inviti account + gruppo restano nel percorso del gruppo e non assegnano autorità globale.
 
@@ -23,3 +23,7 @@ In modalità approvazione, la registrazione resta **in attesa e senza privilegi*
 Migrazione f518a762bd19: conserva il primo superadmin e i permessi precedenti degli admin esistenti; aggiunge autorità multiple, capacità per admin e ruoli richiesti negli inviti/approvazioni. Il riferimento instance.superadmin_id diventa l’ancora di un superadmin attivo; se quel ruolo viene revocato legittimamente passa a un altro superadmin. Il nome visualizzato non determina il ruolo. Audit conserva le decisioni; non sono inseriti password, codici o token nel registro.
 
 Backup e ripristino conservano ruoli e capacità; il restore continua a revocare sessioni/inviti sensibili e sospendere automatismi. Un downgrade che perderebbe superadmin aggiuntivi, richieste privilegiate o permessi personalizzati viene rifiutato. Non usare SQL manuale per aggirare la protezione dell’ultimo superadmin.
+
+## Sospensione ed eliminazione
+
+Un superadmin può sospendere o eliminare anche un altro superadmin, con conferma password/MFA e mantenendo almeno un superadmin attivo. La sospensione conserva il ruolo; l’eliminazione anonimizza l’account e preserva la contabilità. Non si può intervenire sul proprio account da questi controlli. Vedi [eliminazione account](eliminazione-account.md).

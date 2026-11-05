@@ -76,3 +76,5 @@ Sono supportati dominio HTTPS, localhost, 127.0.0.1 e IP LAN HTTP dichiarato esp
 La donazione è interamente volontaria: non acquista funzionalità né comporta obblighi, priorità delle richieste, legami con lo sviluppo del codice o promesse su tempi e risultati.
 
 Per proporre idee, descrivi esigenza e risultato desiderato usando esempi inventati, senza credenziali o dati personali. Nell’app trovi anche il modulo **Guida e informazioni → Idee e contatti sviluppatore**. Configurazione per chi ospita Sgancia: [contatti.md](docs/contatti.md).
+
+Guide: [inviti condivisi alla piattaforma](docs/inviti-condivisi.md) · [sospensione ed eliminazione account](docs/eliminazione-account.md).

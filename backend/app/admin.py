@@ -37,7 +37,7 @@ class Invitation(Strict):
 
 @router.get('/users')
 def users(user=Depends(admin), db=Depends(get_db)):
-    return [{'id': u.id, 'name': u.name, 'email': u.email, 'status': u.status, 'admin': u.admin,'email_verified':u.email_verified,'superadmin':__import__('app.superadmin',fromlist=['is_superadmin']).is_superadmin(db,u.id),'admin_permissions':__import__('app.admin_permissions',fromlist=['permissions']).permissions(db,u),'requested_role':u.requested_role,'auth_version':u.auth_version} for u in db.scalars(select(User).order_by(User.email))]
+    return [{'id': u.id, 'name': u.name, 'email': u.email, 'deleted':u.deleted,'status': u.status, 'admin': u.admin,'email_verified':u.email_verified,'superadmin':__import__('app.superadmin',fromlist=['is_superadmin']).is_superadmin(db,u.id),'admin_permissions':__import__('app.admin_permissions',fromlist=['permissions']).permissions(db,u),'requested_role':u.requested_role,'auth_version':u.auth_version} for u in db.scalars(select(User).order_by(User.email))]
 
 
 @router.put('/registration')
@@ -64,6 +64,7 @@ def status(user_id: str, body: Status, request: Request, user=Depends(admin), db
     if target.admin:
         raise HTTPException(403, 'Gli amministratori non possono essere sospesi da questa operazione')
     if body.expected_status is not None and target.status!=body.expected_status:raise HTTPException(409,'La richiesta è già stata gestita: aggiorna la lista')
+    if target.deleted:raise HTTPException(409,'Account eliminato: non può essere riattivato')
     was_pending=target.status=='pending'
     from .admin_permissions import require_permission
     require_permission(db,user,'registrations' if was_pending else 'users')

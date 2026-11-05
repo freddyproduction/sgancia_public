@@ -95,6 +95,7 @@ def edit_person(group_id: str, participant_id: str, body: PersonUpdate, user=Dep
 def edit_user(user_id: str, body: UserUpdate, request: Request, user=Depends(admin), db=Depends(get_db)):
     from .global_roles import locked_admin
     user,person=locked_admin(db,request,user,user_id)
+    if person.deleted:raise HTTPException(409,'Account eliminato: non modificabile')
     from .superadmin import is_superadmin
     if person.admin and not is_superadmin(db,user.id) and person.id!=user.id:raise HTTPException(403,'Solo un superadmin può modificare altri amministratori')
     if person.requested_role!='user' and not is_superadmin(db,user.id):raise HTTPException(403,'Richiesta con ruolo riservata ai superadmin')

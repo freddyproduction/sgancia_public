@@ -109,6 +109,8 @@ def issue_claim(group_id:str,participant_id:str,body:ClaimIn,user=Depends(curren
 
 @router.post('/participants/claim')
 def claim(body:TokenIn,user=Depends(current),db=Depends(get_db)):
+    from .account_security import live_group_user
+    user=live_group_user(db,user)
     initial=db.get(ParticipantClaim,digest(body.token))
     if not initial:raise HTTPException(404,'Associazione non disponibile')
     initial_person=db.get(Participant,initial.participant_id)

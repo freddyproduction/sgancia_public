@@ -447,6 +447,27 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | shared | BOOLEAN | no |  |
 | version | INTEGER | no |  |
 
+## platform_invitation_links
+
+| Colonna | Tipo | Nullable | Riferimenti |
+|---|---|---|---|
+| id | VARCHAR(36) | no |  |
+| token_hash | VARCHAR(64) | no |  |
+| secret | BLOB | no |  |
+| label | VARCHAR(100) | no |  |
+| created | BIGINT | no |  |
+| expires | BIGINT | no |  |
+| uses | INTEGER | no |  |
+| total_uses | INTEGER | no |  |
+| max_uses | INTEGER | sì |  |
+| auto_rotate | BOOLEAN | no |  |
+| rotations | INTEGER | no |  |
+| revoked | BOOLEAN | no |  |
+| version | INTEGER | no |  |
+| issuer_id | VARCHAR(36) | no | users.id |
+| requested_role | VARCHAR(16) | no |  |
+| issuer_auth_version | INTEGER | sì |  |
+
 ## rate_buckets
 
 | Colonna | Tipo | Nullable | Riferimenti |
@@ -620,6 +641,7 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | email | VARCHAR(254) | no |  |
 | name | VARCHAR(100) | no |  |
 | password_hash | VARCHAR(256) | no |  |
+| deleted | BOOLEAN | no |  |
 | status | VARCHAR(20) | no |  |
 | admin | BOOLEAN | no |  |
 | superadmin | BOOLEAN | no |  |

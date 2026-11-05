@@ -37,6 +37,11 @@ def preview_access(db,clear,user):
         if not existing:check_group_invitation(db,inv,user.email)
         person=db.get(Participant,inv.participant_id) if inv.participant_id else None
         return {'kind':'invitation','group_id':group.id,'group':group.name,'role':existing.role if existing else inv.role,'person':person.name if person else None,'already_member':bool(existing),'expires':inv.expires,'message':'Sei già membro: apri il gruppo senza creare duplicati.' if existing else 'Collegherai il tuo account alla persona esistente, conservando saldi e cronologia.' if person else 'Diventerai un nuovo membro del gruppo con il tuo account.'}
+    from .models import PlatformInvitationLink
+    platform=db.scalar(select(PlatformInvitationLink).where(PlatformInvitationLink.token_hash==hashed))
+    single=db.get(Invite,hashed)
+    if platform or single:
+        return {'kind':'platform_registration','group_id':'','group':'Invito alla piattaforma','role':'user','person':None,'already_member':True,'expires':(platform or single).expires,'message':'Questo link serve a creare un nuovo account Sgancia, non a entrare in un gruppo o cambiare il ruolo di un account esistente. Hai già effettuato l’accesso: puoi continuare con il tuo account.'}
     claim=db.get(ParticipantClaim,hashed)
     if claim:
         person=db.get(Participant,claim.participant_id);group=db.get(Group,person.group_id) if person else None
@@ -55,12 +60,12 @@ def preview(body:Accept,user=Depends(current),db=Depends(get_db)):
 @router.post('/group-access/accept')
 def accept(body:JoinAccept,user=Depends(current),db=Depends(get_db)):
     throttle(db,'group-access:'+user.id,30)
+    from .account_security import live_group_user
+    user=live_group_user(db,user)
     data=preview_access(db,body.token,user)
+    if data['kind']=='platform_registration':raise HTTPException(422,'Questo invito serve solo a registrarsi alla piattaforma')
     db.scalar(select(Group).where(Group.id==data['group_id']).with_for_update())
     db.expire_all()
-    from .models import User
-    user=db.scalar(select(User).where(User.id==user.id).with_for_update().execution_options(populate_existing=True))
-    if not user or user.status!='active':raise HTTPException(403,'Account non disponibile')
     data=preview_access(db,body.token,user)
     if data['kind']=='group_code':
         from .group_codes import join

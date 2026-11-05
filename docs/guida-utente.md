@@ -12,6 +12,8 @@ Se perdi i fattori usa un codice di recupero conservato privatamente. Un admin g
 
 La chiave dell’installazione e il login hanno durate separate, configurabili dall’admin globale. Esci revoca l’account ma conserva la chiave già verificata; al ritorno trovi direttamente il login finché il cancello è valido. Per cancellarlo usa Dimentica la chiave dell’installazione nel modulo di accesso. La modalità Immediato usa cookie fino alla chiusura del browser, con limite server di 30 giorni; il ripristino delle sessioni del browser può conservarli. Le durate si applicano ai nuovi accessi e sono distinte dalla conferma identità delle operazioni sensibili.
 
+Puoi ricevere un link di invito condiviso alla piattaforma: permette più registrazioni entro scadenza e limite di utilizzi. Non è un invito a un gruppo e non cambia il ruolo di un account esistente. Se è prevista approvazione devi attendere la conferma.
+
 ## Account, aspetto e metodi di pagamento
 
 In Impostazioni modifica nome, email e password, gestisci MFA, passkey e sessioni. Le operazioni sensibili richiedono Conferma identità recente: quando necessario si apre un popup per password account e codice MFA/recupero se attivo. Dopo la verifica torna al modulo e premi di nuovo il pulsante dell’operazione; non viene ripetuta automaticamente. Il tema chiaro o scuro è salvato sull’account e si applica anche agli altri dispositivi.
@@ -107,6 +109,8 @@ Il ripristino revoca sessioni, inviti e collegamenti sensibili e sospende automa
 In Registrazioni e inviti globali scegli la modalità corrente e gestisci le richieste in attesa: Approva attiva l’account, Rifiuta lo sospende senza cancellarlo. Gli inviti globali hanno durata da 1 a 90 giorni, stato e filtri. Rinnova conserva il codice; Rigenera ne crea uno nuovo e revoca il precedente; Rimuovi / revoca lo invalida conservando lo storico. Il link si copia solo alla creazione o rigenerazione e non viene inviato automaticamente. Gli inviti account + gruppo restano nel gruppo.
 
 Solo i superadmin assegnano ruoli globali e scelgono i permessi degli admin: account, registrazioni, SMTP, accesso, politiche, ospiti, Telegram, backup, audit e sessioni. I nuovi admin partono senza permessi aggiuntivi. Negli inviti si può proporre il ruolo; in modalità approvazione rimane senza effetto finché un superadmin non conferma la richiesta. Le nomine privilegiate richiedono password e MFA se attiva. La revoca del ruolo non elimina account o conti.
+
+Gli inviti condivisi si creano in Amministrazione → Registrazioni e inviti globali: durata, quota, rinnovo, revoca e rigenerazione manuale o automatica. I superadmin possono sospendere, riattivare ed eliminare account a ogni livello con password e MFA; l’ultimo superadmin attivo e il proprio account sono protetti. Eliminare anonimizza il profilo e conserva le spese condivise, con trasferimento delle proprietà o gruppi nel cestino.
 
 ## Disponibile, da abilitare e in arrivo
 

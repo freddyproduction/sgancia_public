@@ -80,7 +80,7 @@ def current(request: Request, db=Depends(get_db), instance=Depends(gate)):
     if not session or session.expires <= time.time() or session.gate_version != instance.gate_version:
         raise HTTPException(401, 'Sessione scaduta o non valida')
     user = db.get(User, session.user_id)
-    if not user or user.status != 'active' or session.auth_version!=user.auth_version:
+    if not user or user.status != 'active' or user.deleted or session.auth_version!=user.auth_version:
         raise HTTPException(401, 'Account non disponibile')
     if request.method not in ('GET', 'HEAD', 'OPTIONS'):
         if not secrets.compare_digest(session.csrf_hash, digest(request.headers.get('X-CSRF-Token', ''))):

@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import { api,send,type Detail,type Person } from './api'
 import { Modal,ErrorMessage } from './ui'
-export type AdminUser={id:string;name:string;email:string;status:string;admin:boolean;superadmin?:boolean;admin_permissions?:string[];auth_version?:number}
+export type AdminUser={deleted?:boolean;id:string;name:string;email:string;status:string;admin:boolean;superadmin?:boolean;admin_permissions?:string[];auth_version?:number}
 export function ParticipantEditor({person,detail,onClose,onSaved}:{person:Person;detail:Detail;onClose:()=>void;onSaved:()=>Promise<void>}){
  const[error,setError]=useState(''),[busy,setBusy]=useState(false)
  const canChangeRole=['owner','admin'].includes(detail.role)&&person.role!=='owner'&&person.id!==detail.my_participant

@@ -145,6 +145,8 @@ def invite(group_id:str,body:InviteIn,request:Request,user=Depends(current),db=D
 
 @router.post('/invitations/accept')
 def accept(body:Accept,user=Depends(current),db=Depends(get_db)):
+    from .account_security import live_group_user
+    user=live_group_user(db,user)
     lock_invitation_group(db,digest(body.token.strip()))
     registration=db.scalar(select(Invite).where(Invite.token_hash==digest(body.token.strip())).with_for_update())
     invitation=db.scalar(select(GroupInvite).where(GroupInvite.token_hash==digest(body.token.strip())).with_for_update().execution_options(populate_existing=True))

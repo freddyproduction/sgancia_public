@@ -22,6 +22,9 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | POST | `/api/v1/admin/installation/smtp/test` | Test Smtp |
 | GET | `/api/v1/admin/invitations` | Invitations |
 | POST | `/api/v1/admin/invitations` | Invite |
+| GET | `/api/v1/admin/invitations/shared-links` | Links |
+| POST | `/api/v1/admin/invitations/shared-links` | Create |
+| POST | `/api/v1/admin/invitations/shared-links/{identity}/{action}` | Change |
 | POST | `/api/v1/admin/invitations/{identity}/regenerate` | Regenerate |
 | POST | `/api/v1/admin/invitations/{identity}/renew` | Renew |
 | POST | `/api/v1/admin/invitations/{identity}/revoke` | Revoke |
@@ -39,6 +42,8 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | PUT | `/api/v1/admin/registration` | Policy |
 | GET | `/api/v1/admin/users` | Users |
 | PUT | `/api/v1/admin/users/{identity}/authority` | Change Authority |
+| GET | `/api/v1/admin/users/{identity}/deletion-preview` | Preview |
+| POST | `/api/v1/admin/users/{identity}/lifecycle` | Lifecycle |
 | PUT | `/api/v1/admin/users/{user_id}` | Edit User |
 | PUT | `/api/v1/admin/users/{user_id}/global-role` | Change Role |
 | POST | `/api/v1/admin/users/{user_id}/reset-factors` | Reset Factors |

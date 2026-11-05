@@ -14,6 +14,13 @@ router=APIRouter(prefix='/api/v1',tags=['Sicurezza account'])
 def locked_user(db,uid):return db.scalar(select(User).where(User.id==uid).with_for_update().execution_options(populate_existing=True))
 
 
+def live_group_user(db,user):
+    version=user.auth_version
+    row=locked_user(db,user.id)
+    if not row or row.status!='active' or row.deleted or row.auth_version!=version:raise HTTPException(403,'Account o sessione non più disponibili')
+    return row
+
+
 def revoke_access(db,user,session=None):
     user.auth_version+=1
     condition=[Session.user_id==user.id]

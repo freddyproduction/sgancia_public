@@ -47,3 +47,7 @@ Chiave ricordata e login hanno ora [durate indipendenti configurabili](durate-ac
 ## Aggiornamento ruoli globali
 
 Le descrizioni storiche del fondatore permanente sono sostituite dalla [gestione aggiornata dei superadmin e dei permessi](ruoli-globali.md): più superadmin, revoca soltanto da parte di un altro, protezione dell’ultimo e account conservato. Solo i superadmin assegnano ruoli privilegiati negli inviti/approvazioni o modificano capacità degli admin.
+
+## Inviti condivisi e account
+
+Oltre agli inviti personali sono disponibili [link condivisi](inviti-condivisi.md) con durata, quota, revoca e rigenerazione. Solo i superadmin gestiscono [sospensione ed eliminazione a ogni livello](eliminazione-account.md), proteggendo l’ultimo superadmin attivo e conservando la contabilità condivisa.

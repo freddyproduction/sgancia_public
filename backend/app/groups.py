@@ -44,6 +44,8 @@ def groups(user=Depends(current), db=Depends(get_db)):
 
 @router.post('/groups', status_code=201)
 def create_group(body: GroupIn, user=Depends(current), db=Depends(get_db)):
+    from .account_security import live_group_user
+    user=live_group_user(db,user)
     if not body.name.strip():
         raise HTTPException(422, 'Nome obbligatorio')
     group = Group(name=body.name.strip(), currency=body.currency, owner_id=user.id)
@@ -79,15 +81,14 @@ def participant_avatar(group_id:str,participant_id:str,user=Depends(current),db=
 
 @router.post('/groups/{group_id}/participants', status_code=201)
 def add_participant(group_id: str, body: ParticipantIn, user=Depends(current), db=Depends(get_db)):
+    membership(db, group_id, user, write=True, manage=True)
+    if not body.name.strip():raise HTTPException(422,'Nome obbligatorio')
+    target=None
+    if body.email:
+        target=db.scalar(select(User).where(User.email==body.email.strip().lower(),User.status=='active',User.deleted.is_(False)).with_for_update().execution_options(populate_existing=True))
+        if not target:raise HTTPException(400,'Account non disponibile')
     db.scalar(select(Group).where(Group.id==group_id).with_for_update())
     membership(db, group_id, user, write=True, manage=True)
-    if not body.name.strip():
-        raise HTTPException(422, 'Nome obbligatorio')
-    target = None
-    if body.email:
-        target = db.scalar(select(User).where(User.email == body.email.strip().lower(), User.status == 'active'))
-        if not target:
-            raise HTTPException(400, 'Account non disponibile')
     p = Participant(group_id=group_id, name=body.name.strip(), user_id=target.id if target else None, role=body.role)
     db.add(p)
     try:

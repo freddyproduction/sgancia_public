@@ -16,6 +16,7 @@ def require_superadmin(db,user):
 
 def check_request(db,user,request):
     path=request.url.path
+    if path.endswith(('/lifecycle','/deletion-preview')):require_superadmin(db,user);return
     if path.endswith(('/authority','/global-role','/authority-options')):require_superadmin(db,user);return
     if path.endswith('/admin/users') or (path.startswith('/api/v1/admin/users/') and path.endswith('/status')):require_permission(db,user,'users','registrations');return
     if '/admin/users/' in path:require_permission(db,user,'users');return

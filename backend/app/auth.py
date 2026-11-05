@@ -66,22 +66,28 @@ def register(body: Register, request: Request, db=Depends(get_db), instance=Depe
         raise HTTPException(403, 'Registrazioni disabilitate')
     invitation = None
     group_invitation = None
+    shared_link=None
     if body.invite.strip():
         lock_invitation_group(db,digest(body.invite.strip()))
         invitation = db.scalar(select(Invite).where(Invite.token_hash == digest(body.invite.strip())).with_for_update())
         group_invitation = db.scalar(select(GroupInvite).where(GroupInvite.token_hash == digest(body.invite.strip())).with_for_update().execution_options(populate_existing=True))
         if invitation and (invitation.used or invitation.revoked or invitation.expires <= time.time() or invitation.email != body.email):
             raise HTTPException(403, 'Invito di registrazione scaduto, già usato o destinato a un’altra email')
-        if not invitation and not group_invitation:
+        from .models import PlatformInvitationLink
+        shared_link=db.scalar(select(PlatformInvitationLink).where(PlatformInvitationLink.token_hash==digest(body.invite.strip())).with_for_update())
+        if shared_link:
+            from .platform_links import validate
+            validate(db,shared_link)
+        if not invitation and not group_invitation and not shared_link:
             raise HTTPException(403, 'Codice invito non riconosciuto: copia il codice completo senza modificarlo')
-    if instance.registration == 'invite' and not invitation:
+    if instance.registration == 'invite' and not invitation and not shared_link:
         if group_invitation:
             raise HTTPException(403, 'Questo codice serve solo a entrare nel gruppo con un account esistente. Chiedi all’amministratore un invito “Nuovo account + gruppo”.')
         raise HTTPException(403, 'Per creare un account è richiesto un invito di registrazione')
     if group_invitation:
         check_group_invitation(db, group_invitation, body.email,new_account=True)
     from .authority import invitation_role
-    requested_role=invitation_role(db,invitation) if invitation else 'user'
+    requested_role=invitation_role(db,shared_link or invitation) if (invitation or shared_link) else 'user'
     if invitation:
         invitation.used = True
     user = User(email=body.email, name=body.name.strip(), password_hash=passwords.hash(body.password), status='pending' if instance.registration == 'approval' else 'active')
@@ -91,6 +97,10 @@ def register(body: Register, request: Request, db=Depends(get_db), instance=Depe
     try:
         db.flush()
         if invitation:invitation.used_by=user.id
+        if shared_link:
+            from .platform_links import consume
+            consume(db,shared_link)
+            audit(db,user.id,'platform_link.used',shared_link.id)
         group = join_from_invitation(db, group_invitation, user) if group_invitation else None
         from .mail_delivery import configured
         if configured(db):
@@ -112,7 +122,7 @@ def login(body: Credentials, request: Request, response: Response, db=Depends(ge
     throttle(db, 'login-user:' + body.email, 10)
     user = db.scalar(select(User).where(User.email == body.email))
     valid = verify(user.password_hash if user else DUMMY, body.password)
-    if not valid or not user or user.status != 'active':
+    if not valid or not user or user.status != 'active' or user.deleted:
         raise HTTPException(401, 'Credenziali non valide o account non attivo')
     if user.totp_secret and not totp_check(db, user, body.code):
         raise HTTPException(401, 'Codice MFA richiesto o non valido')

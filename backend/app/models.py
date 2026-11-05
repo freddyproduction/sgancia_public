@@ -31,6 +31,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(254), unique=True)
     name: Mapped[str] = mapped_column(String(100))
     password_hash: Mapped[str] = mapped_column(String(256))
+    deleted: Mapped[bool] = mapped_column(Boolean,default=False)
     status: Mapped[str] = mapped_column(String(20), default='active')
     admin: Mapped[bool] = mapped_column(Boolean, default=False)
     superadmin: Mapped[bool] = mapped_column(Boolean,default=False)
@@ -45,7 +46,7 @@ class User(Base):
     totp_secret: Mapped[str | None] = mapped_column(String(512))
     totp_pending: Mapped[str | None] = mapped_column(String(512))
     totp_last_counter: Mapped[int] = mapped_column(BigInteger, default=-1)
-    __table_args__ = (CheckConstraint("not superadmin or (admin and status='active')",name='ck_users_superadmin_active'),CheckConstraint("status in ('active','pending','suspended')"),CheckConstraint("theme in ('light','dark')",name='ck_users_theme'))
+    __table_args__ = (CheckConstraint("not deleted or (not admin and not superadmin and status='suspended')",name='ck_users_deleted'),CheckConstraint("not superadmin or (admin and not deleted and status in ('active','suspended'))",name='ck_users_superadmin_active'),CheckConstraint("status in ('active','pending','suspended')"),CheckConstraint("theme in ('light','dark')",name='ck_users_theme'))
 
 
 class Session(Base):
@@ -631,3 +632,24 @@ class GroupJoinCode(Base):
     role: Mapped[str] = mapped_column(String(16))
     secret: Mapped[bytes] = mapped_column(LargeBinary)
     __table_args__ = (UniqueConstraint('group_id', 'role'), CheckConstraint("role in ('admin','member','viewer')"))
+
+
+class PlatformInvitationLink(Base):
+    __tablename__='platform_invitation_links'
+    id: Mapped[str] = mapped_column(String(36),primary_key=True,default=uid)
+    token_hash: Mapped[str] = mapped_column(String(64),unique=True)
+    secret: Mapped[bytes] = mapped_column(LargeBinary)
+    label: Mapped[str] = mapped_column(String(100))
+    created: Mapped[int] = mapped_column(BigInteger,default=lambda:int(time.time()))
+    expires: Mapped[int] = mapped_column(BigInteger)
+    uses: Mapped[int] = mapped_column(default=0)
+    total_uses: Mapped[int] = mapped_column(default=0)
+    max_uses: Mapped[int | None] = mapped_column(Integer)
+    auto_rotate: Mapped[bool] = mapped_column(Boolean,default=False)
+    rotations: Mapped[int] = mapped_column(default=0)
+    revoked: Mapped[bool] = mapped_column(Boolean,default=False)
+    version: Mapped[int] = mapped_column(default=1)
+    issuer_id: Mapped[str] = mapped_column(ForeignKey('users.id'))
+    requested_role: Mapped[str] = mapped_column(String(16),default='user')
+    issuer_auth_version: Mapped[int | None] = mapped_column(Integer)
+    __table_args__=(CheckConstraint('uses>=0 and total_uses>=uses and (max_uses is null or max_uses>=1)'),CheckConstraint("requested_role in ('user','admin','superadmin')"))
