@@ -31,6 +31,9 @@ DO $$ BEGIN
   IF EXISTS(SELECT 1 FROM information_schema.columns WHERE table_name='instance' AND column_name='guest_links_enabled') THEN EXECUTE 'UPDATE instance SET guest_links_enabled=false'; END IF;
   IF to_regclass('maintenance_jobs') IS NOT NULL THEN EXECUTE 'UPDATE maintenance_jobs SET status=''failed'', error=''restore_review'' WHERE status IN (''pending'',''running'')'; END IF;
   IF to_regclass('service_heartbeats') IS NOT NULL THEN EXECUTE 'DELETE FROM service_heartbeats'; END IF;
+  IF to_regclass('friend_links') IS NOT NULL THEN EXECUTE 'DELETE FROM friend_links'; END IF;
+  IF to_regclass('group_join_codes') IS NOT NULL THEN EXECUTE 'DELETE FROM group_join_codes'; END IF;
+  IF to_regclass('platform_invitation_links') IS NOT NULL THEN EXECUTE 'UPDATE platform_invitation_links SET revoked=true'; END IF;
   IF to_regclass('group_invitations') IS NOT NULL THEN EXECUTE 'UPDATE group_invitations SET used=true'; END IF;
   IF to_regclass('participant_claims') IS NOT NULL THEN EXECUTE 'UPDATE participant_claims SET used=true'; END IF;
   IF EXISTS(SELECT 1 FROM information_schema.columns WHERE table_name='invitations' AND column_name='revoked') THEN EXECUTE 'UPDATE invitations SET revoked=true WHERE NOT used'; END IF;

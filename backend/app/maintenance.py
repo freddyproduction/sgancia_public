@@ -85,7 +85,14 @@ def restore_probe(backup):
 
 def create_backup(job_id,probe=False):
     uuid.UUID(job_id);key();folder=directory();folder.mkdir(parents=True,exist_ok=True)
-    final=folder/('auto-'+job_id+'.sgb');partial=folder/('auto-'+job_id+'.partial')
+
+    with SessionLocal() as db:
+        instance=db.get(Instance,1);raw=instance.backup_policy or {};prefix=raw.get('filename_prefix','auto');sub=raw.get('subdirectory','')
+    if not re.fullmatch(r'[A-Za-z0-9_-]{1,40}',prefix) or not re.fullmatch(r'[A-Za-z0-9_-]{0,40}',sub):raise BackupError('unsafe_backup_path')
+    folder=folder/sub
+    if folder.is_symlink():raise BackupError('unsafe_backup_path')
+    folder.mkdir(parents=True,exist_ok=True)
+    final=folder/(prefix+'-'+job_id+'.sgb');partial=folder/(prefix+'-'+job_id+'.partial')
     if final.is_symlink() or partial.is_symlink():raise BackupError('unsafe_backup_path')
     partial.unlink(missing_ok=True)
     if not final.exists():
@@ -107,21 +114,21 @@ def create_backup(job_id,probe=False):
     with workspace('sgancia-verify-') as tmp:
         with (Path(tmp)/'database.dump').open('w+b') as out:verified_dump(final,out,Path(tmp)/'objects')
         execute(['pg_restore','--list',str(Path(tmp)/'database.dump')])
-    result={'filename':final.name,'bytes':final.stat().st_size,'sha256':file_hash(final),'integrity':'verified'}
+    result={'filename':str(final.relative_to(directory())),'bytes':final.stat().st_size,'sha256':file_hash(final),'integrity':'verified'}
     if probe:result.update(restore_probe(final))
     return result
 
 
 def prune(keep):
     # Only this service's encrypted completed archives; manual backups are in another directory.
-    files=sorted((p for p in directory().glob('auto-*.sgb') if not p.is_symlink() and re.fullmatch(r'auto-[0-9a-f-]{36}\.sgb',p.name)),key=lambda p:p.stat().st_mtime,reverse=True)
+    files=sorted((p for p in directory().rglob('*.sgb') if not p.is_symlink() and not p.parent.is_symlink() and re.fullmatch(r'[A-Za-z0-9_-]{1,40}-[0-9a-f-]{36}\.sgb',p.name)),key=lambda p:p.stat().st_mtime,reverse=True)
     for path in files[keep:]:path.unlink()
 
 
 def schedule(db,now):
     instance=db.scalar(select(Instance).where(Instance.id==1).with_for_update())
     if not instance:return
-    raw=instance.backup_policy or {};cfg=BackupPolicy.model_validate({k:v for k,v in raw.items() if k!='started_at'})
+    raw=instance.backup_policy or {};cfg=BackupPolicy.model_validate({k:v for k,v in raw.items() if k not in ('started_at','portable')})
     days=policy(db)['audit_retention_days']
     if days:db.execute(delete(Audit).where(Audit.at<now-max(7,days)*86400))
     if not cfg.enabled:return
@@ -147,7 +154,7 @@ def tick():
             # With the process lock held, a prior running job belongs to a crashed worker.
             job=db.scalar(select(MaintenanceJob).where(MaintenanceJob.status.in_(['pending','running'])).order_by(MaintenanceJob.created).with_for_update(skip_locked=True).limit(1))
             if not job:return
-            instance=db.get(Instance,1);cfg=BackupPolicy.model_validate({k:v for k,v in (instance.backup_policy or {}).items() if k!='started_at'})
+            instance=db.get(Instance,1);cfg=BackupPolicy.model_validate({k:v for k,v in (instance.backup_policy or {}).items() if k not in ('started_at','portable')})
             completed=db.query(MaintenanceJob).filter(MaintenanceJob.status=='done').count()
             probe=cfg.restore_checks and completed%cfg.restore_check_every==0
             job.status='running';job.started=int(time.time());db.commit()

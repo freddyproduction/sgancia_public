@@ -78,3 +78,6 @@ La donazione è interamente volontaria: non acquista funzionalità né comporta 
 Per proporre idee, descrivi esigenza e risultato desiderato usando esempi inventati, senza credenziali o dati personali. Nell’app trovi anche il modulo **Guida e informazioni → Idee e contatti sviluppatore**. Configurazione per chi ospita Sgancia: [contatti.md](docs/contatti.md).
 
 Guide: [inviti condivisi alla piattaforma](docs/inviti-condivisi.md) · [sospensione ed eliminazione account](docs/eliminazione-account.md).
+
+- [Amici e link personali](docs/amici.md)
+- [Backup portabili, migrazione e ripristino iniziale](docs/backup-portabile.md)

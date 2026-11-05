@@ -28,6 +28,21 @@ try:
   except (OSError,ValueError):time.sleep(1)
  else:raise SystemExit('QA non pronta')
  run(['node','frontend/e2e/release.mjs'])
+ run(['node','frontend/e2e/friends-backup.mjs'])
+ migration_env={**env,'QA_PORT':'18089','QA_DB_PASSWORD':secrets.token_hex(32),'QA_ENCRYPTION_KEY':base64.urlsafe_b64encode(secrets.token_bytes(32)).decode(),'QA_BACKUP_KEY':base64.urlsafe_b64encode(secrets.token_bytes(32)).decode()}
+ migration_base=['docker','compose','-p','sgancia-portable-qa','-f','compose.qa.yml']
+ migration_existing=subprocess.check_output(migration_base+['ps','-a','-q'],cwd=root,env=migration_env,text=True)
+ if migration_existing.strip():raise SystemExit('QA migrazione già presente: nessuna modifica')
+ try:
+  subprocess.run(migration_base+['up','-d','api'],cwd=root,env=migration_env,check=True)
+  for attempt in range(30):
+   try:
+    if urllib.request.urlopen('http://localhost:18089/health/ready',timeout=2).status==200:break
+   except (OSError,ValueError):time.sleep(1)
+  else:raise SystemExit('QA migrazione non pronta')
+  subprocess.run(['node','frontend/e2e/restore-setup.mjs'],cwd=root,env=migration_env,check=True)
+ finally:subprocess.run(migration_base+['down','-v','--remove-orphans'],cwd=root,env=migration_env,check=False)
+
  # Restart both processes, preserve volumes/database, then repeat authenticated read smoke.
  run(base+['restart','api','worker'])
  for attempt in range(30):

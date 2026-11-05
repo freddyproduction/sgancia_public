@@ -27,5 +27,5 @@ def check_request(db,user,request):
     if '/admin/operations/' in path:
         action=path.split('/admin/operations/')[1].split('/')[0]
         if action=='status':return
-        require_permission(db,user,{'policy':'policy','backups':'backups','backup':'backups','telegram':'telegram','audit':'audit','revoke-sessions':'sessions'}.get(action,'__denied'));return
+        require_permission(db,user,{'policy':'policy','backups':'backups','backup':'backups','portable':'backups','telegram':'telegram','audit':'audit','revoke-sessions':'sessions'}.get(action,'__denied'));return
     raise HTTPException(403,'Operazione amministrativa non autorizzata')

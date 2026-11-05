@@ -34,6 +34,9 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | PUT | `/api/v1/admin/operations/backups` | Save Backups |
 | GET | `/api/v1/admin/operations/policy` | Get Policy |
 | PUT | `/api/v1/admin/operations/policy` | Save Policy |
+| GET | `/api/v1/admin/operations/portable` | Get Policy |
+| PUT | `/api/v1/admin/operations/portable` | Save Policy |
+| POST | `/api/v1/admin/operations/portable/export` | Export Installation |
 | POST | `/api/v1/admin/operations/revoke-sessions` | Revoke Sessions |
 | GET | `/api/v1/admin/operations/status` | Status |
 | GET | `/api/v1/admin/operations/telegram` | Telegram |
@@ -85,15 +88,28 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | DELETE | `/api/v1/auth/sessions/{session_id}` | Revoke |
 | POST | `/api/v1/auth/totp/confirm` | Confirm Totp |
 | POST | `/api/v1/auth/totp/setup` | Setup Totp |
+| GET | `/api/v1/backup-policy` | Member Policy |
 | POST | `/api/v1/calculator` | Calculator |
 | GET | `/api/v1/currencies` | Currencies |
 | POST | `/api/v1/currency-conversion` | Convert Amount |
 | GET | `/api/v1/exchange-rate` | Exchange Rate |
+| GET | `/api/v1/friends` | Listing |
+| GET | `/api/v1/friends/link` | My Link |
+| POST | `/api/v1/friends/link` | Make Link |
+| DELETE | `/api/v1/friends/link` | Revoke Link |
+| POST | `/api/v1/friends/link/accept` | Accept Link |
+| POST | `/api/v1/friends/link/preview` | Preview |
+| POST | `/api/v1/friends/requests` | Request Friend |
+| DELETE | `/api/v1/friends/requests/{identity}` | Remove |
+| POST | `/api/v1/friends/requests/{identity}/accept` | Accept |
+| GET | `/api/v1/friends/search` | Search |
+| GET | `/api/v1/friends/{identity}/avatar` | Avatar |
 | POST | `/api/v1/group-access/accept` | Accept |
 | POST | `/api/v1/group-access/preview` | Preview |
 | GET | `/api/v1/group-trash` | Group Trash |
 | GET | `/api/v1/groups` | Groups |
 | POST | `/api/v1/groups` | Create Group |
+| POST | `/api/v1/groups/backup/restore` | Restore Group |
 | DELETE | `/api/v1/groups/{gid}` | Remove Group |
 | GET | `/api/v1/groups/{gid}/access-invitations` | List Invitations |
 | DELETE | `/api/v1/groups/{gid}/access-invitations/{iid}` | Revoke Invitation |
@@ -102,6 +118,7 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | GET | `/api/v1/groups/{gid}/attachments/{aid}/content` | Download |
 | GET | `/api/v1/groups/{gid}/attachments/{aid}/preview` | Preview |
 | POST | `/api/v1/groups/{gid}/attachments/{aid}/restore` | Restore |
+| POST | `/api/v1/groups/{gid}/backup` | Export Group |
 | GET | `/api/v1/groups/{gid}/budgets` | Budgets |
 | POST | `/api/v1/groups/{gid}/budgets` | Add Budget |
 | PUT | `/api/v1/groups/{gid}/budgets/{bid}` | Edit Budget |
@@ -120,6 +137,7 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | POST | `/api/v1/groups/{gid}/expenses/{eid}/reveal-schedule` | Schedule |
 | DELETE | `/api/v1/groups/{gid}/expenses/{eid}/reveal-schedule/{jid}` | Cancel |
 | GET | `/api/v1/groups/{gid}/export` | Export Group |
+| POST | `/api/v1/groups/{gid}/friends` | Add Group |
 | POST | `/api/v1/groups/{gid}/imports/preview` | Preview Import |
 | POST | `/api/v1/groups/{gid}/imports/{batch_id}/apply` | Apply Import |
 | GET | `/api/v1/groups/{gid}/join-codes` | Group Codes |
@@ -202,6 +220,9 @@ Versione 0.2.0-dev. Fonte autorevole: `/api/openapi.json`; interfaccia `/api/doc
 | POST | `/api/v1/overview/settle` | Settle Overview |
 | POST | `/api/v1/participants/claim` | Claim |
 | GET | `/api/v1/project` | Project |
+| POST | `/api/v1/setup/initialize` | Initialize |
+| POST | `/api/v1/setup/restore` | Setup Restore |
+| GET | `/api/v1/setup/status` | Setup Status |
 | GET | `/api/v1/statistics` | Personal Stats |
 | GET | `/api/v1/telegram/account` | Account |
 | DELETE | `/api/v1/telegram/account` | Unlink |

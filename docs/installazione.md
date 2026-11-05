@@ -40,9 +40,10 @@ Dopo aver compilato e salvato `.env`:
 chmod 600 .env
 docker compose config --quiet &&
 docker compose build migrate &&
-docker compose up -d &&
-docker compose exec api python -m app.cli init
+docker compose up -d
 ```
+
+**Apri ora il frontend:** una destinazione vuota propone Nuova installazione oppure Ripristina o migra. Autorizza con `SGANCIA_ENCRYPTION_KEY` del nuovo `.env`. Per migrare carica il backup `.sgp`, senza creare prima un altro admin. La CLI `docker compose exec api python -m app.cli init` resta una alternativa per iniziare da zero. [Guida completa](backup-portabile.md).
 
 Il controllo `config --quiet` non stampa i valori; se fallisce, correggere `.env` prima di proseguire. La sequenza con `&&` si arresta al primo errore. Non usare `docker compose config` senza `--quiet` in output da condividere, perché può mostrare segreti.
 

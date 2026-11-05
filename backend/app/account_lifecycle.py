@@ -42,6 +42,9 @@ def preview(identity:str,user=Depends(admin),db=Depends(get_db)):
 
 
 def erase_profile(db,target,actor):
+    from .models import Friendship,FriendLink
+    db.execute(delete(FriendLink).where(FriendLink.user_id==target.id))
+    db.execute(delete(Friendship).where((Friendship.first_id==target.id)|(Friendship.second_id==target.id)))
     from .membership_ops import revoke
     # Group locks serialize account deletion with membership, ownership and invitation acceptance.
     gids=list(db.scalars(select(Group.id).where((Group.owner_id==target.id)|(Group.id.in_(select(Participant.group_id).where(Participant.user_id==target.id)))).order_by(Group.id)))

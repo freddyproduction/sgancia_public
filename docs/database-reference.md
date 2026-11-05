@@ -171,6 +171,26 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | snapshot | JSON | no |  |
 | created | BIGINT | no |  |
 
+## friend_links
+
+| Colonna | Tipo | Nullable | Riferimenti |
+|---|---|---|---|
+| user_id | VARCHAR(36) | no | users.id |
+| token_hash | VARCHAR(64) | no |  |
+| secret | BLOB | no |  |
+| expires | BIGINT | no |  |
+
+## friendships
+
+| Colonna | Tipo | Nullable | Riferimenti |
+|---|---|---|---|
+| id | VARCHAR(36) | no |  |
+| first_id | VARCHAR(36) | no | users.id |
+| second_id | VARCHAR(36) | no | users.id |
+| requested_by | VARCHAR(36) | no | users.id |
+| accepted | BOOLEAN | no |  |
+| created | BIGINT | no |  |
+
 ## gate_grants
 
 | Colonna | Tipo | Nullable | Riferimenti |
@@ -642,6 +662,7 @@ Generato dai modelli SQLAlchemy; le migrazioni restano la fonte per vincoli SQL 
 | name | VARCHAR(100) | no |  |
 | password_hash | VARCHAR(256) | no |  |
 | deleted | BOOLEAN | no |  |
+| archival | BOOLEAN | no |  |
 | status | VARCHAR(20) | no |  |
 | admin | BOOLEAN | no |  |
 | superadmin | BOOLEAN | no |  |

@@ -114,3 +114,6 @@ Blocchi 14/18 consegnati: politiche/monitoraggio/audit amministrativi, backup sc
 Blocchi 15/16: versione 0.2.0-dev; guida integrata/Markdown sincronizzata, firma PjChaosEOW, idee e recapiti configurabili, roadmap pubblica, changelog e cataloghi API/DB. Qualifica locale completa e copia pubblicabile separata; server Linux reale, CI remota, dispositivi e revisione finale sicurezza/licenze restano aperti. Non dichiarare release stabile.
 
 Aggiornamento 4 novembre — autorità globale: la precedente permanenza del solo fondatore è superata dalla richiesta esplicita di più superadmin. Solo un altro superadmin revoca il ruolo; l’ultimo è protetto e nessun account viene eliminato. Permessi per-admin e ruoli negli inviti/approvazioni disponibili: docs/ruoli-globali.md.
+
+
+Novembre 2026: [Amici](amici.md) e [blocco17 backup/migrazione](blocco-17-stato.md) implementati e verificati su QA isolata, inclusa migrazione da browser prima del bootstrap e ripristino gruppi completi con ambiti privati conservati. [Uso e limiti](backup-portabile.md).

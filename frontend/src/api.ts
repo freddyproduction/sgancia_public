@@ -27,7 +27,8 @@ export type Finance={summary:{expenses_total:number;paid:number;owed:number;sent
 
 
 export async function apiBlob(path:string,options:RequestInit={}):Promise<Blob>{
- const res=await fetch('/api/v1'+path,{...options,credentials:'same-origin',headers:{'Content-Type':'application/json',...options.headers}})
+ const csrf=decodeURIComponent(document.cookie.split('; ').find(v=>v.startsWith('sg_csrf='))?.split('=')[1]??'')
+ const res=await fetch('/api/v1'+path,{...options,credentials:'same-origin',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf,...options.headers}})
  if(!res.ok){const body=await res.json().catch(()=>({}));const message=typeof body.detail==='string'?body.detail:'File non disponibile.';requestIdentity(res.status,message);throw new ApiError(res.status,message)}
  return res.blob()
 }

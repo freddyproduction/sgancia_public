@@ -51,3 +51,6 @@ Le descrizioni storiche del fondatore permanente sono sostituite dalla [gestione
 ## Inviti condivisi e account
 
 Oltre agli inviti personali sono disponibili [link condivisi](inviti-condivisi.md) con durata, quota, revoca e rigenerazione. Solo i superadmin gestiscono [sospensione ed eliminazione a ogni livello](eliminazione-account.md), proteggendo l’ultimo superadmin attivo e conservando la contabilità condivisa.
+
+
+[Backup portabili, parametri gruppi e ripristino iniziale](backup-portabile.md). [Amici](amici.md).

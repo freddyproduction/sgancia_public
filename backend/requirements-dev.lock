@@ -106,6 +106,8 @@ python-dotenv==1.2.4
     # via
     #   pydantic-settings
     #   uvicorn
+python-multipart==0.0.33
+    # via -r backend/requirements.in
 pyyaml==6.0.3
     # via uvicorn
 reportlab==5.1.0

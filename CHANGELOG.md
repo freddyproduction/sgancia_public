@@ -1,5 +1,11 @@
 # Changelog
 
+## Aggiornamenti novembre 2026
+
+- Amici con richieste, link personali revocabili e inserimento nei gruppi.
+- Backup portabili cifrati di installazione e gruppi, recupero iniziale senza nuovo admin e parametri configurabili.
+- Copie dei gruppi con storico completo e destinatari privati conservati; automatismi sospesi al recupero.
+
 ## 0.2.0-dev — 4 novembre 2026
 
 - Più superadmin, permessi granulari per admin globali e ruolo negli inviti/approvazioni, con prove aggiuntive e protezione dell’ultimo superadmin.

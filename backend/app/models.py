@@ -32,6 +32,7 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(100))
     password_hash: Mapped[str] = mapped_column(String(256))
     deleted: Mapped[bool] = mapped_column(Boolean,default=False)
+    archival: Mapped[bool] = mapped_column(Boolean,default=False)
     status: Mapped[str] = mapped_column(String(20), default='active')
     admin: Mapped[bool] = mapped_column(Boolean, default=False)
     superadmin: Mapped[bool] = mapped_column(Boolean,default=False)
@@ -46,7 +47,7 @@ class User(Base):
     totp_secret: Mapped[str | None] = mapped_column(String(512))
     totp_pending: Mapped[str | None] = mapped_column(String(512))
     totp_last_counter: Mapped[int] = mapped_column(BigInteger, default=-1)
-    __table_args__ = (CheckConstraint("not deleted or (not admin and not superadmin and status='suspended')",name='ck_users_deleted'),CheckConstraint("not superadmin or (admin and not deleted and status in ('active','suspended'))",name='ck_users_superadmin_active'),CheckConstraint("status in ('active','pending','suspended')"),CheckConstraint("theme in ('light','dark')",name='ck_users_theme'))
+    __table_args__ = (CheckConstraint("not archival or (deleted and not admin and not superadmin and status='suspended')",name='ck_users_archival'),CheckConstraint("not deleted or (not admin and not superadmin and status='suspended')",name='ck_users_deleted'),CheckConstraint("not superadmin or (admin and not deleted and status in ('active','suspended'))",name='ck_users_superadmin_active'),CheckConstraint("status in ('active','pending','suspended')"),CheckConstraint("theme in ('light','dark')",name='ck_users_theme'))
 
 
 class Session(Base):
@@ -653,3 +654,22 @@ class PlatformInvitationLink(Base):
     requested_role: Mapped[str] = mapped_column(String(16),default='user')
     issuer_auth_version: Mapped[int | None] = mapped_column(Integer)
     __table_args__=(CheckConstraint('uses>=0 and total_uses>=uses and (max_uses is null or max_uses>=1)'),CheckConstraint("requested_role in ('user','admin','superadmin')"))
+
+
+class Friendship(Base):
+    __tablename__ = 'friendships'
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    first_id: Mapped[str] = mapped_column(ForeignKey('users.id'), index=True)
+    second_id: Mapped[str] = mapped_column(ForeignKey('users.id'), index=True)
+    requested_by: Mapped[str] = mapped_column(ForeignKey('users.id'))
+    accepted: Mapped[bool] = mapped_column(Boolean, default=False)
+    created: Mapped[int] = mapped_column(BigInteger, default=lambda: int(time.time()))
+    __table_args__ = (UniqueConstraint('first_id','second_id'),CheckConstraint('first_id < second_id'))
+
+
+class FriendLink(Base):
+    __tablename__ = 'friend_links'
+    user_id: Mapped[str] = mapped_column(ForeignKey('users.id'), primary_key=True)
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    secret: Mapped[bytes] = mapped_column(LargeBinary)
+    expires: Mapped[int] = mapped_column(BigInteger)

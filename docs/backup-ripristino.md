@@ -50,3 +50,8 @@ La prova periodica non richiama lo script di ripristino sul database corrente: c
 Dopo un recupero completo: backup pianificati e ricorrenze sospesi; lavori pendenti marcati da rivedere; notifiche sospese/coda email svuotata; sessioni, gate grant, passkey di installazione e challenge revocati; inviti/associazioni/link ospiti invalidati e ospiti globalmente spenti. Dati e identità dei membri già associati restano conservati. Controlla configurazioni prima di riabilitare qualsiasi automatismo e registra nuovamente le passkey del cancello.
 
 Prima del restore fermare anche il servizio telegram; la procedura revoca i collegamenti e disabilita l’integrazione. Restano da riabilitare consapevolmente ricorrenze, rivelazioni e notifiche. La prova del blocco 11 ha verificato il bundle cifrato con ledger conservato e autorizzazioni Telegram revocate; le prove sul server reale restano nella checklist di rilascio.
+
+
+## Recupero dal web
+
+Per migrazione iniziale e singoli gruppi usa il formato `.sgp`: [guida](backup-portabile.md). La procedura `.sgb` sopra rimane disponibile per il recupero server.

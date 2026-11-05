@@ -30,6 +30,10 @@ I link per nuovi account, i codici per account già registrati e i link ospite s
 
 Ogni gruppo ha codici e link diretti riutilizzabili per membro, visualizzatore e admin in Impostazioni gruppo → Inviti e ospiti / Codici invito. Gli admin vedono tutti i codici e possono rigenerarli; i membri vedono membro e visualizzatore. Ogni codice permette di collegare soltanto virtuali dello stesso ruolo. Aprendo il link trovi il codice già inserito anche dopo il login. Copia il link dal dominio pubblico se devi condividerlo fuori dalla LAN. Da Ho un invito puoi entrare come nuova persona oppure collegare la tua persona senza account conservando spese e saldi, e scegliere il nome nel gruppo. Condividi privatamente i codici: permettono di collegare i virtuali e non autorizzano la registrazione alla piattaforma.
 
+La sezione Amici offre ricerca via email esatta, richieste e link personali revocabili. Gli admin del gruppo aggiungono amici confermati da Membri → Aggiungi persona.
+
+Backup gruppo in Gestione avanzata: include anche tutte le spese riservate; il ripristino crea una copia congelata con destinatari conservati e altri partecipanti virtuali. Chi possiede file e password può leggere il contenuto fuori dall’app: conservali separatamente.
+
 ## Inserire e modificare una spesa
 
 Premi Aggiungi spesa, compila titolo, data, categoria e note. Aggiungi una o più voci. Per ogni voce la casella accanto al nome indica chi divide il costo, la stella chi ha anticipato. Più pagatori possono indicare anticipi precisi o dividere automaticamente il resto. Puoi creare categorie del gruppo.
@@ -111,6 +115,8 @@ In Registrazioni e inviti globali scegli la modalità corrente e gestisci le ric
 Solo i superadmin assegnano ruoli globali e scelgono i permessi degli admin: account, registrazioni, SMTP, accesso, politiche, ospiti, Telegram, backup, audit e sessioni. I nuovi admin partono senza permessi aggiuntivi. Negli inviti si può proporre il ruolo; in modalità approvazione rimane senza effetto finché un superadmin non conferma la richiesta. Le nomine privilegiate richiedono password e MFA se attiva. La revoca del ruolo non elimina account o conti.
 
 Gli inviti condivisi si creano in Amministrazione → Registrazioni e inviti globali: durata, quota, rinnovo, revoca e rigenerazione manuale o automatica. I superadmin possono sospendere, riattivare ed eliminare account a ogni livello con password e MFA; l’ultimo superadmin attivo e il proprio account sono protetti. Eliminare anonimizza il profilo e conserva le spese condivise, con trasferimento delle proprietà o gruppi nel cestino.
+
+I superadmin possono scaricare un archivio portabile completo .sgp. Sulla destinazione vuota si ripristina dalla configurazione iniziale, senza creare altri admin, usando SGANCIA_ENCRYPTION_KEY del nuovo server e la password del file. Le impostazioni amministrative controllano abilitazione e limiti dei backup di gruppo.
 
 ## Disponibile, da abilitare e in arrivo
 

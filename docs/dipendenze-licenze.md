@@ -214,3 +214,5 @@ Rilevato il 4 novembre 2026 dai metadati dell’immagine runtime e dal lockfile 
 `npm audit` sul lockfile: 0 vulnerabilità conosciute. `pip-audit` sul requirements.lock runtime: 43 dipendenze, 0 vulnerabilità conosciute. Esito puntuale del 4 novembre 2026: ripetere al rilascio. Nessun pacchetto audit è stato aggiunto all’immagine produzione.
 
 Il progetto è AGPL-3.0-only; Python/PostgreSQL/Node e le immagini base conservano le proprie licenze. Non è ancora attestata una revisione legale completa delle licenze transitive o dei binari nelle immagini: è un requisito aperto della release stabile. Non rimuovere avvisi e testi di terzi durante la distribuzione.
+
+Caricamento archivi dal browser: python-multipart 0.0.33, Apache-2.0, bloccato nei lockfile runtime e test.

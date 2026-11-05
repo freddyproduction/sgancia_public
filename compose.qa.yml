@@ -18,8 +18,8 @@ services:
       SGANCIA_DATABASE_URL: postgresql+psycopg://sgancia_qa:${QA_DB_PASSWORD}@db:5432/sgancia_qa
       SGANCIA_ENCRYPTION_KEY: ${QA_ENCRYPTION_KEY:?QA runner required}
       SGANCIA_BACKUP_KEY: ${QA_BACKUP_KEY:?QA runner required}
-      SGANCIA_PUBLIC_ORIGIN: http://localhost:18088
-      SGANCIA_ALLOWED_ORIGINS: '["http://127.0.0.1:18088"]'
+      SGANCIA_PUBLIC_ORIGIN: http://localhost:${QA_PORT:-18088}
+      SGANCIA_ALLOWED_ORIGINS: '["http://127.0.0.1:${QA_PORT:-18088}"]'
       SGANCIA_SECURE_COOKIES: 'false'
     command: [alembic, upgrade, head]
     depends_on:
@@ -32,7 +32,7 @@ services:
   api:
     image: sgancia:local
     environment: *qa_env
-    ports: ['127.0.0.1:18088:8000']
+    ports: ['127.0.0.1:${QA_PORT:-18088}:8000']
     volumes: [qa-storage:/app/storage]
     depends_on:
       migrate: {condition: service_completed_successfully}

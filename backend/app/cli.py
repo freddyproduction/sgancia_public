@@ -28,6 +28,8 @@ def main():
             raise SystemExit('Chiavi differenti')
         if '@' not in email or not name or len(password) < 12 or len(gate) < 16:
             raise SystemExit('Dati non validi')
+        from .portable_backup import empty_lock
+        empty_lock(db)
         founder=User(email=email,name=name,password_hash=passwords.hash(password),admin=True,superadmin=True)
         db.add(founder);db.flush()
         db.add(Instance(id=1,gate_hash=passwords.hash(gate),superadmin_id=founder.id))

@@ -35,6 +35,10 @@ async def boundary(request: Request, call_next):
     health=request.url.path in ('/health/live','/health/ready') and request.method in ('GET','HEAD')
     if not health and target_origin not in settings.origins:
         return JSONResponse({'detail':'Indirizzo non autorizzato: configura dominio o IP del server'},status_code=400)
+    if request.method=='POST' and request.url.path in ('/api/v1/setup/restore','/api/v1/groups/backup/restore'):
+        try:size=int(request.headers.get('content-length','0'))
+        except ValueError:return JSONResponse({'detail':'Dimensione file non valida'},status_code=400)
+        if size>513*1024**2:return JSONResponse({'detail':'Archivio oltre il limite di 512 MB'},status_code=413)
     if request.method not in ('GET','HEAD','OPTIONS'):
         origin=request.headers.get('origin')
         if origin is not None:
@@ -64,6 +68,10 @@ from .authority import router as authority
 app.include_router(authority)
 from .account_lifecycle import router as account_lifecycle
 app.include_router(account_lifecycle)
+from .friends import router as friends
+app.include_router(friends)
+from .portable_backup import router as portable_backup
+app.include_router(portable_backup)
 app.include_router(project_info)
 
 @app.get('/health/live', include_in_schema=False)
@@ -75,7 +83,7 @@ def live():
 def ready():
     try:
         with engine.connect() as connection:
-            connection.execute(text('SELECT gate_version FROM instance WHERE id = 1')).scalar_one()
+            connection.execute(text('SELECT gate_version FROM instance WHERE id = 1')).scalar_one_or_none()
         return {'status': 'ready'}
     except Exception:
         return JSONResponse({'status': 'not_ready'}, status_code=503)

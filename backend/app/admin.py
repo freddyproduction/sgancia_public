@@ -37,7 +37,7 @@ class Invitation(Strict):
 
 @router.get('/users')
 def users(user=Depends(admin), db=Depends(get_db)):
-    return [{'id': u.id, 'name': u.name, 'email': u.email, 'deleted':u.deleted,'status': u.status, 'admin': u.admin,'email_verified':u.email_verified,'superadmin':__import__('app.superadmin',fromlist=['is_superadmin']).is_superadmin(db,u.id),'admin_permissions':__import__('app.admin_permissions',fromlist=['permissions']).permissions(db,u),'requested_role':u.requested_role,'auth_version':u.auth_version} for u in db.scalars(select(User).order_by(User.email))]
+    return [{'id': u.id, 'name': u.name, 'email': u.email, 'deleted':u.deleted,'status': u.status, 'admin': u.admin,'email_verified':u.email_verified,'superadmin':__import__('app.superadmin',fromlist=['is_superadmin']).is_superadmin(db,u.id),'admin_permissions':__import__('app.admin_permissions',fromlist=['permissions']).permissions(db,u),'requested_role':u.requested_role,'auth_version':u.auth_version} for u in db.scalars(select(User).where(User.archival.is_(False)).order_by(User.email))]
 
 
 @router.put('/registration')

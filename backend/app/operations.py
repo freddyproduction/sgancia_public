@@ -14,6 +14,8 @@ router=APIRouter(prefix='/api/v1/admin/operations',tags=['Amministrazione operat
 SAFE_EVENTS=('authority.','global_admin.','invitation.','registration.','installation.','user.','account.','session.','passkey.','installation_passkey.','mfa.','backup.','operations.','telegram.')
 
 class BackupPolicy(Strict):
+    filename_prefix:str=Field(default='auto',pattern=r'^[A-Za-z0-9_-]{1,40}$')
+    subdirectory:str=Field(default='',pattern=r'^[A-Za-z0-9_-]{0,40}$')
     enabled:bool=False
     interval_hours:int=Field(default=24,ge=1,le=168)
     keep_count:int=Field(default=14,ge=2,le=365)
@@ -78,13 +80,13 @@ def events(request:Request,before:int|None=None,user=Depends(admin),db=Depends(g
 
 
 @router.get('/backups')
-def backups(user=Depends(admin),db=Depends(get_db)):return BackupPolicy.model_validate({k:v for k,v in (db.get(Instance,1).backup_policy or {}).items() if k!='started_at'}).model_dump()
+def backups(user=Depends(admin),db=Depends(get_db)):return BackupPolicy.model_validate({k:v for k,v in (db.get(Instance,1).backup_policy or {}).items() if k not in ('started_at','portable')}).model_dump()
 
 
 @router.put('/backups')
 def save_backups(body:BackupPolicy,request:Request,user=Depends(admin),db=Depends(get_db)):
     row=instance_locked(db);require_admin_session(db,request,user)
-    row.backup_policy={**body.model_dump(),'started_at':int(time.time())};audit(db,user.id,'installation.backup_policy_changed');db.commit();return {'saved':True}
+    row.backup_policy={**(row.backup_policy or {}),**body.model_dump(),'started_at':int(time.time())};audit(db,user.id,'installation.backup_policy_changed');db.commit();return {'saved':True}
 
 
 @router.post('/backup',status_code=202)
